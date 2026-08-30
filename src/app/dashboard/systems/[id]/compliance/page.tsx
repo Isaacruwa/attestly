@@ -78,6 +78,9 @@ export default function CompliancePage({ params }: { params: { id: string } }) {
           <Link href={`/dashboard/systems/${aiSystemId}/traces`} style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
             ← Traces
           </Link>
+          <Link href={`/dashboard/systems/${aiSystemId}/documentation`} style={{ fontSize: 13, color: "var(--color-primary)" }}>
+            Review documentation →
+          </Link>
           <button
             onClick={runSync}
             disabled={syncing}
