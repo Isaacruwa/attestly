@@ -1,0 +1,59 @@
+:root {
+  /* Palette: "ledger" — paper-white surface, ink text, deep evidence-blue primary.
+     Status colors read like a real audit ledger: approved/green, needs-review/amber,
+     missing/rust, updated/blue. Deliberately not cream+terracotta or black+neon. */
+  --color-paper: #F6F7F5;
+  --color-ink: #14181C;
+  --color-ink-muted: #5B6470;
+  --color-line: #DEE3E1;
+  --color-primary: #1F3A3D;      /* deep evidence-teal, not navy-by-default */
+  --color-primary-hover: #16292B;
+  --color-approved: #2E6E4E;
+  --color-review: #A6741B;
+  --color-missing: #A13F2B;
+  --color-updated: #2C5F8A;
+
+  --font-display: "IBM Plex Sans", -apple-system, sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Signature element: the "ledger rule" — a thin left-border tick used on every
+   status row, echoing a paper audit trail rather than a card/shadow UI. */
+.ledger-row {
+  border-left: 3px solid var(--color-line);
+  padding-left: 12px;
+}
+.ledger-row[data-status="approved"] { border-left-color: var(--color-approved); }
+.ledger-row[data-status="needs_review"] { border-left-color: var(--color-review); }
+.ledger-row[data-status="missing_information"] { border-left-color: var(--color-missing); }
+.ledger-row[data-status="updated"] { border-left-color: var(--color-updated); }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
