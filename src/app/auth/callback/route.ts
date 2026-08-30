@@ -13,7 +13,37 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+
     if (!error) {
+      // First-ever sign-in for this account: every AI system has to belong
+      // to an organization, so brand-new accounts get a personal one
+      // automatically. Existing members skip this silently.
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: membership } = await supabase
+          .from("organization_members")
+          .select("organization_id")
+          .eq("user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+
+        if (!membership) {
+          const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
+          const { data: org } = await supabase.from("organizations").insert({ name: orgName }).select().single();
+
+          if (org) {
+            await supabase.from("organization_members").insert({
+              organization_id: org.id,
+              user_id: user.id,
+              role: "owner",
+            });
+          }
+        }
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

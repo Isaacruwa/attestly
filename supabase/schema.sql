@@ -188,8 +188,14 @@ $$;
 create policy "members see their org" on organizations
   for select using (is_org_member(id));
 
+create policy "authenticated users can create an organization" on organizations
+  for insert with check (auth.uid() is not null);
+
 create policy "members see membership rows" on organization_members
   for select using (is_org_member(organization_id));
+
+create policy "users can add themselves as a member" on organization_members
+  for insert with check (user_id = auth.uid());
 
 create policy "members manage ai systems" on ai_systems
   for all using (is_org_member(organization_id)) with check (is_org_member(organization_id));
