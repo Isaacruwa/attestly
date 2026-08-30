@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const STATUS_LABEL: Record<string, string> = {
   in_progress: "In progress",
@@ -64,9 +65,20 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <p style={{ marginTop: 40, fontSize: 13, color: "var(--color-ink-muted)" }}>
-        Signed in as {user?.email}
-      </p>
+      <form
+        action={async () => {
+          "use server";
+          const supabase = createClient();
+          await supabase.auth.signOut();
+          redirect("/login");
+        }}
+        style={{ marginTop: 40, display: "flex", justifyContent: "space-between", alignItems: "center" }}
+      >
+        <p style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>Signed in as {user?.email}</p>
+        <button type="submit" style={{ fontSize: 13, color: "var(--color-primary)", background: "none", border: "none", textDecoration: "underline" }}>
+          Sign out
+        </button>
+      </form>
     </main>
   );
 }
