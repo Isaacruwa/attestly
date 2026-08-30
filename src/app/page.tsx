@@ -1,40 +1,109 @@
 import Link from "next/link";
 
+const PIPELINE_STEPS = [
+  {
+    icon: "01",
+    title: "Your agents run",
+    desc: "OpenTelemetry, LangSmith, AgentOps, or MCP logs — whatever you already emit.",
+  },
+  {
+    icon: "02",
+    title: "Attestly structures it",
+    desc: "Tool calls, model calls, human interventions, and errors, normalized and mapped to Annex IV.",
+  },
+  {
+    icon: "03",
+    title: "A person signs off",
+    desc: "Every generated section is reviewed, edited, or rejected before it counts as final.",
+  },
+];
+
+const DELIVERABLES = [
+  {
+    title: "Annex IV technical documentation",
+    desc: "General description, design specification, and monitoring measures — drafted from what your system actually did.",
+  },
+  {
+    title: "Risk-management summaries",
+    desc: "Identified risks, mitigations, and residual risk, traced back to the events that surfaced them.",
+  },
+  {
+    title: "Conformity-assessment checklists",
+    desc: "A running view of what's covered, what's missing, and what still needs a human decision.",
+  },
+  {
+    title: "Audit-ready evidence trails",
+    desc: "Every generated sentence links to the specific trace event that justified it.",
+  },
+];
+
 export default function LandingPage() {
   return (
-    <main style={{ maxWidth: 780, margin: "0 auto", padding: "96px 24px" }}>
-      <p className="mono" style={{ color: "var(--color-ink-muted)", fontSize: 13, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-        Attestly
-      </p>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1.15, marginTop: 12, marginBottom: 20 }}>
-        Stop manually reconstructing what your AI system did.
-      </h1>
-      <p style={{ fontSize: 18, color: "var(--color-ink-muted)", lineHeight: 1.6, marginBottom: 32 }}>
-        Attestly reads the traces your AI agents already produce — OpenTelemetry, LangSmith, AgentOps, MCP logs —
-        and turns them into EU AI Act technical documentation, risk-management records, and audit-ready evidence.
-        Reviewed by a human before anything counts as final.
-      </p>
-      <Link
-        href="/login"
-        style={{
-          display: "inline-block",
-          background: "var(--color-primary)",
-          color: "white",
-          padding: "12px 22px",
-          borderRadius: 4,
-          textDecoration: "none",
-          fontWeight: 500,
-        }}
-      >
-        Get started
-      </Link>
+    <>
+      <nav className="site-nav">
+        <span className="site-nav__brand">
+          <span className="site-nav__mark" aria-hidden="true" />
+          Attestly
+        </span>
+        <Link href="/login" className="site-nav__link">Sign in</Link>
+      </nav>
 
-      <div style={{ marginTop: 72, borderTop: "1px solid var(--color-line)", paddingTop: 32 }}>
-        <p className="mono" style={{ fontSize: 12, color: "var(--color-ink-muted)" }}>
+      <header className="hero">
+        <p className="hero__eyebrow">EU AI Act · Technical Documentation</p>
+        <div className="hero__grid">
+          <div>
+            <h1>Stop manually reconstructing what your AI system did.</h1>
+            <p>
+              Attestly reads the traces your agents already produce and turns them into EU AI Act
+              technical documentation, risk-management records, and audit-ready evidence —
+              continuously, not as a quarterly scramble.
+            </p>
+            <Link href="/login" className="btn-primary">Get started →</Link>
+          </div>
+
+          <div className="pipeline">
+            <p className="pipeline__label">How it works</p>
+            {PIPELINE_STEPS.map((step) => (
+              <div className="pipeline__step" key={step.icon}>
+                <span className="pipeline__step-icon">{step.icon}</span>
+                <div>
+                  <p className="pipeline__step-title">{step.title}</p>
+                  <p className="pipeline__step-desc">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <section className="section">
+        <p className="section__eyebrow">What it generates</p>
+        <h2>Four documents compliance teams currently build by hand.</h2>
+        <div className="deliverables-grid">
+          {DELIVERABLES.map((d) => (
+            <div className="deliverable" key={d.title}>
+              <p className="deliverable__title">{d.title}</p>
+              <p className="deliverable__desc">{d.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="trust-strip">
           Attestly does not provide legal advice and does not guarantee regulatory compliance.
-          Every generated section is reviewed, edited, and approved by a person before export.
-        </p>
-      </div>
-    </main>
+          Every generated section is clearly marked as AI-generated, user-provided, or missing —
+          and requires human review, edit, or approval before export.
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <span className="site-nav__brand">
+          <span className="site-nav__mark" aria-hidden="true" />
+          Attestly
+        </span>
+        <span className="site-footer__meta">Built for teams shipping autonomous AI agents into the EU</span>
+      </footer>
+    </>
   );
 }

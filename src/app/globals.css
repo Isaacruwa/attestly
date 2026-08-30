@@ -1,21 +1,24 @@
 :root {
-  /* Palette: "ledger" — paper-white surface, ink text, deep evidence-blue primary.
-     Status colors read like a real audit ledger: approved/green, needs-review/amber,
-     missing/rust, updated/blue. Deliberately not cream+terracotta or black+neon. */
+  /* Palette: "ledger" — paper surface, ink text, deep evidence-teal primary.
+     Status colors read like a real audit ledger. Deliberately not the default
+     cream+terracotta or black+neon AI-generated look. */
   --color-paper: #F6F7F5;
+  --color-paper-raised: #FFFFFF;
   --color-ink: #14181C;
   --color-ink-muted: #5B6470;
+  --color-ink-faint: #8A929B;
   --color-line: #DEE3E1;
-  --color-primary: #1F3A3D;      /* deep evidence-teal, not navy-by-default */
+  --color-primary: #1F3A3D;
   --color-primary-hover: #16292B;
+  --color-primary-tint: #E9EFEE;
   --color-approved: #2E6E4E;
   --color-review: #A6741B;
   --color-missing: #A13F2B;
   --color-updated: #2C5F8A;
 
-  --font-display: "IBM Plex Sans", -apple-system, sans-serif;
-  --font-body: "IBM Plex Sans", -apple-system, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: var(--font-plex-serif), Georgia, serif;
+  --font-body: var(--font-plex-sans), -apple-system, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -52,6 +55,222 @@ button {
 button:focus-visible, a:focus-visible, input:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* ===================== Marketing page ===================== */
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+.site-nav__brand {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.site-nav__mark {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 3px;
+  position: relative;
+  flex-shrink: 0;
+}
+.site-nav__mark::after {
+  content: "";
+  position: absolute;
+  left: 3px; top: 3px; right: 7px; bottom: 3px;
+  border-left: 1.5px solid var(--color-primary);
+}
+.site-nav__link {
+  font-size: 14px;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+}
+
+.hero {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin: 0 0 18px;
+}
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (min-width: 860px) {
+  .hero__grid { grid-template-columns: 1.1fr 0.9fr; gap: 56px; }
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 22px;
+}
+.hero p {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-ink-muted);
+  margin: 0 0 30px;
+  max-width: 46ch;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary);
+  color: white;
+  padding: 13px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  border: none;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover { background: var(--color-primary-hover); }
+
+.pipeline {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 28px 22px;
+}
+.pipeline__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  margin: 0 0 20px;
+}
+.pipeline__step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-top: 1px solid var(--color-line);
+}
+.pipeline__step:first-of-type { border-top: none; }
+.pipeline__step-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.pipeline__step-title {
+  font-weight: 600;
+  font-size: 14.5px;
+  margin: 0 0 3px;
+}
+.pipeline__step-desc {
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid var(--color-line);
+}
+.section__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  margin: 0 0 12px;
+}
+.section h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0 0 36px;
+  max-width: 40ch;
+}
+
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--color-line);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+@media (min-width: 700px) {
+  .deliverables-grid { grid-template-columns: 1fr 1fr; }
+}
+.deliverable {
+  background: var(--color-paper-raised);
+  padding: 22px;
+}
+.deliverable__title {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0 0 6px;
+}
+.deliverable__desc {
+  font-size: 13.5px;
+  color: var(--color-ink-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.trust-strip {
+  background: var(--color-primary-tint);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  padding: 20px 22px;
+  font-size: 13.5px;
+  color: var(--color-primary);
+  line-height: 1.6;
+}
+
+.site-footer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 24px 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.site-footer__meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-ink-faint);
 }
 
 @media (prefers-reduced-motion: reduce) {
