@@ -75,26 +75,50 @@ export default function DocumentationPage({ params }: { params: { id: string } }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   async function generate(sectionId: string) {
     setBusySectionId(sectionId);
-    await fetch("/api/documentation/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ documentation_section_id: sectionId }),
-    });
-    await loadSections();
-    setBusySectionId(null);
+    setErrors((prev) => ({ ...prev, [sectionId]: "" }));
+    try {
+      const res = await fetch("/api/documentation/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentation_section_id: sectionId }),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrors((prev) => ({ ...prev, [sectionId]: result.error ?? `Request failed (${res.status})` }));
+      } else {
+        await loadSections();
+      }
+    } catch (err: any) {
+      setErrors((prev) => ({ ...prev, [sectionId]: err.message ?? "Network error" }));
+    } finally {
+      setBusySectionId(null);
+    }
   }
 
   async function review(sectionId: string, action: "approve" | "reject" | "edit" | "manual_add", newContent?: string) {
     setBusySectionId(sectionId);
-    await fetch("/api/documentation/review", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ documentation_section_id: sectionId, action, new_content: newContent }),
-    });
-    await loadSections();
-    setBusySectionId(null);
+    setErrors((prev) => ({ ...prev, [sectionId]: "" }));
+    try {
+      const res = await fetch("/api/documentation/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentation_section_id: sectionId, action, new_content: newContent }),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrors((prev) => ({ ...prev, [sectionId]: result.error ?? `Request failed (${res.status})` }));
+      } else {
+        await loadSections();
+      }
+    } catch (err: any) {
+      setErrors((prev) => ({ ...prev, [sectionId]: err.message ?? "Network error" }));
+    } finally {
+      setBusySectionId(null);
+    }
   }
 
   return (
@@ -143,14 +167,17 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                     No evidence linked yet. Import traces and re-sync compliance mapping first.
                   </p>
                 ) : !s.content ? (
-                  <button
-                    onClick={() => generate(s.id)}
-                    disabled={busy}
-                    className="btn-primary"
-                    style={{ border: "none", fontSize: 13, padding: "9px 16px" }}
-                  >
-                    {busy ? "Generating…" : `Generate draft from ${s.evidence_count} evidence event${s.evidence_count === 1 ? "" : "s"}`}
-                  </button>
+                  <>
+                    <button
+                      onClick={() => generate(s.id)}
+                      disabled={busy}
+                      className="btn-primary"
+                      style={{ border: "none", fontSize: 13, padding: "9px 16px" }}
+                    >
+                      {busy ? "Generating…" : `Generate draft from ${s.evidence_count} evidence event${s.evidence_count === 1 ? "" : "s"}`}
+                    </button>
+                    {errors[s.id] && <p style={{ fontSize: 13, color: "var(--color-missing)", marginTop: 8 }}>{errors[s.id]}</p>}
+                  </>
                 ) : (
                   <>
                     {s.content_source && (

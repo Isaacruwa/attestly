@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     "This draft is not legal advice and does not itself establish compliance.";
 
   const response = await genAI.models.generateContent({
-    model: "gemini-flash-latest",
+    model: "gemini-2.5-flash",
     config: { systemInstruction },
     contents: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
       evidence,
