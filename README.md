@@ -16,7 +16,7 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
   `events` table (source-specific parsers for OTel/LangSmith/AgentOps plug in
   here later, all resolving to the same normalized shape)
 - `POST /api/documentation/generate` — pulls evidence linked to a documentation
-  section and asks Claude to draft it **strictly from that evidence**, marking
+  section and asks Gemini to draft it **strictly from that evidence**, marking
   gaps explicitly rather than inventing content. Always lands in `needs_review`,
   never auto-approved.
 
@@ -25,7 +25,7 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
 1. Create a Supabase project (free tier is enough for development).
 2. Run `supabase/schema.sql` then `supabase/seed.sql` against it (SQL editor or CLI).
 3. Copy `.env.example` to `.env.local` and fill in your Supabase URL/keys and
-   `ANTHROPIC_API_KEY`. The Anthropic key is only ever read server-side in
+   `GEMINI_API_KEY`. The Gemini key is only ever read server-side in
    route handlers — never bundled into client code.
 4. `npm install`
 5. `npm run dev`

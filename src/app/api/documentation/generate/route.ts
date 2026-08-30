@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const Body = z.object({ documentation_section_id: z.string().uuid() });
 
 // Given a documentation section, pulls the events already linked as evidence
-// for it, asks Claude to draft the section strictly from that evidence, and
+// for it, asks Gemini to draft the section strictly from that evidence, and
 // stores the result as a draft — never auto-approved. Human review is a
 // separate, required step (see section_reviews table).
 export async function POST(req: NextRequest) {
@@ -48,31 +48,24 @@ export async function POST(req: NextRequest) {
 
   const requirement: any = (section as any).compliance_requirements;
 
-  const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1200,
-    system:
-      "You draft one section of EU AI Act Annex IV technical documentation. " +
-      "Use ONLY the evidence provided — never invent facts, dates, or metrics. " +
-      "Where the evidence is insufficient to fully address the requirement, say so explicitly " +
-      "under a 'Gaps' heading rather than filling in plausible-sounding text. " +
-      "This draft is not legal advice and does not itself establish compliance.",
-    messages: [
-      {
-        role: "user",
-        content: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
-          evidence,
-          null,
-          2
-        )}`,
-      },
-    ],
+  const systemInstruction =
+    "You draft one section of EU AI Act Annex IV technical documentation. " +
+    "Use ONLY the evidence provided — never invent facts, dates, or metrics. " +
+    "Where the evidence is insufficient to fully address the requirement, say so explicitly " +
+    "under a 'Gaps' heading rather than filling in plausible-sounding text. " +
+    "This draft is not legal advice and does not itself establish compliance.";
+
+  const response = await genAI.models.generateContent({
+    model: "gemini-flash-latest",
+    config: { systemInstruction },
+    contents: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
+      evidence,
+      null,
+      2
+    )}`,
   });
 
-  const draft = message.content
-    .filter((b) => b.type === "text")
-    .map((b: any) => b.text)
-    .join("\n");
+  const draft = response.text ?? "";
 
   await supabase
     .from("documentation_sections")
