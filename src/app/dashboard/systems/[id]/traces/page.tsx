@@ -13,7 +13,7 @@ export default function TracesPage({ params }: { params: { id: string } }) {
   const [imports, setImports] = useState<TraceImport[]>([]);
   const [recentEvents, setRecentEvents] = useState<EventRow[]>([]);
   const [status, setStatus] = useState<string | null>(null);
-  const [source, setSource] = useState<"opentelemetry" | "manual_json">("manual_json");
+  const [source, setSource] = useState<"opentelemetry" | "langsmith" | "agentops" | "manual_json">("manual_json");
 
   async function refresh() {
     const { data: importRows } = await supabase
@@ -90,6 +90,8 @@ export default function TracesPage({ params }: { params: { id: string } }) {
           >
             <option value="manual_json">Pre-normalized JSON</option>
             <option value="opentelemetry">OpenTelemetry export</option>
+            <option value="langsmith">LangSmith export</option>
+            <option value="agentops">AgentOps export</option>
           </select>
           <input type="file" accept="application/json" onChange={handleFile} />
         </div>

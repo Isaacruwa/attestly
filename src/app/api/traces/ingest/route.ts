@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import { parseOpenTelemetryTrace } from "@/lib/parsers/opentelemetry";
+import { parseLangSmithTrace } from "@/lib/parsers/langsmith";
+import { parseAgentOpsTrace } from "@/lib/parsers/agentops";
 
 // Accepts either:
 //  (a) a generic pre-normalized `events` array (manual_json, or any source
@@ -55,9 +57,13 @@ export async function POST(req: NextRequest) {
   if (!events && payload) {
     if (source === "opentelemetry") {
       events = parseOpenTelemetryTrace(payload);
+    } else if (source === "langsmith") {
+      events = parseLangSmithTrace(payload);
+    } else if (source === "agentops") {
+      events = parseAgentOpsTrace(payload);
     } else {
       return NextResponse.json(
-        { error: `No parser yet for source "${source}" — send pre-normalized "events" instead, or use source "opentelemetry"/"manual_json".` },
+        { error: `No parser yet for source "${source}" — send pre-normalized "events" instead, or use source "opentelemetry"/"langsmith"/"agentops"/"manual_json".` },
         { status: 400 }
       );
     }

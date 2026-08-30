@@ -32,18 +32,19 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
 
 ## Phase 2 additions
 
-- `src/lib/parsers/opentelemetry.ts` — converts a real OpenTelemetry JSON trace
-  export into normalized events (agent action / tool call / API call / model
-  call / human intervention / error / system event)
+- `src/lib/parsers/opentelemetry.ts`, `langsmith.ts`, `agentops.ts` — each
+  converts that source's native trace/export format into the same normalized
+  event shape (agent action / tool call / API call / model call / human
+  intervention / error / system event)
 - `/dashboard/systems/[id]/traces` — upload a trace file from the browser,
-  see import history and a live activity feed of recorded events
-- Ingest route now accepts either pre-normalized `events` or a raw `payload`
-  routed through the matching source's parser
+  choose which source it's from, see import history and a live activity feed
+- Ingest route routes a raw `payload` through the matching source's parser,
+  or accepts pre-normalized `events` directly
 
 ## What's intentionally not built yet
 
-- LangSmith / AgentOps / MCP-log parsers (only OpenTelemetry + generic JSON so far —
-  same plug-in pattern, one file each)
+- MCP-log and API-history parsers (same plug-in pattern — one file each,
+  following opentelemetry.ts/langsmith.ts/agentops.ts)
 - Section review UI (edit/approve/reject buttons — the `section_reviews` table
   and status transitions exist, the UI doesn't yet)
 - Export (PDF/DOCX of approved documentation)
