@@ -25,7 +25,7 @@ const RawEvent = z.object({
     "error",
     "system_event",
   ]),
-  occurred_at: z.string().optional(),
+  occurred_at: z.string().nullable().optional(),
   summary: z.string().optional(),
   data: z.record(z.any()).optional(),
 });
