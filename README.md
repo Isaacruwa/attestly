@@ -41,12 +41,25 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
 - Ingest route routes a raw `payload` through the matching source's parser,
   or accepts pre-normalized `events` directly
 
+## Phase 3 additions
+
+- `POST /api/compliance/sync` — for a given AI system, ensures a documentation
+  project + one section per EU AI Act requirement exist, then scans all
+  imported events and links any matching `required_evidence_types` as
+  evidence for that section (skips ones already linked)
+- `/dashboard/systems/[id]/compliance` — coverage view: which requirements
+  have supporting evidence, which don't, and a manual "re-sync" button
+- Seed data's `required_evidence_types` now uses the exact same vocabulary as
+  `events.event_type`, so matching is a direct comparison, not a translation
+- Fixed a broken dashboard link (pointed at a page that didn't exist)
+
 ## What's intentionally not built yet
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
   following opentelemetry.ts/langsmith.ts/agentops.ts)
 - Section review UI (edit/approve/reject buttons — the `section_reviews` table
-  and status transitions exist, the UI doesn't yet)
+  and status transitions exist, the UI doesn't yet) — this is where Phase 4's
+  Gemini-drafted content will actually get reviewed
 - Export (PDF/DOCX of approved documentation)
 - Billing/usage limits
 - Source-specific trace parsers (OTel span format, LangSmith run format, etc.)

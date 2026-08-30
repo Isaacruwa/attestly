@@ -47,7 +47,7 @@ export default async function DashboardPage() {
             const project = system.documentation_projects?.[0];
             const status = project?.status ?? "missing_information";
             return (
-              <Link key={system.id} href={`/dashboard/systems/${system.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              <Link key={system.id} href={`/dashboard/systems/${system.id}/traces`} style={{ textDecoration: "none", color: "inherit" }}>
                 <div className="ledger-row" data-status={status} style={{ padding: "12px 16px", background: "white", borderRadius: 4 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <strong>{system.name}</strong>

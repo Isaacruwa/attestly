@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 type TraceImport = { id: string; source: string; status: string; event_count: number; created_at: string };
@@ -78,7 +79,12 @@ export default function TracesPage({ params }: { params: { id: string } }) {
 
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24, marginBottom: 24 }}>Traces</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24 }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>Traces</h1>
+        <Link href={`/dashboard/systems/${aiSystemId}/compliance`} style={{ fontSize: 14, color: "var(--color-primary)" }}>
+          View compliance mapping →
+        </Link>
+      </div>
 
       <div style={{ background: "white", border: "1px solid var(--color-line)", borderRadius: 6, padding: 20, marginBottom: 32 }}>
         <p style={{ fontSize: 14, marginBottom: 12 }}>Import a trace file (.json)</p>
