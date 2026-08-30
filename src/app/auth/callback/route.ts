@@ -32,15 +32,7 @@ export async function GET(request: Request) {
 
         if (!membership) {
           const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
-          const { data: org } = await supabase.from("organizations").insert({ name: orgName }).select().single();
-
-          if (org) {
-            await supabase.from("organization_members").insert({
-              organization_id: org.id,
-              user_id: user.id,
-              role: "owner",
-            });
-          }
+          await supabase.rpc("create_organization_for_current_user", { org_name: orgName });
         }
       }
 

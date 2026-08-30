@@ -39,23 +39,35 @@ export default function NewAiSystemPage() {
       return;
     }
 
-    const { data: membership, error: membershipError } = await supabase
+    const { data: membership } = await supabase
       .from("organization_members")
       .select("organization_id")
       .eq("user_id", user.id)
       .limit(1)
       .maybeSingle();
 
-    if (membershipError || !membership) {
-      setError("Couldn't find your organization. Try signing out and back in.");
-      setSaving(false);
-      return;
+    let organizationId = membership?.organization_id;
+
+    if (!organizationId) {
+      // Safety net for accounts whose auto-created org didn't land the first
+      // time (e.g. signed in before this fix existed).
+      const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
+      const { data: newOrgId, error: rpcError } = await supabase.rpc("create_organization_for_current_user", {
+        org_name: orgName,
+      });
+
+      if (rpcError || !newOrgId) {
+        setError(rpcError?.message ?? "Couldn't set up your organization. Please try again.");
+        setSaving(false);
+        return;
+      }
+      organizationId = newOrgId;
     }
 
     const { data: system, error: insertError } = await supabase
       .from("ai_systems")
       .insert({
-        organization_id: membership.organization_id,
+        organization_id: organizationId,
         name,
         description: description || null,
         risk_category: riskCategory,

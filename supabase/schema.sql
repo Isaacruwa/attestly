@@ -245,3 +245,26 @@ create policy "members see audit log" on audit_log
 alter table compliance_requirements enable row level security;
 create policy "authenticated users can read requirements" on compliance_requirements
   for select using (auth.role() = 'authenticated');
+
+-- Atomically creates an organization and adds the calling user as its owner.
+-- Doing this as two separate insert-then-select calls from the app breaks
+-- under RLS: right after creating the org, the caller isn't a member yet, so
+-- the SELECT policy on organizations blocks reading the row back, and the
+-- membership insert never happens. security definer bypasses RLS *inside*
+-- this function only, and only for exactly this operation.
+create or replace function create_organization_for_current_user(org_name text)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  new_org_id uuid;
+begin
+  insert into organizations (name) values (org_name) returning id into new_org_id;
+  insert into organization_members (organization_id, user_id, role) values (new_org_id, auth.uid(), 'owner');
+  return new_org_id;
+end;
+$$;
+
+grant execute on function create_organization_for_current_user(text) to authenticated;
