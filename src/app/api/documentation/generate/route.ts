@@ -52,7 +52,10 @@ export async function POST(req: NextRequest) {
     "You draft one section of EU AI Act Annex IV technical documentation. " +
     "Use ONLY the evidence provided — never invent facts, dates, or metrics. " +
     "Where the evidence is insufficient to fully address the requirement, say so explicitly " +
-    "under a 'Gaps' heading rather than filling in plausible-sounding text. " +
+    "under a 'Gaps:' line at the end rather than filling in plausible-sounding text. " +
+    "Write in plain prose paragraphs only — no markdown formatting of any kind: no '#' headers, " +
+    "no '**bold**', no bullet lists, no numbered lists. This text goes directly into a formal " +
+    "document, not a chat interface, so it must read as normal written paragraphs. " +
     "This draft is not legal advice and does not itself establish compliance.";
 
   const response = await genAI.models.generateContent({
@@ -65,7 +68,16 @@ export async function POST(req: NextRequest) {
     )}`,
   });
 
-  const draft = response.text ?? "";
+  const rawDraft = response.text ?? "";
+
+  // Defensive cleanup: even with an explicit instruction not to, models
+  // occasionally slip into markdown. Strip the common cases so approved
+  // text never ends up with stray '#'/'**' characters in the final document.
+  const draft = rawDraft
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/^[-*]\s+/gm, "")
+    .trim();
 
   await supabase
     .from("documentation_sections")
