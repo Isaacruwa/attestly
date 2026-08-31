@@ -11,12 +11,11 @@ const jsonLd = {
       operatingSystem: "Web",
       description:
         "Attestly turns AI agents' operational traces (OpenTelemetry, LangSmith, AgentOps, MCP logs) into EU AI Act technical documentation, risk-management records, and audit-ready evidence, with mandatory human review before anything is final.",
-      offers: {
-        "@type": "Offer",
-        price: "79",
-        priceCurrency: "USD",
-        priceValidUntil: "2027-12-31",
-      },
+      offers: [
+        { "@type": "Offer", name: "Starter", price: "79", priceCurrency: "USD" },
+        { "@type": "Offer", name: "Professional", price: "349", priceCurrency: "USD" },
+        { "@type": "Offer", name: "Enterprise", price: "1499", priceCurrency: "USD" },
+      ],
       featureList: [
         "EU AI Act Annex IV technical documentation generation",
         "Risk-management summaries",
@@ -102,7 +101,10 @@ export default function LandingPage() {
           <span className="site-nav__mark" aria-hidden="true" />
           Attestly
         </span>
-        <Link href="/login" className="site-nav__link">Sign in</Link>
+        <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+          <Link href="/pricing" className="site-nav__link">Pricing</Link>
+          <Link href="/login" className="site-nav__link">Sign in</Link>
+        </div>
       </nav>
 
       <header className="hero">

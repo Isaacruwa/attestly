@@ -125,7 +125,14 @@ export default function NewAiSystemPage() {
         {error && <p style={{ color: "var(--color-missing)", fontSize: 14 }}>{error}</p>}
 
         <button type="submit" disabled={saving} className="btn-primary" style={{ justifyContent: "center", border: "none" }}>
-          {saving ? "Creating…" : "Create AI system"}
+          {saving ? (
+            <span className="busy-row">
+              <span className="spinner" />
+              <span className="loading-message">Creating your AI system…</span>
+            </span>
+          ) : (
+            "Create AI system"
+          )}
         </button>
       </form>
     </main>

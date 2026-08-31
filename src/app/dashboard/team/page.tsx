@@ -91,7 +91,8 @@ export default function TeamPage() {
           onChange={(e) => setEmail(e.target.value)}
           style={{ flex: 1, padding: "10px 12px", border: "1px solid var(--color-line)", borderRadius: 4, fontSize: 14 }}
         />
-        <button type="submit" disabled={sending} className="btn-primary" style={{ border: "none", fontSize: 14, padding: "10px 18px" }}>
+        <button type="submit" disabled={sending} className="btn-primary busy-row" style={{ border: "none", fontSize: 14, padding: "10px 18px" }}>
+          {sending && <span className="spinner" />}
           {sending ? "Sending…" : "Invite"}
         </button>
       </form>

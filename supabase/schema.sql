@@ -156,6 +156,17 @@ create table organization_invites (
   created_at timestamptz not null default now()
 );
 
+create table organization_subscriptions (
+  id uuid primary key default uuid_generate_v4(),
+  organization_id uuid not null unique references organizations(id) on delete cascade,
+  plan text not null default 'none' check (plan in ('none', 'starter', 'professional', 'enterprise')),
+  status text not null default 'inactive' check (status in ('inactive', 'active', 'past_due', 'canceled', 'paused')),
+  paddle_customer_id text,
+  paddle_subscription_id text,
+  current_period_end timestamptz,
+  updated_at timestamptz not null default now()
+);
+
 create table audit_log (
   id uuid primary key default uuid_generate_v4(),
   organization_id uuid not null references organizations(id) on delete cascade,
@@ -183,6 +194,7 @@ alter table evidence_links enable row level security;
 alter table section_reviews enable row level security;
 alter table audit_log enable row level security;
 alter table organization_invites enable row level security;
+alter table organization_subscriptions enable row level security;
 
 -- Helper: is the current user a member of a given organization?
 create or replace function is_org_member(org_id uuid)
@@ -255,6 +267,12 @@ create policy "members see audit log" on audit_log
 
 create policy "members manage invites for their org" on organization_invites
   for all using (is_org_member(organization_id)) with check (is_org_member(organization_id));
+
+-- Read-only for members: subscription state is only ever written by the
+-- Paddle webhook using the service-role key, which bypasses RLS entirely.
+-- No client, however trusted, should be able to grant itself a paid plan.
+create policy "members see their subscription" on organization_subscriptions
+  for select using (is_org_member(organization_id));
 
 -- Atomically validates an invite token against the calling user's own email
 -- and adds them to that organization. security definer bypasses RLS inside

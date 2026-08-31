@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useCyclingMessage } from "@/lib/useCyclingMessage";
 
 type SectionRow = {
   id: string;
@@ -19,6 +20,11 @@ export default function CompliancePage({ params }: { params: { id: string } }) {
   const [sections, setSections] = useState<SectionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+
+  const syncMessage = useCyclingMessage(
+    ["Scanning your imported traces…", "Matching evidence to Annex IV…", "Almost done…"],
+    syncing || loading
+  );
 
   async function loadSections() {
     const { data: project } = await supabase
@@ -84,8 +90,10 @@ export default function CompliancePage({ params }: { params: { id: string } }) {
           <button
             onClick={runSync}
             disabled={syncing}
+            className="busy-row"
             style={{ fontSize: 13, color: "var(--color-primary)", background: "none", border: "none", cursor: "pointer" }}
           >
+            {syncing && <span className="spinner spinner-dark" />}
             {syncing ? "Syncing…" : "Re-sync from traces"}
           </button>
         </div>
@@ -98,7 +106,10 @@ export default function CompliancePage({ params }: { params: { id: string } }) {
       )}
 
       {loading ? (
-        <p style={{ color: "var(--color-ink-muted)" }}>Loading…</p>
+        <p className="busy-row" style={{ color: "var(--color-ink-muted)" }}>
+          <span className="spinner spinner-dark" />
+          <span className="loading-message">{syncMessage}</span>
+        </p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {sections.map((s) => {

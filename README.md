@@ -53,7 +53,53 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
   `events.event_type`, so matching is a direct comparison, not a translation
 - Fixed a broken dashboard link (pointed at a page that didn't exist)
 
-## What's intentionally not built yet
+## Phase 6 (partial): loading UX, output polish, and billing
+
+- Every button/screen that waits on a real backend call (creating a system,
+  uploading traces, syncing compliance, generating a draft, approving/
+  rejecting, sending an invite) now shows a spinner instead of leaving the
+  page static. Draft generation specifically cycles through short status
+  messages since that call has real, noticeable latency.
+- Markdown cleanup on generated drafts is now much more thorough: headers,
+  bold, italics, blockquotes, bullet/numbered lists, horizontal rules,
+  markdown links, and inline code are all stripped, with excess blank lines
+  collapsed. Already-generated old drafts don't get this retroactively —
+  hit "Regenerate" on those to get clean text.
+- `organization_subscriptions` table + `/api/webhooks/paddle` — tracks each
+  org's plan/status from real Paddle subscription events (created, updated,
+  canceled), with the webhook signature verified against the raw request
+  body before anything is written. This table is select-only for members;
+  only the webhook (service-role key) can write to it, so no client can
+  grant itself a paid plan.
+- `/pricing` — public, self-serve pricing page with direct Paddle Checkout
+  buttons on all three tiers, including Enterprise. No "contact sales" gate
+  anywhere.
+
+### Setup needed for billing to go live
+
+1. In your Paddle dashboard, create three **Prices** (one per tier, monthly
+   recurring) and copy each Price ID.
+2. In Vercel, add: `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN` (Paddle → Developer
+   Tools → Authentication), `NEXT_PUBLIC_PADDLE_PRICE_STARTER`,
+   `NEXT_PUBLIC_PADDLE_PRICE_PROFESSIONAL`, `NEXT_PUBLIC_PADDLE_PRICE_ENTERPRISE`
+   (the three Price IDs from step 1), `NEXT_PUBLIC_PADDLE_ENVIRONMENT`
+   (`production` or `sandbox`), and `PADDLE_WEBHOOK_SECRET`.
+3. In Paddle, add a webhook destination pointing at
+   `https://<your-domain>/api/webhooks/paddle`, subscribed to
+   `subscription.created`, `subscription.updated`, `subscription.activated`,
+   and `subscription.canceled`. Paddle gives you the webhook's signing
+   secret when you create it — that's `PADDLE_WEBHOOK_SECRET`.
+4. Run the schema update for `organization_subscriptions` (see schema.sql).
+
+### What's intentionally not built yet (billing)
+
+- Usage-limit enforcement per plan (e.g. capping Starter at 1 AI system) —
+  subscriptions are tracked, but nothing currently blocks a free account
+  from using more than a paid plan would allow.
+- A "billing" page inside the dashboard showing the org's current plan —
+  right now that only lives in the database.
+
+## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
   following opentelemetry.ts/langsmith.ts/agentops.ts)

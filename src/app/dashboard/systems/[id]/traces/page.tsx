@@ -14,6 +14,7 @@ export default function TracesPage({ params }: { params: { id: string } }) {
   const [imports, setImports] = useState<TraceImport[]>([]);
   const [recentEvents, setRecentEvents] = useState<EventRow[]>([]);
   const [status, setStatus] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [source, setSource] = useState<"opentelemetry" | "langsmith" | "agentops" | "manual_json">("manual_json");
 
   async function refresh() {
@@ -44,7 +45,8 @@ export default function TracesPage({ params }: { params: { id: string } }) {
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setStatus("Uploading…");
+    setUploading(true);
+    setStatus(null);
 
     try {
       const text = await file.text();
@@ -73,6 +75,7 @@ export default function TracesPage({ params }: { params: { id: string } }) {
     } catch (err: any) {
       setStatus(`Failed to read file: ${err.message}`);
     } finally {
+      setUploading(false);
       e.target.value = "";
     }
   }
@@ -99,9 +102,15 @@ export default function TracesPage({ params }: { params: { id: string } }) {
             <option value="langsmith">LangSmith export</option>
             <option value="agentops">AgentOps export</option>
           </select>
-          <input type="file" accept="application/json" onChange={handleFile} />
+          <input type="file" accept="application/json" onChange={handleFile} disabled={uploading} />
         </div>
-        {status && <p style={{ fontSize: 13, marginTop: 12, color: "var(--color-ink-muted)" }}>{status}</p>}
+        {uploading && (
+          <p className="busy-row" style={{ fontSize: 13, marginTop: 12, color: "var(--color-ink-muted)" }}>
+            <span className="spinner spinner-dark" />
+            <span className="loading-message">Reading and structuring your trace file…</span>
+          </p>
+        )}
+        {!uploading && status && <p style={{ fontSize: 13, marginTop: 12, color: "var(--color-ink-muted)" }}>{status}</p>}
       </div>
 
       <h2 style={{ fontSize: 16, marginBottom: 12 }}>Import history</h2>

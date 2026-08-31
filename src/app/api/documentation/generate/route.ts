@@ -71,12 +71,19 @@ export async function POST(req: NextRequest) {
   const rawDraft = response.text ?? "";
 
   // Defensive cleanup: even with an explicit instruction not to, models
-  // occasionally slip into markdown. Strip the common cases so approved
-  // text never ends up with stray '#'/'**' characters in the final document.
+  // occasionally slip into markdown. Strip every common case so approved
+  // text never carries stray '#'/'**'/list syntax into the final document.
   const draft = rawDraft
-    .replace(/^#{1,6}\s*/gm, "")
-    .replace(/\*\*(.*?)\*\*/g, "$1")
-    .replace(/^[-*]\s+/gm, "")
+    .replace(/^#{1,6}\s*/gm, "") // headers
+    .replace(/\*\*(.*?)\*\*/g, "$1") // bold
+    .replace(/(?<!\*)\*(?!\*)(.*?)\*(?!\*)/g, "$1") // italics (single asterisk, not part of **)
+    .replace(/^>\s?/gm, "") // blockquotes
+    .replace(/^[-*]\s+/gm, "") // bullet lists
+    .replace(/^\d+\.\s+/gm, "") // numbered lists
+    .replace(/^-{3,}$/gm, "") // horizontal rules
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1") // markdown links -> plain text
+    .replace(/`([^`]*)`/g, "$1") // inline code
+    .replace(/\n{3,}/g, "\n\n") // collapse leftover blank lines from stripped headers/rules
     .trim();
 
   await supabase

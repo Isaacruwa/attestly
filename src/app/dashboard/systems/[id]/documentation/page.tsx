@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useCyclingMessage } from "@/lib/useCyclingMessage";
 
 type SectionRow = {
   id: string;
@@ -35,7 +36,14 @@ export default function DocumentationPage({ params }: { params: { id: string } }
   const [sections, setSections] = useState<SectionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [busySectionId, setBusySectionId] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
+
+  const generateMessage = useCyclingMessage(
+    ["Reading the linked trace evidence…", "Checking what's actually covered…", "Drafting the section…", "Almost there…"],
+    isGenerating,
+    1300
+  );
 
   async function loadSections() {
     const { data: project } = await supabase
@@ -79,6 +87,7 @@ export default function DocumentationPage({ params }: { params: { id: string } }
 
   async function generate(sectionId: string) {
     setBusySectionId(sectionId);
+    setIsGenerating(true);
     setErrors((prev) => ({ ...prev, [sectionId]: "" }));
     try {
       const res = await fetch("/api/documentation/generate", {
@@ -96,6 +105,7 @@ export default function DocumentationPage({ params }: { params: { id: string } }
       setErrors((prev) => ({ ...prev, [sectionId]: err.message ?? "Network error" }));
     } finally {
       setBusySectionId(null);
+      setIsGenerating(false);
     }
   }
 
@@ -146,7 +156,10 @@ export default function DocumentationPage({ params }: { params: { id: string } }
       </div>
 
       {loading ? (
-        <p style={{ color: "var(--color-ink-muted)" }}>Loading…</p>
+        <p className="busy-row" style={{ color: "var(--color-ink-muted)" }}>
+          <span className="spinner spinner-dark" />
+          <span className="loading-message">Loading your documentation…</span>
+        </p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {sections.map((s) => {
@@ -181,9 +194,16 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                       onClick={() => generate(s.id)}
                       disabled={busy}
                       className="btn-primary"
-                      style={{ border: "none", fontSize: 13, padding: "9px 16px" }}
+                      style={{ border: "none", fontSize: 13, padding: "9px 16px", minWidth: 220, justifyContent: "flex-start" }}
                     >
-                      {busy ? "Generating…" : `Generate draft from ${s.evidence_count} evidence event${s.evidence_count === 1 ? "" : "s"}`}
+                      {busy && isGenerating ? (
+                        <span className="busy-row">
+                          <span className="spinner" />
+                          <span className="loading-message" key={generateMessage}>{generateMessage}</span>
+                        </span>
+                      ) : (
+                        `Generate draft from ${s.evidence_count} evidence event${s.evidence_count === 1 ? "" : "s"}`
+                      )}
                     </button>
                     {errors[s.id] && <p style={{ fontSize: 13, color: "var(--color-missing)", marginTop: 8 }}>{errors[s.id]}</p>}
                   </>
@@ -214,8 +234,10 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                         <button
                           onClick={() => review(s.id, "edit", draft)}
                           disabled={busy}
+                          className="busy-row"
                           style={{ fontSize: 13, padding: "8px 14px", border: "1px solid var(--color-line)", borderRadius: 4, background: "white" }}
                         >
+                          {busy && <span className="spinner spinner-dark" />}
                           Save edit
                         </button>
                       )}
@@ -224,15 +246,19 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                           <button
                             onClick={() => review(s.id, "approve")}
                             disabled={busy}
+                            className="busy-row"
                             style={{ fontSize: 13, padding: "8px 14px", border: "none", borderRadius: 4, background: "var(--color-approved)", color: "white" }}
                           >
+                            {busy && <span className="spinner" />}
                             Approve
                           </button>
                           <button
                             onClick={() => review(s.id, "reject")}
                             disabled={busy}
+                            className="busy-row"
                             style={{ fontSize: 13, padding: "8px 14px", border: "1px solid var(--color-missing)", borderRadius: 4, background: "white", color: "var(--color-missing)" }}
                           >
+                            {busy && <span className="spinner spinner-dark" />}
                             Reject
                           </button>
                         </>
@@ -241,9 +267,17 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                         <button
                           onClick={() => generate(s.id)}
                           disabled={busy}
+                          className="busy-row"
                           style={{ fontSize: 13, padding: "8px 14px", border: "1px solid var(--color-line)", borderRadius: 4, background: "white" }}
                         >
-                          Regenerate
+                          {busy && isGenerating ? (
+                            <>
+                              <span className="spinner spinner-dark" />
+                              <span className="loading-message" key={generateMessage}>{generateMessage}</span>
+                            </>
+                          ) : (
+                            "Regenerate"
+                          )}
                         </button>
                       )}
                     </div>

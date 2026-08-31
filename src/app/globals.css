@@ -276,3 +276,40 @@ button:focus-visible, a:focus-visible, input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ===================== Loading states ===================== */
+
+@keyframes attestly-spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: attestly-spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.spinner-dark {
+  border: 2px solid var(--color-primary-tint);
+  border-top-color: var(--color-primary);
+}
+
+@keyframes attestly-fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.loading-message {
+  animation: attestly-fade-in 0.25s ease;
+  display: inline-block;
+}
+
+.busy-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

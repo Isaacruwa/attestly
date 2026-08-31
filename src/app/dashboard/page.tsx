@@ -43,6 +43,9 @@ export default async function DashboardPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>AI systems</h1>
         <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+          <Link href="/pricing" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+            Pricing
+          </Link>
           <Link href="/dashboard/team" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             Team
           </Link>
