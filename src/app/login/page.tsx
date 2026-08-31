@@ -16,9 +16,19 @@ function LoginForm() {
     e.preventDefault();
     setError(null);
     const supabase = createClient();
+
+    // The redirect URL Supabase validates against its allow-list is kept
+    // bare (no query string) — a wildcard like https://domain.com/** can be
+    // finicky about matching URLs that carry their own query params. Instead,
+    // the intended post-login destination travels via a short-lived cookie
+    // that the callback route reads directly.
+    if (next !== "/dashboard") {
+      document.cookie = `attestly_post_login_redirect=${encodeURIComponent(next)}; path=/; max-age=600; SameSite=Lax`;
+    }
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
       setError(error.message);

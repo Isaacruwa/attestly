@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 // Supabase's magic-link email points here first. The link carries a one-time
 // `code` that must be exchanged for a real session on the server — without
@@ -8,7 +9,9 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+
+  const cookieStore = cookies();
+  const next = decodeURIComponent(cookieStore.get("attestly_post_login_redirect")?.value ?? "/dashboard");
 
   if (code) {
     const supabase = createClient();
@@ -36,7 +39,9 @@ export async function GET(request: Request) {
         }
       }
 
-      return NextResponse.redirect(`${origin}${next}`);
+      const response = NextResponse.redirect(`${origin}${next}`);
+      response.cookies.set("attestly_post_login_redirect", "", { path: "/", maxAge: 0 });
+      return response;
     }
   }
 
