@@ -145,6 +145,17 @@ create table section_reviews (
   created_at timestamptz not null default now()
 );
 
+create table organization_invites (
+  id uuid primary key default uuid_generate_v4(),
+  organization_id uuid not null references organizations(id) on delete cascade,
+  email text not null,
+  role text not null default 'member' check (role in ('owner', 'admin', 'member')),
+  invited_by uuid references auth.users(id),
+  token uuid not null default uuid_generate_v4() unique,
+  status text not null default 'pending' check (status in ('pending', 'accepted', 'revoked')),
+  created_at timestamptz not null default now()
+);
+
 create table audit_log (
   id uuid primary key default uuid_generate_v4(),
   organization_id uuid not null references organizations(id) on delete cascade,
@@ -171,6 +182,7 @@ alter table documentation_sections enable row level security;
 alter table evidence_links enable row level security;
 alter table section_reviews enable row level security;
 alter table audit_log enable row level security;
+alter table organization_invites enable row level security;
 
 -- Helper: is the current user a member of a given organization?
 create or replace function is_org_member(org_id uuid)
@@ -240,6 +252,49 @@ create policy "members see reviews" on section_reviews
 
 create policy "members see audit log" on audit_log
   for select using (is_org_member(organization_id));
+
+create policy "members manage invites for their org" on organization_invites
+  for all using (is_org_member(organization_id)) with check (is_org_member(organization_id));
+
+-- Atomically validates an invite token against the calling user's own email
+-- and adds them to that organization. security definer bypasses RLS inside
+-- this function only — the same pattern as create_organization_for_current_user,
+-- needed here because the invitee isn't a member of the org yet (so couldn't
+-- otherwise see or act on the invite row that grants them membership).
+create or replace function accept_organization_invite(p_token uuid)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_org_id uuid;
+  v_role text;
+  v_email text;
+begin
+  select email into v_email from auth.users where id = auth.uid();
+
+  select organization_id, role into v_org_id, v_role
+  from organization_invites
+  where token = p_token
+    and status = 'pending'
+    and lower(email) = lower(v_email);
+
+  if v_org_id is null then
+    raise exception 'Invite not found, already used, or not addressed to this email';
+  end if;
+
+  insert into organization_members (organization_id, user_id, role)
+  values (v_org_id, auth.uid(), v_role)
+  on conflict (organization_id, user_id) do nothing;
+
+  update organization_invites set status = 'accepted' where token = p_token;
+
+  return v_org_id;
+end;
+$$;
+
+grant execute on function accept_organization_invite(uuid) to authenticated;
 
 -- compliance_requirements is shared reference data: readable by any authenticated user, no writes from clients.
 alter table compliance_requirements enable row level security;

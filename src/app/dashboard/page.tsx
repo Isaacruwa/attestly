@@ -2,12 +2,24 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const STATUS_LABEL: Record<string, string> = {
-  in_progress: "In progress",
-  needs_review: "Needs review",
-  approved: "Approved",
-  archived: "Archived",
-};
+function summarize(sections: { status: string }[]): { label: string; ledgerStatus: string } {
+  if (sections.length === 0) {
+    return { label: "Not started", ledgerStatus: "missing_information" };
+  }
+  const approved = sections.filter((s) => s.status === "approved").length;
+  const needsReview = sections.filter((s) => s.status === "needs_review").length;
+
+  if (approved === sections.length) {
+    return { label: "Fully approved", ledgerStatus: "approved" };
+  }
+  if (needsReview > 0) {
+    return { label: `${approved}/${sections.length} approved, ${needsReview} to review`, ledgerStatus: "needs_review" };
+  }
+  if (approved > 0) {
+    return { label: `${approved}/${sections.length} approved`, ledgerStatus: "updated" };
+  }
+  return { label: "No drafts generated yet", ledgerStatus: "missing_information" };
+}
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -22,7 +34,7 @@ export default async function DashboardPage() {
     .from("ai_systems")
     .select(
       `id, name, risk_category, updated_at,
-       documentation_projects ( id, status, updated_at )`
+       documentation_projects ( id, documentation_sections ( status ) )`
     )
     .order("updated_at", { ascending: false });
 
@@ -30,9 +42,14 @@ export default async function DashboardPage() {
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>AI systems</h1>
-        <Link href="/dashboard/systems/new" style={{ fontSize: 14, color: "var(--color-primary)" }}>
-          + Add AI system
-        </Link>
+        <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+          <Link href="/dashboard/team" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+            Team
+          </Link>
+          <Link href="/dashboard/systems/new" style={{ fontSize: 14, color: "var(--color-primary)" }}>
+            + Add AI system
+          </Link>
+        </div>
       </div>
 
       {!aiSystems || aiSystems.length === 0 ? (
@@ -44,15 +61,15 @@ export default async function DashboardPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {aiSystems.map((system: any) => {
-            const project = system.documentation_projects?.[0];
-            const status = project?.status ?? "missing_information";
+            const sections = system.documentation_projects?.[0]?.documentation_sections ?? [];
+            const { label, ledgerStatus } = summarize(sections);
             return (
               <Link key={system.id} href={`/dashboard/systems/${system.id}/traces`} style={{ textDecoration: "none", color: "inherit" }}>
-                <div className="ledger-row" data-status={status} style={{ padding: "12px 16px", background: "white", borderRadius: 4 }}>
+                <div className="ledger-row" data-status={ledgerStatus} style={{ padding: "12px 16px", background: "white", borderRadius: 4 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <strong>{system.name}</strong>
                     <span className="mono" style={{ fontSize: 12, color: "var(--color-ink-muted)" }}>
-                      {STATUS_LABEL[status] ?? status}
+                      {label}
                     </span>
                   </div>
                   <p style={{ fontSize: 13, color: "var(--color-ink-muted)", marginTop: 4 }}>

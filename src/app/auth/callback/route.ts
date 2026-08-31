@@ -22,7 +22,7 @@ export async function GET(request: Request) {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (user) {
+      if (user && !next.startsWith("/invite/")) {
         const { data: membership } = await supabase
           .from("organization_members")
           .select("organization_id")
