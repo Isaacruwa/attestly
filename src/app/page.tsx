@@ -1,5 +1,61 @@
 import Link from "next/link";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      name: "Attestly",
+      applicationCategory: "BusinessApplication",
+      applicationSubCategory: "Regulatory Compliance Software",
+      operatingSystem: "Web",
+      description:
+        "Attestly turns AI agents' operational traces (OpenTelemetry, LangSmith, AgentOps, MCP logs) into EU AI Act technical documentation, risk-management records, and audit-ready evidence, with mandatory human review before anything is final.",
+      offers: {
+        "@type": "Offer",
+        price: "79",
+        priceCurrency: "USD",
+        priceValidUntil: "2027-12-31",
+      },
+      featureList: [
+        "EU AI Act Annex IV technical documentation generation",
+        "Risk-management summaries",
+        "Conformity-assessment checklists",
+        "Audit-ready evidence trails",
+        "OpenTelemetry, LangSmith, and AgentOps trace ingestion",
+        "Human-in-the-loop review workflow",
+      ],
+    },
+    {
+      "@type": "Organization",
+      name: "Attestly",
+      url: "https://attestly-one.vercel.app",
+      description: "EU AI Act compliance documentation automation for autonomous AI agents.",
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Does Attestly provide legal advice or guarantee compliance?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No. Attestly does not provide legal advice and does not guarantee regulatory compliance. Every generated section is reviewed, edited, and approved by a human before it counts as final.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What trace sources does Attestly support?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Attestly ingests OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized JSON.",
+          },
+        },
+      ],
+    },
+  ],
+};
+
 const PIPELINE_STEPS = [
   {
     icon: "01",
@@ -40,6 +96,7 @@ const DELIVERABLES = [
 export default function LandingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="site-nav">
         <span className="site-nav__brand">
           <span className="site-nav__mark" aria-hidden="true" />

@@ -23,10 +23,44 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const siteUrl = "https://attestly-one.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Attestly — EU AI Act evidence, generated from what your agents already do",
   description:
     "Attestly turns your AI agents' operational traces into audit-ready EU AI Act documentation, continuously.",
+  keywords: [
+    "EU AI Act compliance",
+    "AI Act technical documentation",
+    "Annex IV documentation",
+    "AI agent compliance",
+    "AI risk management documentation",
+    "AI conformity assessment",
+    "agentic AI compliance software",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    siteName: "Attestly",
+    title: "Attestly — EU AI Act evidence, generated from what your agents already do",
+    description:
+      "Attestly turns your AI agents' operational traces into audit-ready EU AI Act documentation, continuously.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Attestly — EU AI Act evidence, generated from what your agents already do",
+    description:
+      "Attestly turns your AI agents' operational traces into audit-ready EU AI Act documentation, continuously.",
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
