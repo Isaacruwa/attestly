@@ -119,12 +119,16 @@ function LoginForm() {
           <form onSubmit={verifyCode}>
             <input
               type="text"
-              inputMode="numeric"
               autoFocus
               required
               placeholder="123456"
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              onPaste={(e) => {
+                e.preventDefault();
+                const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                setCode(pasted);
+              }}
               maxLength={6}
               style={{ ...inputStyle, fontSize: 22, letterSpacing: "0.2em", textAlign: "center", fontFamily: "var(--font-mono)" }}
             />
