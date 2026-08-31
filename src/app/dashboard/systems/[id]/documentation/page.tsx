@@ -123,11 +123,20 @@ export default function DocumentationPage({ params }: { params: { id: string } }
 
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8, flexWrap: "wrap", gap: 12 }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>Documentation</h1>
-        <Link href={`/dashboard/systems/${aiSystemId}/compliance`} style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
-          ← Compliance mapping
-        </Link>
+        <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+          <Link href={`/dashboard/systems/${aiSystemId}/compliance`} style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
+            ← Compliance mapping
+          </Link>
+          <a
+            href={`/api/documentation/export?ai_system_id=${aiSystemId}`}
+            className="btn-primary"
+            style={{ border: "none", fontSize: 13, padding: "8px 16px" }}
+          >
+            Export .docx
+          </a>
+        </div>
       </div>
 
       <div className="trust-strip" style={{ marginBottom: 28 }}>
