@@ -28,7 +28,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "Attestly",
-      url: "https://attestly-one.vercel.app",
+      url: "https://attestly.online",
       description: "EU AI Act compliance documentation automation for autonomous AI agents.",
     },
     {

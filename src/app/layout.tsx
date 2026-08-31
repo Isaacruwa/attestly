@@ -23,7 +23,7 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://attestly-one.vercel.app";
+const siteUrl = "https://attestly.online";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
