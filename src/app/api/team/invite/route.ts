@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Attestly <onboarding@resend.dev>",
+          from: "Attestly <noreply@attestly.online>",
           to: [email],
           subject: `${user.email} invited you to Attestly`,
           html: `<p>You've been invited to join an organization on Attestly.</p><p><a href="${inviteUrl}">Accept invite</a></p>`,
