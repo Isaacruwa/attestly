@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 export default function NewAiSystemPage() {
   const router = useRouter();
-  const supabase = createClient();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -30,60 +28,30 @@ export default function NewAiSystemPage() {
     setSaving(true);
     setError(null);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setError("Not signed in.");
-      setSaving(false);
-      return;
-    }
-
-    const { data: membership } = await supabase
-      .from("organization_members")
-      .select("organization_id")
-      .eq("user_id", user.id)
-      .limit(1)
-      .maybeSingle();
-
-    let organizationId = membership?.organization_id;
-
-    if (!organizationId) {
-      // Safety net for accounts whose auto-created org didn't land the first
-      // time (e.g. signed in before this fix existed).
-      const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
-      const { data: newOrgId, error: rpcError } = await supabase.rpc("create_organization_for_current_user", {
-        org_name: orgName,
+    try {
+      const res = await fetch("/api/systems/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          description: description || undefined,
+          risk_category: riskCategory,
+          intended_purpose: intendedPurpose || undefined,
+        }),
       });
+      const result = await res.json();
 
-      if (rpcError || !newOrgId) {
-        setError(rpcError?.message ?? "Couldn't set up your organization. Please try again.");
+      if (!res.ok) {
+        setError(result.error ?? "Failed to create AI system.");
         setSaving(false);
         return;
       }
-      organizationId = newOrgId;
-    }
 
-    const { data: system, error: insertError } = await supabase
-      .from("ai_systems")
-      .insert({
-        organization_id: organizationId,
-        name,
-        description: description || null,
-        risk_category: riskCategory,
-        intended_purpose: intendedPurpose || null,
-        created_by: user.id,
-      })
-      .select()
-      .single();
-
-    if (insertError || !system) {
-      setError(insertError?.message ?? "Failed to create AI system.");
+      router.push(`/dashboard/systems/${result.id}/traces`);
+    } catch (err: any) {
+      setError(err.message ?? "Something went wrong.");
       setSaving(false);
-      return;
     }
-
-    router.push(`/dashboard/systems/${system.id}/traces`);
   }
 
   return (

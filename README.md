@@ -99,6 +99,23 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
 - A "billing" page inside the dashboard showing the org's current plan —
   right now that only lives in the database.
 
+### Free-tier enforcement (built ahead of the domain)
+
+- `organization_subscriptions.lifetime_generations_used` tracks total drafts
+  generated per org, ever (not monthly).
+- Free tier (no active paid subscription): **1 AI system, 10 lifetime
+  documentation generations**. Enforced server-side in
+  `/api/systems/create` and `/api/documentation/generate` — not just in the
+  UI, so it can't be bypassed by calling the API directly.
+- `src/lib/planLimits.ts` is the single source of truth for what each plan
+  allows; change limits there, not in multiple places.
+- AI system creation now goes through `/api/systems/create` instead of a
+  direct client-side insert, specifically so the limit check happens
+  server-side where it can't be skipped.
+- Deliberately not closing the "sign up with a new email to reset the free
+  tier" loophole (e.g. requiring a company email domain) — accepted as a
+  normal cost of running a free tier rather than adding signup friction.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,

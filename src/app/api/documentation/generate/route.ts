@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
+import { getSubscription, limitsFor } from "@/lib/planLimits";
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -25,12 +26,35 @@ export async function POST(req: NextRequest) {
 
   const { data: section, error: sectionError } = await supabase
     .from("documentation_sections")
-    .select("id, compliance_requirement_id, compliance_requirements(title, description)")
+    .select("id, documentation_project_id, compliance_requirement_id, compliance_requirements(title, description)")
     .eq("id", documentation_section_id)
     .single();
 
   if (sectionError || !section) {
     return NextResponse.json({ error: "section not found" }, { status: 404 });
+  }
+
+  const { data: project } = await supabase
+    .from("documentation_projects")
+    .select("ai_system_id")
+    .eq("id", (section as any).documentation_project_id)
+    .single();
+
+  const { data: aiSystem } = await supabase.from("ai_systems").select("organization_id").eq("id", project?.ai_system_id).single();
+
+  if (!aiSystem) return NextResponse.json({ error: "AI system not found" }, { status: 404 });
+
+  const subscription = await getSubscription(supabase, aiSystem.organization_id);
+  const { maxLifetimeGenerations } = limitsFor(subscription.plan, subscription.status);
+
+  if (maxLifetimeGenerations !== null && subscription.lifetime_generations_used >= maxLifetimeGenerations) {
+    return NextResponse.json(
+      {
+        error: `You've used all ${maxLifetimeGenerations} free documentation generations. Upgrade to keep generating.`,
+        upgrade_url: "/pricing",
+      },
+      { status: 403 }
+    );
   }
 
   const { data: evidence } = await supabase
@@ -95,6 +119,11 @@ export async function POST(req: NextRequest) {
       last_generated_at: new Date().toISOString(),
     })
     .eq("id", documentation_section_id);
+
+  await createServiceRoleClient()
+    .from("organization_subscriptions")
+    .update({ lifetime_generations_used: subscription.lifetime_generations_used + 1 })
+    .eq("organization_id", aiSystem.organization_id);
 
   return NextResponse.json({ status: "needs_review", draft });
 }

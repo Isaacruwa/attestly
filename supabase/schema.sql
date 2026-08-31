@@ -164,6 +164,7 @@ create table organization_subscriptions (
   paddle_customer_id text,
   paddle_subscription_id text,
   current_period_end timestamptz,
+  lifetime_generations_used integer not null default 0,
   updated_at timestamptz not null default now()
 );
 
@@ -336,6 +337,7 @@ declare
 begin
   insert into organizations (name) values (org_name) returning id into new_org_id;
   insert into organization_members (organization_id, user_id, role) values (new_org_id, auth.uid(), 'owner');
+  insert into organization_subscriptions (organization_id) values (new_org_id);
   return new_org_id;
 end;
 $$;
