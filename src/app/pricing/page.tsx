@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { createClient } from "@/lib/supabase/client";
@@ -39,12 +39,17 @@ const TIERS: Tier[] = [
   },
 ];
 
+const FRAME_ID = "attestly-checkout-frame";
+
 export default function PricingPage() {
   const supabase = createClient();
   const [paddle, setPaddle] = useState<Paddle>();
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeTier, setActiveTier] = useState<Tier | null>(null);
+  const [checkoutReady, setCheckoutReady] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
@@ -52,6 +57,15 @@ export default function PricingPage() {
     initializePaddle({
       environment: (process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT as "production" | "sandbox") ?? "production",
       token,
+      eventCallback: (event) => {
+        if (event.name === "checkout.loaded") {
+          setCheckoutReady(true);
+        }
+        if (event.name === "checkout.completed") {
+          setActiveTier(null);
+          window.location.href = "/dashboard?subscribed=1";
+        }
+      },
     }).then(setPaddle);
 
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -78,12 +92,28 @@ export default function PricingPage() {
       window.location.href = `/login?next=${encodeURIComponent("/pricing")}`;
       return;
     }
-    paddle?.Checkout.open({
-      items: [{ priceId: tier.priceId, quantity: 1 }],
-      customData: { organization_id: organizationId },
-      customer: userEmail ? { email: userEmail } : undefined,
-    });
+    setCheckoutReady(false);
+    setActiveTier(tier);
   }
+
+  // Once the modal (and its target div) exists in the DOM, tell Paddle to
+  // render the payment form inline inside it, rather than as its own popup.
+  useEffect(() => {
+    if (!activeTier || !paddle || !frameRef.current) return;
+    paddle.Checkout.open({
+      items: [{ priceId: activeTier.priceId!, quantity: 1 }],
+      customData: { organization_id: organizationId! },
+      customer: userEmail ? { email: userEmail } : undefined,
+      settings: {
+        displayMode: "inline",
+        frameTarget: FRAME_ID,
+        frameInitialHeight: 450,
+        frameStyle: "width: 100%; min-width: 100%; background-color: transparent; border: none;",
+        theme: "light",
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTier, paddle]);
 
   return (
     <main style={{ maxWidth: 1080, margin: "0 auto", padding: "56px 24px" }}>
@@ -151,6 +181,72 @@ export default function PricingPage() {
           </div>
         ))}
       </div>
+
+      {activeTier && (
+        <div
+          onClick={() => setActiveTier(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(20, 24, 28, 0.55)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            zIndex: 50,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "var(--color-paper)",
+              borderRadius: 10,
+              maxWidth: 480,
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 20px 60px rgba(20, 24, 28, 0.3)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "18px 22px",
+                borderBottom: "1px solid var(--color-line)",
+              }}
+            >
+              <div>
+                <p className="site-nav__brand" style={{ marginBottom: 2 }}>
+                  <span className="site-nav__mark" aria-hidden="true" />
+                  Attestly
+                </p>
+                <p style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
+                  Subscribing to <strong>{activeTier.name}</strong> — {activeTier.price}
+                </p>
+              </div>
+              <button
+                onClick={() => setActiveTier(null)}
+                aria-label="Close"
+                style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ padding: 22 }}>
+              {!checkoutReady && (
+                <p className="busy-row" style={{ color: "var(--color-ink-muted)", fontSize: 14, padding: "40px 0", justifyContent: "center" }}>
+                  <span className="spinner spinner-dark" />
+                  <span className="loading-message">Loading secure checkout…</span>
+                </p>
+              )}
+              <div id={FRAME_ID} ref={frameRef} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (min-width: 860px) {
