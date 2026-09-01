@@ -131,13 +131,17 @@ export default function PricingPage() {
   useEffect(() => {
     if (!activeTier || !activeTransactionId || !paddle || !frameRef.current) return;
 
-    try {
-      paddle.Checkout.open({ transactionId: activeTransactionId });
-    } catch (err: any) {
-      setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
-      setActiveTier(null);
-      setActiveTransactionId(null);
-    }
+    const timer = setTimeout(() => {
+      try {
+        paddle.Checkout.open({ transactionId: activeTransactionId });
+      } catch (err: any) {
+        setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
+        setActiveTier(null);
+        setActiveTransactionId(null);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTier, activeTransactionId, paddle]);
 
