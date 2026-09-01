@@ -60,6 +60,15 @@ export default function PricingPage() {
     initializePaddle({
       environment: (process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT as "production" | "sandbox") ?? "production",
       token,
+      checkout: {
+        settings: {
+          displayMode: "inline",
+          frameTarget: FRAME_ID,
+          frameInitialHeight: 450,
+          frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;",
+          theme: "light",
+        },
+      },
       eventCallback: (event) => {
         if (event.name === "checkout.loaded") {
           setCheckoutReady(true);
@@ -117,13 +126,6 @@ export default function PricingPage() {
         items: [{ priceId: activeTier.priceId, quantity: 1 }],
         customData: { organization_id: organizationId },
         customer: userEmail ? { email: userEmail } : undefined,
-        settings: {
-          displayMode: "inline",
-          frameTarget: FRAME_ID,
-          frameInitialHeight: 450,
-          frameStyle: "width: 100%; min-width: 100%; background-color: transparent; border: none;",
-          theme: "light",
-        },
       });
     } catch (err: any) {
       setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
