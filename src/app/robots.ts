@@ -48,7 +48,7 @@ export default function robots(): MetadataRoute.Robots {
     "Omgili",
   ];
 
-  const disallowPaths = ["/dashboard", "/api", "/auth", "/invite"];
+  const disallowPaths = ["/dashboard", "/api", "/invite"];
 
   return {
     rules: [

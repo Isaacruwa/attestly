@@ -1,20 +1,41 @@
 import Link from "next/link";
 
+const SITE_URL = "https://attestly.online";
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "SoftwareApplication",
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       name: "Attestly",
+      url: SITE_URL,
+      description: "EU AI Act compliance documentation automation for autonomous AI agents.",
+      logo: `${SITE_URL}/icon.svg`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Attestly",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      inLanguage: "en",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${SITE_URL}/#software`,
+      name: "Attestly",
+      url: SITE_URL,
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "Regulatory Compliance Software",
       operatingSystem: "Web",
+      publisher: { "@id": `${SITE_URL}/#organization` },
       description:
         "Attestly turns AI agents' operational traces (OpenTelemetry, LangSmith, AgentOps, MCP logs) into EU AI Act technical documentation, risk-management records, and audit-ready evidence, with mandatory human review before anything is final.",
       offers: [
-        { "@type": "Offer", name: "Starter", price: "79", priceCurrency: "USD" },
-        { "@type": "Offer", name: "Professional", price: "349", priceCurrency: "USD" },
-        { "@type": "Offer", name: "Enterprise", price: "1499", priceCurrency: "USD" },
+        { "@type": "Offer", name: "Starter", price: "79", priceCurrency: "USD", url: `${SITE_URL}/pricing` },
+        { "@type": "Offer", name: "Professional", price: "349", priceCurrency: "USD", url: `${SITE_URL}/pricing` },
+        { "@type": "Offer", name: "Enterprise", price: "1499", priceCurrency: "USD", url: `${SITE_URL}/pricing` },
       ],
       featureList: [
         "EU AI Act Annex IV technical documentation generation",
@@ -26,13 +47,8 @@ const jsonLd = {
       ],
     },
     {
-      "@type": "Organization",
-      name: "Attestly",
-      url: "https://attestly.online",
-      description: "EU AI Act compliance documentation automation for autonomous AI agents.",
-    },
-    {
       "@type": "FAQPage",
+      "@id": `${SITE_URL}/#faq`,
       mainEntity: [
         {
           "@type": "Question",
@@ -156,12 +172,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="section">
+        <p className="section__eyebrow">Frequently asked</p>
+        <h2>Common questions</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "65ch" }}>
+          <div>
+            <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>
+              Does Attestly provide legal advice or guarantee compliance?
+            </p>
+            <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>
+              No. Attestly does not provide legal advice and does not guarantee regulatory compliance. Every
+              generated section is reviewed, edited, and approved by a human before it counts as final.
+            </p>
+          </div>
+          <div>
+            <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>What trace sources does Attestly support?</p>
+            <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>
+              Attestly ingests OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized
+              JSON.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <footer className="site-footer">
         <span className="site-nav__brand">
           <span className="site-nav__mark" aria-hidden="true" />
           Attestly
         </span>
-        <span className="site-footer__meta">Built for teams shipping autonomous AI agents into the EU</span>
+        <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
+          <Link href="/terms" className="site-footer__meta" style={{ textDecoration: "none" }}>Terms</Link>
+          <Link href="/privacy" className="site-footer__meta" style={{ textDecoration: "none" }}>Privacy</Link>
+          <Link href="/refund-policy" className="site-footer__meta" style={{ textDecoration: "none" }}>Refunds</Link>
+          <span className="site-footer__meta">Built for teams shipping autonomous AI agents into the EU</span>
+        </div>
       </footer>
     </>
   );

@@ -116,6 +116,66 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
   tier" loophole (e.g. requiring a company email domain) — accepted as a
   normal cost of running a free tier rather than adding signup friction.
 
+## Legal pages + expanded SEO/GEO/AI discoverability
+
+- `/terms`, `/privacy`, `/refund-policy` — real legal pages, linked in the
+  landing page footer. Paddle requires these to exist and be reachable for
+  ongoing checkout approval. **Not lawyer-reviewed** — solid standard-practice
+  drafts, worth an actual legal review before leaning on them heavily.
+- Landing page now has a visible FAQ section whose text matches the
+  `FAQPage` JSON-LD exactly (structured data must agree with visible content).
+- JSON-LD rebuilt as a proper linked entity graph: `Organization`, `WebSite`,
+  and `SoftwareApplication` now reference each other via stable `@id`s
+  instead of being disconnected blobs.
+- `manifest.ts`, `icon.svg`, `apple-icon.tsx` (generated via `next/og`, not a
+  fabricated image asset) — standard PWA/favicon signals.
+- `not-found.tsx` — real custom 404 page, explicitly `noindex`.
+- `/dashboard/layout.tsx` — explicit `noindex` on the whole dashboard as a
+  second layer of protection beyond the `robots.txt` disallow.
+- `/pricing/layout.tsx` — gives the pricing page (a client component) its
+  own title/description/canonical, since client components can't export
+  metadata directly.
+- `next.config.js` — baseline security headers (`X-Content-Type-Options`,
+  `Referrer-Policy`, `Permissions-Policy`, HSTS). Doesn't affect SEO ranking
+  directly but is a standard technical-trust signal.
+- Sitemap and robots.txt updated for the new pages; removed a stale
+  `/auth` disallow entry left over from the deleted magic-link route.
+
+### What's out of scope for now (and why)
+
+- **RSS/Atom feed** — no blog or regularly-updated content exists yet to feed.
+- **Breadcrumbs** — the site is flat (no nested content hierarchy) so there's
+  nothing genuine to represent.
+- **hreflang** — single-language site, no alternate-language pages exist.
+- **sameAs social profiles** — none exist yet; add real ones here once they do,
+  never fabricated ones.
+- **Automated SEO validation script** — skipped per the explicit instruction
+  not to build unnecessary tooling; the checks below were done manually
+  against this build instead.
+
+### Manual verification performed this round
+
+- robots.txt: PASS (served via Next.js route, all major AI/search crawlers
+  explicitly allowed, private routes disallowed)
+- sitemap.xml: PASS (all public pages present, absolute HTTPS URLs)
+- canonical URLs: PASS (every indexable page sets one, all pointing at
+  `attestly.online`, no localhost/Vercel-subdomain leakage found in a full
+  repo grep)
+- JSON-LD: PASS (valid graph structure, `@id`s consistent, matches visible
+  page content)
+- Open Graph / Twitter cards: PASS (present in root metadata)
+- llms.txt: PASS (already existed from a prior round, still accurate)
+- 404 handling: PASS (returns real 404, noindex, useful links back in)
+
+### What still needs manual action outside this repo
+
+- Submit `attestly.online` to Google Search Console and Bing Webmaster
+  Tools, and submit the sitemap URL there — this can't be done from code.
+- If/when real social profiles exist, add them to the `Organization`
+  JSON-LD's `sameAs` array.
+- Have an actual lawyer review the Terms/Privacy/Refund pages before
+  treating them as your real legal position.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
