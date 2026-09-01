@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { initializePaddle, type Paddle } from "@paddle/paddle-js";
 import { createClient } from "@/lib/supabase/client";
@@ -39,17 +39,14 @@ const TIERS: Tier[] = [
   },
 ];
 
-const FRAME_ID = "attestly-checkout-frame";
-
+// TEMPORARY: plain default Paddle overlay, zero customization, to isolate
+// whether checkout itself works before troubleshooting a custom inline UI.
 export default function PricingPage() {
   const supabase = createClient();
   const [paddle, setPaddle] = useState<Paddle>();
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [activeTier, setActiveTier] = useState<Tier | null>(null);
-  const [activeTransactionId, setActiveTransactionId] = useState<string | null>(null);
-  const [checkoutReady, setCheckoutReady] = useState(false);
-  const frameRef = useRef<HTMLDivElement>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
@@ -60,22 +57,8 @@ export default function PricingPage() {
     initializePaddle({
       environment: (process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT as "production" | "sandbox") ?? "production",
       token,
-      checkout: {
-        settings: {
-          displayMode: "inline",
-          frameTarget: FRAME_ID,
-          frameInitialHeight: 450,
-          frameStyle: "width: 100%; min-width: 312px; background-color: transparent; border: none;",
-          theme: "light",
-        },
-      },
       eventCallback: (event) => {
-        if (event.name === "checkout.loaded") {
-          setCheckoutReady(true);
-        }
         if (event.name === "checkout.completed") {
-          setActiveTier(null);
-          setActiveTransactionId(null);
           window.location.href = "/dashboard?subscribed=1";
         }
       },
@@ -96,16 +79,6 @@ export default function PricingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function closeModal() {
-    try {
-      paddle?.Checkout.close();
-    } catch {
-      // Nothing was open — fine.
-    }
-    setActiveTier(null);
-    setActiveTransactionId(null);
-  }
-
   async function subscribe(tier: Tier) {
     setError(null);
     if (!tier.priceId) {
@@ -116,8 +89,12 @@ export default function PricingPage() {
       window.location.href = `/login?next=${encodeURIComponent("/pricing")}`;
       return;
     }
-    setCheckoutReady(false);
+    if (!paddle) {
+      setError("Checkout hasn't finished loading yet — try again in a second.");
+      return;
+    }
 
+    setBusy(true);
     try {
       const res = await fetch("/api/paddle/create-transaction", {
         method: "POST",
@@ -127,38 +104,18 @@ export default function PricingPage() {
       const result = await res.json();
       if (!res.ok) {
         setError(result.error ?? "Couldn't start checkout.");
+        setBusy(false);
         return;
       }
-      setActiveTransactionId(result.transactionId);
-      setActiveTier(tier);
+      // No settings, no frameTarget, no custom anything — Paddle's own
+      // default overlay popup handles everything itself.
+      paddle.Checkout.open({ transactionId: result.transactionId });
     } catch (err: any) {
       setError(err.message ?? "Couldn't start checkout.");
+    } finally {
+      setBusy(false);
     }
   }
-
-  // Once the modal (and its target div) exists in the DOM, tell Paddle to
-  // render the payment form inline inside it, rather than as its own popup.
-  useEffect(() => {
-    if (!activeTier || !activeTransactionId || !paddle || !frameRef.current) return;
-
-    const timer = setTimeout(() => {
-      try {
-        paddle.Checkout.close();
-      } catch {
-        // No prior checkout instance to close — expected on the first-ever open.
-      }
-      try {
-        paddle.Checkout.open({ transactionId: activeTransactionId });
-      } catch (err: any) {
-        setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
-        setActiveTier(null);
-        setActiveTransactionId(null);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTier, activeTransactionId, paddle]);
 
   return (
     <main style={{ maxWidth: 1080, margin: "0 auto", padding: "56px 24px" }}>
@@ -206,7 +163,8 @@ export default function PricingPage() {
             </ul>
             <button
               onClick={() => subscribe(tier)}
-              className={tier.highlight ? "btn-primary" : undefined}
+              disabled={busy}
+              className={tier.highlight ? "btn-primary busy-row" : "busy-row"}
               style={
                 tier.highlight
                   ? { border: "none", justifyContent: "center" }
@@ -218,83 +176,15 @@ export default function PricingPage() {
                       color: "var(--color-primary)",
                       fontWeight: 500,
                       fontSize: 15,
+                      justifyContent: "center",
                     }
               }
             >
-              Subscribe
+              {busy && <span className={tier.highlight ? "spinner" : "spinner spinner-dark"} />}
+              {busy ? "Starting checkout…" : "Subscribe"}
             </button>
           </div>
         ))}
-      </div>
-
-      <div
-        onClick={closeModal}
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(20, 24, 28, 0.55)",
-          display: activeTier ? "flex" : "none",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 20,
-          zIndex: 50,
-        }}
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            background: "var(--color-paper)",
-            borderRadius: 10,
-            maxWidth: 480,
-            width: "100%",
-            maxHeight: "90vh",
-            overflowY: "auto",
-            boxShadow: "0 20px 60px rgba(20, 24, 28, 0.3)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "18px 22px",
-              borderBottom: "1px solid var(--color-line)",
-            }}
-          >
-            <div>
-              <p className="site-nav__brand" style={{ marginBottom: 2 }}>
-                <span className="site-nav__mark" aria-hidden="true" />
-                Attestly
-              </p>
-              <p style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
-                {activeTier ? (
-                  <>
-                    Subscribing to <strong>{activeTier.name}</strong> — {activeTier.price}
-                  </>
-                ) : (
-                  "\u00A0"
-                )}
-              </p>
-            </div>
-            <button
-              onClick={closeModal}
-              aria-label="Close"
-              style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
-            >
-              ×
-            </button>
-          </div>
-
-          <div style={{ padding: 22 }}>
-            {!checkoutReady && (
-              <p className="busy-row" style={{ color: "var(--color-ink-muted)", fontSize: 14, padding: "40px 0", justifyContent: "center" }}>
-                <span className="spinner spinner-dark" />
-                <span className="loading-message">Loading secure checkout…</span>
-              </p>
-            )}
-            <div id={FRAME_ID} ref={frameRef} />
-          </div>
-        </div>
       </div>
 
       <style>{`
