@@ -55,3 +55,4 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ transactionId: paddleData.data.id });
 }
+
