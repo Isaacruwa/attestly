@@ -201,71 +201,75 @@ export default function PricingPage() {
         ))}
       </div>
 
-      {activeTier && (
+      <div
+        onClick={() => setActiveTier(null)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(20, 24, 28, 0.55)",
+          display: activeTier ? "flex" : "none",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+          zIndex: 50,
+        }}
+      >
         <div
-          onClick={() => setActiveTier(null)}
+          onClick={(e) => e.stopPropagation()}
           style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(20, 24, 28, 0.55)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20,
-            zIndex: 50,
+            background: "var(--color-paper)",
+            borderRadius: 10,
+            maxWidth: 480,
+            width: "100%",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            boxShadow: "0 20px 60px rgba(20, 24, 28, 0.3)",
           }}
         >
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
-              background: "var(--color-paper)",
-              borderRadius: 10,
-              maxWidth: 480,
-              width: "100%",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              boxShadow: "0 20px 60px rgba(20, 24, 28, 0.3)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "18px 22px",
+              borderBottom: "1px solid var(--color-line)",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "18px 22px",
-                borderBottom: "1px solid var(--color-line)",
-              }}
+            <div>
+              <p className="site-nav__brand" style={{ marginBottom: 2 }}>
+                <span className="site-nav__mark" aria-hidden="true" />
+                Attestly
+              </p>
+              <p style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
+                {activeTier ? (
+                  <>
+                    Subscribing to <strong>{activeTier.name}</strong> — {activeTier.price}
+                  </>
+                ) : (
+                  "\u00A0"
+                )}
+              </p>
+            </div>
+            <button
+              onClick={() => setActiveTier(null)}
+              aria-label="Close"
+              style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
             >
-              <div>
-                <p className="site-nav__brand" style={{ marginBottom: 2 }}>
-                  <span className="site-nav__mark" aria-hidden="true" />
-                  Attestly
-                </p>
-                <p style={{ fontSize: 13, color: "var(--color-ink-muted)" }}>
-                  Subscribing to <strong>{activeTier.name}</strong> — {activeTier.price}
-                </p>
-              </div>
-              <button
-                onClick={() => setActiveTier(null)}
-                aria-label="Close"
-                style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
-              >
-                ×
-              </button>
-            </div>
+              ×
+            </button>
+          </div>
 
-            <div style={{ padding: 22 }}>
-              {!checkoutReady && (
-                <p className="busy-row" style={{ color: "var(--color-ink-muted)", fontSize: 14, padding: "40px 0", justifyContent: "center" }}>
-                  <span className="spinner spinner-dark" />
-                  <span className="loading-message">Loading secure checkout…</span>
-                </p>
-              )}
-              <div id={FRAME_ID} ref={frameRef} />
-            </div>
+          <div style={{ padding: 22 }}>
+            {!checkoutReady && (
+              <p className="busy-row" style={{ color: "var(--color-ink-muted)", fontSize: 14, padding: "40px 0", justifyContent: "center" }}>
+                <span className="spinner spinner-dark" />
+                <span className="loading-message">Loading secure checkout…</span>
+              </p>
+            )}
+            <div id={FRAME_ID} ref={frameRef} />
           </div>
         </div>
-      )}
+      </div>
 
       <style>{`
         @media (min-width: 860px) {
