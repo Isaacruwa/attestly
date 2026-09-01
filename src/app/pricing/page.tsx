@@ -45,9 +45,9 @@ export default function PricingPage() {
   const supabase = createClient();
   const [paddle, setPaddle] = useState<Paddle>();
   const [organizationId, setOrganizationId] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTier, setActiveTier] = useState<Tier | null>(null);
+  const [activeTransactionId, setActiveTransactionId] = useState<string | null>(null);
   const [checkoutReady, setCheckoutReady] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +75,7 @@ export default function PricingPage() {
         }
         if (event.name === "checkout.completed") {
           setActiveTier(null);
+          setActiveTransactionId(null);
           window.location.href = "/dashboard?subscribed=1";
         }
       },
@@ -84,7 +85,6 @@ export default function PricingPage() {
 
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
-      setUserEmail(user.email ?? null);
       const { data: membership } = await supabase
         .from("organization_members")
         .select("organization_id")
@@ -96,7 +96,7 @@ export default function PricingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function subscribe(tier: Tier) {
+  async function subscribe(tier: Tier) {
     setError(null);
     if (!tier.priceId) {
       setError("This plan isn't fully configured yet.");
@@ -107,32 +107,39 @@ export default function PricingPage() {
       return;
     }
     setCheckoutReady(false);
-    setActiveTier(tier);
+
+    try {
+      const res = await fetch("/api/paddle/create-transaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId: tier.priceId }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        setError(result.error ?? "Couldn't start checkout.");
+        return;
+      }
+      setActiveTransactionId(result.transactionId);
+      setActiveTier(tier);
+    } catch (err: any) {
+      setError(err.message ?? "Couldn't start checkout.");
+    }
   }
 
   // Once the modal (and its target div) exists in the DOM, tell Paddle to
   // render the payment form inline inside it, rather than as its own popup.
   useEffect(() => {
-    if (!activeTier || !paddle || !frameRef.current) return;
-
-    if (!activeTier.priceId || !organizationId) {
-      setError("Checkout couldn't start — missing plan or account information.");
-      setActiveTier(null);
-      return;
-    }
+    if (!activeTier || !activeTransactionId || !paddle || !frameRef.current) return;
 
     try {
-      paddle.Checkout.open({
-        items: [{ priceId: activeTier.priceId, quantity: 1 }],
-        customData: { organization_id: organizationId },
-        customer: userEmail ? { email: userEmail } : undefined,
-      });
+      paddle.Checkout.open({ transactionId: activeTransactionId });
     } catch (err: any) {
       setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
       setActiveTier(null);
+      setActiveTransactionId(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTier, paddle]);
+  }, [activeTier, activeTransactionId, paddle]);
 
   return (
     <main style={{ maxWidth: 1080, margin: "0 auto", padding: "56px 24px" }}>
@@ -202,7 +209,7 @@ export default function PricingPage() {
       </div>
 
       <div
-        onClick={() => setActiveTier(null)}
+        onClick={() => { setActiveTier(null); setActiveTransactionId(null); }}
         style={{
           position: "fixed",
           inset: 0,
@@ -251,7 +258,7 @@ export default function PricingPage() {
               </p>
             </div>
             <button
-              onClick={() => setActiveTier(null)}
+              onClick={() => { setActiveTier(null); setActiveTransactionId(null); }}
               aria-label="Close"
               style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
             >
