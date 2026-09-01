@@ -53,7 +53,10 @@ export default function PricingPage() {
 
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
-    if (!token) return;
+    if (!token) {
+      setError("Checkout isn't configured yet (missing Paddle client token).");
+      return;
+    }
     initializePaddle({
       environment: (process.env.NEXT_PUBLIC_PADDLE_ENVIRONMENT as "production" | "sandbox") ?? "production",
       token,
@@ -66,7 +69,9 @@ export default function PricingPage() {
           window.location.href = "/dashboard?subscribed=1";
         }
       },
-    }).then(setPaddle);
+    })
+      .then(setPaddle)
+      .catch((err) => setError(`Couldn't set up checkout: ${err?.message ?? "unknown error"}`));
 
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
@@ -100,18 +105,30 @@ export default function PricingPage() {
   // render the payment form inline inside it, rather than as its own popup.
   useEffect(() => {
     if (!activeTier || !paddle || !frameRef.current) return;
-    paddle.Checkout.open({
-      items: [{ priceId: activeTier.priceId!, quantity: 1 }],
-      customData: { organization_id: organizationId! },
-      customer: userEmail ? { email: userEmail } : undefined,
-      settings: {
-        displayMode: "inline",
-        frameTarget: FRAME_ID,
-        frameInitialHeight: 450,
-        frameStyle: "width: 100%; min-width: 100%; background-color: transparent; border: none;",
-        theme: "light",
-      },
-    });
+
+    if (!activeTier.priceId || !organizationId) {
+      setError("Checkout couldn't start — missing plan or account information.");
+      setActiveTier(null);
+      return;
+    }
+
+    try {
+      paddle.Checkout.open({
+        items: [{ priceId: activeTier.priceId, quantity: 1 }],
+        customData: { organization_id: organizationId },
+        customer: userEmail ? { email: userEmail } : undefined,
+        settings: {
+          displayMode: "inline",
+          frameTarget: FRAME_ID,
+          frameInitialHeight: 450,
+          frameStyle: "width: 100%; min-width: 100%; background-color: transparent; border: none;",
+          theme: "light",
+        },
+      });
+    } catch (err: any) {
+      setError(`Checkout failed to open: ${err?.message ?? "unknown error"}`);
+      setActiveTier(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTier, paddle]);
 
