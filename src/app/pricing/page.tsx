@@ -96,6 +96,16 @@ export default function PricingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function closeModal() {
+    try {
+      paddle?.Checkout.close();
+    } catch {
+      // Nothing was open — fine.
+    }
+    setActiveTier(null);
+    setActiveTransactionId(null);
+  }
+
   async function subscribe(tier: Tier) {
     setError(null);
     if (!tier.priceId) {
@@ -132,6 +142,11 @@ export default function PricingPage() {
     if (!activeTier || !activeTransactionId || !paddle || !frameRef.current) return;
 
     const timer = setTimeout(() => {
+      try {
+        paddle.Checkout.close();
+      } catch {
+        // No prior checkout instance to close — expected on the first-ever open.
+      }
       try {
         paddle.Checkout.open({ transactionId: activeTransactionId });
       } catch (err: any) {
@@ -213,7 +228,7 @@ export default function PricingPage() {
       </div>
 
       <div
-        onClick={() => { setActiveTier(null); setActiveTransactionId(null); }}
+        onClick={closeModal}
         style={{
           position: "fixed",
           inset: 0,
@@ -262,7 +277,7 @@ export default function PricingPage() {
               </p>
             </div>
             <button
-              onClick={() => { setActiveTier(null); setActiveTransactionId(null); }}
+              onClick={closeModal}
               aria-label="Close"
               style={{ border: "none", background: "none", fontSize: 22, color: "var(--color-ink-faint)", lineHeight: 1, cursor: "pointer" }}
             >
