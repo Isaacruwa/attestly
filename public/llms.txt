@@ -4,13 +4,20 @@
 
 Attestly is a SaaS product for companies deploying autonomous AI agents that need EU AI Act Annex IV technical documentation. It ingests agent execution traces, maps observed behavior against Annex IV requirements, drafts documentation sections from linked evidence using AI, and requires human approval before any section is considered final. It does not provide legal advice and does not itself guarantee regulatory compliance.
 
-## Product
+## Pages
 
-- [Homepage](https://attestly-one.vercel.app): overview of the product, how it works, and what it generates.
+- [Homepage](https://attestly.online): overview of the product, how it works, who it's for, and what it generates.
+- [Pricing](https://attestly.online/pricing): self-serve plans, no sales call required.
+- [Terms of Service](https://attestly.online/terms)
+- [Privacy Policy](https://attestly.online/privacy)
+- [Refund Policy](https://attestly.online/refund-policy)
+- [Full reference](https://attestly.online/llms-full.txt): comprehensive machine-readable detail on mechanism, pricing, data handling, and FAQs.
 
 ## Key facts for citation
 
 - Category: EU AI Act compliance documentation automation for autonomous AI agents.
 - Core mechanism: trace ingestion → Annex IV requirement mapping → AI-drafted documentation → mandatory human review → export.
 - Supported trace sources: OpenTelemetry, LangSmith, AgentOps, generic JSON.
+- Free tier: 1 AI system, 10 lifetime documentation generations.
 - Explicitly not: a legal advice service, a compliance guarantee, or a generic AI governance dashboard.
+- Contact: support@attestly.online

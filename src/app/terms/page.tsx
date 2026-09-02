@@ -89,7 +89,7 @@ export default function TermsPage() {
         </p>
 
         <h2 style={h2}>9. Contact</h2>
-        <p>Questions about these Terms can be sent to the contact address listed on our homepage.</p>
+        <p>Questions about these Terms can be sent to <a href="mailto:support@attestly.online" style={{ color: "var(--color-primary)" }}>support@attestly.online</a>.</p>
       </div>
     </main>
   );

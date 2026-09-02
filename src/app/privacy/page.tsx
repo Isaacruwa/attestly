@@ -70,7 +70,7 @@ export default function PrivacyPage() {
         <h2 style={h2}>5. Your rights</h2>
         <p>
           Depending on your location, you may have rights to access, correct, export, or delete your personal
-          data. Contact us using the address on our homepage to exercise these rights.
+          data. Contact us at <a href="mailto:support@attestly.online" style={{ color: "var(--color-primary)" }}>support@attestly.online</a> to exercise these rights.
         </p>
 
         <h2 style={h2}>6. Security</h2>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
         <p>We may update this policy from time to time. Material changes will be reflected by updating the date above.</p>
 
         <h2 style={h2}>8. Contact</h2>
-        <p>Questions about this policy can be sent to the contact address listed on our homepage.</p>
+        <p>Questions about this policy can be sent to <a href="mailto:support@attestly.online" style={{ color: "var(--color-primary)" }}>support@attestly.online</a>.</p>
       </div>
     </main>
   );

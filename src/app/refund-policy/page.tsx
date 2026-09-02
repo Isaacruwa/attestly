@@ -33,7 +33,7 @@ export default function RefundPolicyPage() {
         <h2 style={h2}>Refunds</h2>
         <p>
           If you believe you were charged in error, or you&apos;re not satisfied with Attestly within the first 7
-          days of a new subscription or upgrade, contact us at the address on our homepage and we&apos;ll review
+          days of a new subscription or upgrade, email <a href="mailto:support@attestly.online" style={{ color: "var(--color-primary)" }}>support@attestly.online</a> and we'll review
           the request. Approved refunds are processed by Paddle back to your original payment method, typically
           within 5–10 business days.
         </p>
@@ -50,7 +50,7 @@ export default function RefundPolicyPage() {
         </p>
 
         <h2 style={h2}>Contact</h2>
-        <p>For billing questions or refund requests, reach us at the contact address listed on our homepage.</p>
+        <p>For billing questions or refund requests, email <a href="mailto:support@attestly.online" style={{ color: "var(--color-primary)" }}>support@attestly.online</a>.</p>
       </div>
     </main>
   );

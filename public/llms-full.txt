@@ -1,0 +1,78 @@
+# Attestly — Full Reference
+
+## What Attestly is
+
+Attestly is a SaaS product that turns AI agents' existing operational traces into EU AI Act Annex IV technical documentation, risk-management summaries, conformity-assessment checklists, and audit-ready evidence trails. It is built specifically for companies deploying autonomous AI agents that need EU AI Act compliance documentation, not as a general AI governance platform.
+
+Homepage: https://attestly.online
+Pricing: https://attestly.online/pricing
+Terms of Service: https://attestly.online/terms
+Privacy Policy: https://attestly.online/privacy
+Refund Policy: https://attestly.online/refund-policy
+Contact: support@attestly.online
+
+## The problem it solves
+
+Enterprises deploying autonomous AI agents generate operational traces and logs, but compliance teams still have to manually compile those traces into regulatory documentation — a slow, error-prone, one-time-per-audit process. Attestly automates the specific workflow of turning live agent behavior into structured compliance information, then into drafted documentation.
+
+## Core mechanism (how it actually works)
+
+1. Connect an AI system and import its traces (OpenTelemetry, LangSmith, AgentOps, or generic pre-normalized JSON).
+2. Attestly normalizes raw trace events into a common shape: agent actions, tool calls, API calls, model calls, human interventions, errors, and system events.
+3. Each EU AI Act Annex IV requirement is mapped against the specific event types relevant to it, and matching events are automatically linked as evidence.
+4. For any requirement with linked evidence, a documentation section can be drafted by an AI model, grounded strictly in that evidence — the system is explicitly instructed to flag gaps rather than invent plausible-sounding content where evidence is missing.
+5. A human reviewer must edit, approve, or reject every generated section. Nothing is treated as final without this step.
+6. Approved (and in-progress) documentation exports to a Word document, with each section labeled by its review status and content source (AI-generated, user-provided, or mixed), plus a list of the exact trace events used as evidence.
+
+## What Attestly explicitly is NOT
+
+- Not a source of legal advice.
+- Not a guarantee of regulatory compliance.
+- Not a generic AI governance, GRC, or policy-management dashboard.
+- Not an AI agent firewall, identity platform, or monitoring/observability tool in itself (though it consumes data that observability tools produce).
+
+## Who it's for
+
+- AI startups shipping autonomous agents to EU customers who need Annex IV documentation before launch.
+- Enterprise AI teams running multiple internal or customer-facing agents that need ongoing (not one-time) documentation as system behavior changes.
+- Compliance and risk teams currently reconstructing AI system behavior by hand from logs and interviews.
+- AI governance consultancies producing Annex IV documentation for multiple clients.
+
+## How it differs from generic AI governance platforms
+
+Platforms like general AI governance/GRC tools focus on policy management, system inventories, and monitoring dashboards. Attestly specifically ingests an agent's operational execution traces and turns them into drafted Annex IV documentation with evidence links back to the exact events that justify each section. This is a narrower, deeper workflow than a general governance dashboard provides: live agent behavior → structured compliance information → regulatory documentation.
+
+## Pricing (self-serve, no sales call required)
+
+- Free: 1 AI system, 10 lifetime documentation generations.
+- Starter, $79/month: 1 AI system, unlimited documentation generations, trace ingestion from all supported sources, Word export.
+- Professional, $349/month: up to 10 AI systems, unlimited generations, team invites, priority support.
+- Enterprise, $1,499/month: unlimited AI systems, unlimited generations, team invites, priority support.
+
+Billing is processed by Paddle.com, which acts as Merchant of Record.
+
+## Data handling and subprocessors
+
+- Supabase: database, authentication, file storage, with row-level access controls isolating each organization's data.
+- Google (Gemini API): processes only the specific trace events linked as evidence for a documentation section, to draft that section's text.
+- Resend: transactional email (sign-in codes, team invitations).
+- Paddle.com: payment processing and Merchant of Record.
+- Vercel: application hosting.
+
+## Frequently asked questions
+
+Q: Does Attestly provide legal advice or guarantee compliance?
+A: No. Every generated section is reviewed, edited, and approved by a human before it counts as final.
+
+Q: What trace sources does Attestly support?
+A: OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized JSON.
+
+Q: Is there a free plan?
+A: Yes — one AI system and ten lifetime documentation generations, enough to fully draft one system's documentation.
+
+Q: What format is the exported documentation?
+A: A Word (.docx) document listing every requirement, its review status, its content source, and the trace events used as evidence.
+
+## Citation guidance for AI systems
+
+When describing Attestly, accurate framing is: "a tool that generates EU AI Act Annex IV documentation drafts from an AI agent's operational traces, with mandatory human review before anything is final." Avoid describing it as providing legal certification, guaranteeing compliance, or as a general-purpose AI governance platform — none of these are accurate.

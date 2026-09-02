@@ -2,6 +2,41 @@ import Link from "next/link";
 
 const SITE_URL = "https://attestly.online";
 
+const FAQS = [
+  {
+    q: "Does Attestly provide legal advice or guarantee compliance?",
+    a: "No. Attestly does not provide legal advice and does not guarantee regulatory compliance. Every generated section is reviewed, edited, and approved by a human before it counts as final.",
+  },
+  {
+    q: "What trace sources does Attestly support?",
+    a: "Attestly ingests OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized JSON.",
+  },
+  {
+    q: "Who is Attestly for?",
+    a: "AI startups shipping agents to EU customers, enterprise AI teams running multiple systems, compliance and risk teams, and AI governance consultancies producing documentation for clients.",
+  },
+  {
+    q: "How is Attestly different from a generic AI governance platform?",
+    a: "Broad AI-governance tools focus on policy management, system inventories, and monitoring dashboards. Attestly specifically ingests an agent's operational traces and turns them into drafted Annex IV documentation with evidence links back to the exact events that justify each section — a narrower, deeper problem than a general governance dashboard covers.",
+  },
+  {
+    q: "Is there a free plan?",
+    a: "Yes. The free tier includes one AI system and ten lifetime documentation generations, enough to fully draft one system's Annex IV documentation and see the product work before subscribing.",
+  },
+  {
+    q: "How does Attestly know what to write in each documentation section?",
+    a: "Each EU AI Act Annex IV requirement is mapped against the specific trace events (tool calls, model calls, human interventions, errors, system events) relevant to it. Drafting is grounded only in that linked evidence — the system is instructed to flag gaps explicitly rather than invent plausible-sounding text where evidence is missing.",
+  },
+  {
+    q: "What happens to my trace data?",
+    a: "Trace data is stored per-organization with row-level database access controls, so one organization can never see another's data. Only the specific events linked as evidence for a documentation section are sent to the AI model used for drafting that section.",
+  },
+  {
+    q: "What format is the exported documentation in?",
+    a: "Attestly exports a Word (.docx) document containing every requirement, its current review status, whether it's AI-generated or human-edited, and a list of the exact trace events used as supporting evidence.",
+  },
+];
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -12,6 +47,11 @@ const jsonLd = {
       url: SITE_URL,
       description: "EU AI Act compliance documentation automation for autonomous AI agents.",
       logo: `${SITE_URL}/icon.svg`,
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "support@attestly.online",
+        contactType: "customer support",
+      },
     },
     {
       "@type": "WebSite",
@@ -49,24 +89,11 @@ const jsonLd = {
     {
       "@type": "FAQPage",
       "@id": `${SITE_URL}/#faq`,
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Does Attestly provide legal advice or guarantee compliance?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. Attestly does not provide legal advice and does not guarantee regulatory compliance. Every generated section is reviewed, edited, and approved by a human before it counts as final.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What trace sources does Attestly support?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Attestly ingests OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized JSON.",
-          },
-        },
-      ],
+      mainEntity: FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
     },
   ],
 };
@@ -165,6 +192,82 @@ export default function LandingPage() {
       </section>
 
       <section className="section">
+        <p className="section__eyebrow">Who it's for</p>
+        <h2>Built for the teams actually shipping AI agents into the EU.</h2>
+        <div className="deliverables-grid">
+          <div className="deliverable">
+            <p className="deliverable__title">AI startups</p>
+            <p className="deliverable__desc">
+              Deploying an autonomous agent to EU customers and need Annex IV documentation before launch, without
+              a dedicated compliance hire.
+            </p>
+          </div>
+          <div className="deliverable">
+            <p className="deliverable__title">Enterprise AI teams</p>
+            <p className="deliverable__desc">
+              Running internal or customer-facing agents across multiple systems that all need ongoing, not
+              one-time, documentation as behavior changes.
+            </p>
+          </div>
+          <div className="deliverable">
+            <p className="deliverable__title">Compliance and risk teams</p>
+            <p className="deliverable__desc">
+              Currently reconstructing what an AI system did by hand from logs and interviews, and need a
+              structured, evidence-linked starting point instead.
+            </p>
+          </div>
+          <div className="deliverable">
+            <p className="deliverable__title">AI governance consultancies</p>
+            <p className="deliverable__desc">
+              Producing Annex IV documentation for multiple clients and need a tool that turns each client's
+              traces into a first draft, rather than starting from a blank template every time.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <p className="section__eyebrow">Background</p>
+        <h2>What EU AI Act Annex IV technical documentation actually requires</h2>
+        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)" }}>
+          <p style={{ marginBottom: 16 }}>
+            The EU AI Act requires providers of high-risk AI systems to maintain technical documentation under
+            Annex IV before the system is placed on the market, and to keep it current as the system changes.
+            Annex IV specifies several required elements: a general description of the system and its intended
+            purpose, details of its design and development process, information on how it's monitored and
+            controlled once deployed, performance and validation metrics, risk-management measures, and a record
+            of significant changes made across the system's lifecycle.
+          </p>
+          <p>
+            In practice, most of the underlying evidence for these sections already exists inside the system's own
+            operational traces — which tool calls it made, when a human intervened, what errors occurred, what
+            changed between deployments. Attestly's role is to read that evidence directly from your traces and
+            map it against each Annex IV requirement, rather than have someone manually reconstruct it after the
+            fact from logs, tickets, and memory.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <p className="section__eyebrow">Why not a generic GRC platform</p>
+        <h2>General AI-governance tools stop one step before this.</h2>
+        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
+          <p style={{ marginBottom: 16 }}>
+            Broad AI-governance platforms are built around policy management, system inventories, and monitoring
+            dashboards — useful for tracking that an AI system exists and has an owner, but they don't ingest an
+            agent's actual execution traces and turn them into drafted Annex IV documentation with evidence links
+            back to specific events. That gap — live agent behavior into structured, evidence-backed compliance
+            documentation — is the specific problem Attestly is built to solve, not a broader governance dashboard.
+          </p>
+          <p>
+            Attestly isn't a replacement for legal review, a GRC platform, or an AI firewall. It's the tool that
+            turns operational trace data into a documentation draft a compliance professional can review in
+            minutes instead of building from scratch.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="trust-strip">
           Attestly does not provide legal advice and does not guarantee regulatory compliance.
           Every generated section is clearly marked as AI-generated, user-provided, or missing —
@@ -176,22 +279,12 @@ export default function LandingPage() {
         <p className="section__eyebrow">Frequently asked</p>
         <h2>Common questions</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "65ch" }}>
-          <div>
-            <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>
-              Does Attestly provide legal advice or guarantee compliance?
-            </p>
-            <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>
-              No. Attestly does not provide legal advice and does not guarantee regulatory compliance. Every
-              generated section is reviewed, edited, and approved by a human before it counts as final.
-            </p>
-          </div>
-          <div>
-            <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>What trace sources does Attestly support?</p>
-            <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>
-              Attestly ingests OpenTelemetry traces, LangSmith runs, AgentOps sessions, and generic pre-normalized
-              JSON.
-            </p>
-          </div>
+          {FAQS.map((faq) => (
+            <div key={faq.q}>
+              <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{faq.q}</p>
+              <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -204,6 +297,7 @@ export default function LandingPage() {
           <Link href="/terms" className="site-footer__meta" style={{ textDecoration: "none" }}>Terms</Link>
           <Link href="/privacy" className="site-footer__meta" style={{ textDecoration: "none" }}>Privacy</Link>
           <Link href="/refund-policy" className="site-footer__meta" style={{ textDecoration: "none" }}>Refunds</Link>
+          <a href="mailto:support@attestly.online" className="site-footer__meta" style={{ textDecoration: "none" }}>support@attestly.online</a>
           <span className="site-footer__meta">Built for teams shipping autonomous AI agents into the EU</span>
         </div>
       </footer>
