@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { isPlatformAdmin } from "@/lib/isPlatformAdmin";
 
 function summarize(sections: { status: string }[]): { label: string; ledgerStatus: string } {
   if (sections.length === 0) {
@@ -43,6 +44,11 @@ export default async function DashboardPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
         <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>AI systems</h1>
         <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+          {isPlatformAdmin(user?.email) && (
+            <Link href="/admin" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+              Admin
+            </Link>
+          )}
           <Link href="/pricing" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             Pricing
           </Link>

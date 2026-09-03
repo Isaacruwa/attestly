@@ -240,6 +240,26 @@ Re-run anytime with `npx tsx scripts/test-parsers.ts` or
 pipeline regardless of source — nothing downstream needed to change, since
 all four parsers converge on the same `NormalizedEvent` shape.
 
+## Admin panel
+
+- `/admin` — internal dashboard: total users, organizations, AI systems,
+  active subscriptions, plan breakdown, a list of paying customers (org +
+  owner email + plan + renewal date), and every user's email + signup date.
+- Access is a simple email allowlist (`ADMIN_EMAILS` env var), checked
+  server-side — not a database role, deliberately, since this page reads
+  across every customer's organization via the service-role key. Fewer
+  moving parts than a role table means fewer ways to accidentally grant
+  someone access.
+- `robots.txt` and page-level `noindex` both block this from ever being
+  crawled or indexed.
+- A link to it only appears in the dashboard nav for allowlisted emails —
+  everyone else sees the normal dashboard with no trace of it.
+
+### Setup
+
+Add to Vercel: `ADMIN_EMAILS` — comma-separated list of email addresses
+allowed to view `/admin` (e.g. `iamswishkenya@gmail.com,swishmilnet@gmail.com`).
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
