@@ -78,6 +78,7 @@ const jsonLd = {
         { "@type": "Offer", name: "Enterprise", price: "1499", priceCurrency: "USD", url: `${SITE_URL}/pricing` },
       ],
       featureList: [
+        "Free EU AI Act risk classification tool",
         "EU AI Act Annex IV technical documentation generation",
         "Risk-management summaries",
         "Conformity-assessment checklists",
@@ -145,6 +146,7 @@ export default function LandingPage() {
           Attestly
         </span>
         <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+          <Link href="/eu-ai-act-risk-checker" className="site-nav__link">Risk Checker</Link>
           <Link href="/pricing" className="site-nav__link">Pricing</Link>
           <Link href="/login" className="site-nav__link">Sign in</Link>
         </div>
@@ -272,6 +274,17 @@ export default function LandingPage() {
           Attestly does not provide legal advice and does not guarantee regulatory compliance.
           Every generated section is clearly marked as AI-generated, user-provided, or missing —
           and requires human review, edit, or approval before export.
+        </div>
+      </section>
+
+      <section className="section">
+        <div style={{ background: "var(--color-primary-tint)", border: "1px solid var(--color-line)", borderRadius: 8, padding: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <p className="mono" style={{ fontSize: 12, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Free tool</p>
+            <p style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Not sure if your AI system is high-risk?</p>
+            <p style={{ fontSize: 13.5, color: "var(--color-ink-muted)" }}>Answer a few questions and get a directional EU AI Act risk classification.</p>
+          </div>
+          <Link href="/eu-ai-act-risk-checker" className="btn-primary" style={{ border: "none", whiteSpace: "nowrap" }}>Check now →</Link>
         </div>
       </section>
 

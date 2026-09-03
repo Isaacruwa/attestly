@@ -265,6 +265,38 @@ allowed to view `/admin` (e.g. `iamswishkenya@gmail.com,swishmilnet@gmail.com`).
   Paddle billing. Every use writes a row to `audit_log` (who did it, what
   changed, when) so it's never a silent, untraceable override.
 
+## Free tool: EU AI Act Risk Checker (organic traffic play #1)
+
+- `/eu-ai-act-risk-checker` — real interactive tool, no signup required.
+  Walks through Article 5's prohibited practices, Annex III's 8 high-risk
+  domains (with the Article 6(3) narrow-task carve-out), and Article 50's
+  transparency triggers, then gives a directional classification.
+- Linked from the homepage nav and a dedicated callout section, added to
+  the sitemap at high priority, and referenced in `llms.txt`.
+- Built using **current** regulatory status verified via live search, not
+  training-data assumptions — important, since the EU passed a "Digital
+  Omnibus" amendment (Regulation (EU) 2026/1744, in force since July 27,
+  2026) that meaningfully changed the timeline:
+  - High-risk Annex III obligations: deadline pushed from August 2, 2026 to
+    **December 2, 2027**. Annex I (product-embedded) systems: **August 2, 2028**.
+  - Two new prohibited practices added (AI nudification tools, AI-generated
+    CSAM), applying from **December 2, 2026**.
+  - Article 50(2) synthetic-content marking duty: grace period until
+    December 2, 2026 for systems already on the market.
+  - Prohibited practices from the original list and GPAI model rules remain
+    in force and unchanged (since Feb 2025 and Aug 2025 respectively).
+  The tool's result screen states these dates explicitly rather than a
+  vague "coming soon," and links to Terms rather than presenting itself as
+  legal advice.
+
+### Still to do from the organic-traffic plan (in order)
+
+2. Glossary/resource pages targeting specific search queries (What is
+   Annex IV, what is a conformity assessment, etc.)
+3. Submit to Google Search Console and Bing Webmaster Tools
+4. A blog (needs ongoing content, not a one-time build)
+5. Core Web Vitals check once real traffic exists
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
