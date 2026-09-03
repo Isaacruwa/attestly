@@ -1,6 +1,7 @@
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { isPlatformAdmin } from "@/lib/isPlatformAdmin";
 import Link from "next/link";
+import AdminOrgsTable from "./AdminOrgsTable";
 
 export default async function AdminPage() {
   const supabase = createClient();
@@ -50,6 +51,18 @@ export default async function AdminPage() {
     planCounts[s.plan] = (planCounts[s.plan] ?? 0) + 1;
   }
 
+  const subscriptionByOrg = new Map<string, { plan: string; status: string }>(
+    ((subscriptions ?? []) as any[]).map((s) => [s.organization_id, { plan: s.plan, status: s.status }])
+  );
+
+  const allOrgRows = ((orgs ?? []) as any[]).map((o) => ({
+    organization_id: o.id,
+    org_name: o.name,
+    owner_email: ownerEmailByOrg.get(o.id) ?? "unknown",
+    plan: subscriptionByOrg.get(o.id)?.plan ?? "none",
+    status: subscriptionByOrg.get(o.id)?.status ?? "inactive",
+  }));
+
   const stat = (label: string, value: string | number) => (
     <div style={{ padding: "16px 20px", background: "white", border: "1px solid var(--color-line)", borderRadius: 6, flex: 1, minWidth: 140 }}>
       <p className="mono" style={{ fontSize: 11, color: "var(--color-ink-faint)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
@@ -80,6 +93,15 @@ export default async function AdminPage() {
             <span style={{ textTransform: "capitalize" }}>{plan}</span>: <strong>{count}</strong>
           </div>
         ))}
+      </div>
+
+      <h2 style={{ fontSize: 16, marginBottom: 8 }}>Manage plans ({allOrgRows.length} organizations)</h2>
+      <p style={{ fontSize: 13, color: "var(--color-ink-muted)", marginBottom: 14 }}>
+        Manually assign a plan — for comps, goodwill after a bug, or testing. Changes here are separate from Paddle
+        billing and logged to the audit trail.
+      </p>
+      <div style={{ marginBottom: 36 }}>
+        <AdminOrgsTable initialRows={allOrgRows} />
       </div>
 
       <h2 style={{ fontSize: 16, marginBottom: 12 }}>Paying customers ({activeSubs.length})</h2>

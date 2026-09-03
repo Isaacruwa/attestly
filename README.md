@@ -260,6 +260,11 @@ all four parsers converge on the same `NormalizedEvent` shape.
 Add to Vercel: `ADMIN_EMAILS` — comma-separated list of email addresses
 allowed to view `/admin` (e.g. `iamswishkenya@gmail.com,swishmilnet@gmail.com`).
 
+- **Manually assign a plan** to any organization — for comps, goodwill after
+  a bug, or testing — via `POST /api/admin/assign-plan`, independent of
+  Paddle billing. Every use writes a row to `audit_log` (who did it, what
+  changed, when) so it's never a silent, untraceable override.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
