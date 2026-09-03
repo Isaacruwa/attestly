@@ -1,0 +1,53 @@
+{
+  "events": [
+    {
+      "event_id": "evt-001",
+      "trace_id": "trace-xyz-1",
+      "timestamp": "2026-09-01T09:00:00Z",
+      "event_type": "agent_action",
+      "name": "Received refund request",
+      "actor": "refund_agent",
+      "attributes": { "channel": "chat" },
+      "metadata": { "priority": "high" }
+    },
+    {
+      "event_id": "evt-002",
+      "trace_id": "trace-xyz-1",
+      "timestamp": "2026-09-01T09:00:02Z",
+      "event_type": "tool_call",
+      "name": "Looked up order",
+      "tool": "order_lookup",
+      "action": "lookup_order",
+      "status": "success",
+      "attributes": { "order_id": "ORD-5521" }
+    },
+    {
+      "event_id": "evt-003",
+      "trace_id": "trace-xyz-1",
+      "timestamp": "2026-09-01T09:00:05Z",
+      "event_type": "model_call",
+      "name": "Drafted refund decision",
+      "model": "gemini-2.5-flash",
+      "evidence": { "policy_section": "refunds-3.2" }
+    },
+    {
+      "event_id": "evt-004",
+      "trace_id": "trace-xyz-1",
+      "timestamp": "2026-09-01T09:00:09Z",
+      "event_type": "human_intervention",
+      "name": "Supervisor approved refund",
+      "actor": "supervisor_12",
+      "human_intervention": { "action": "approved", "reviewer": "supervisor_12" }
+    },
+    {
+      "event_id": "evt-005",
+      "trace_id": "trace-xyz-1",
+      "timestamp": "2026-09-01T09:00:10Z",
+      "event_type": "error",
+      "name": "Payment gateway timeout on first attempt",
+      "errors": { "code": "GATEWAY_TIMEOUT", "retried": true },
+      "policy": { "risk_level": "low" },
+      "risk": { "category": "operational" }
+    }
+  ]
+}

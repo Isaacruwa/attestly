@@ -176,6 +176,70 @@ Continuous EU AI Act evidence, generated from what your AI agents already do.
 - Have an actual lawyer review the Terms/Privacy/Refund pages before
   treating them as your real legal position.
 
+## Trace ingestion bug fix: manual_json and LangSmith imports
+
+**Root cause (one bug, two symptoms):** the upload page guessed how to route an
+uploaded file based on its JSON *shape* — "bare array = already normalized,
+object = raw payload for a parser." That guess was wrong in both directions:
+- A real LangSmith export is commonly a **bare array of unparsed runs**, so it
+  got misrouted as "already normalized," failed schema validation (run
+  objects have `run_type`, not the expected `event_type`), and surfaced as
+  "invalid payload."
+- The spec's own pre-normalized format, `{ "events": [...] }`, is a
+  **wrapped object**, so it got misrouted to the raw-payload path for a
+  `manual_json` parser that didn't exist yet, surfacing as "No parser yet
+  for source manual_json."
+
+**Fix:** routing now depends only on the selected `source`, never on JSON
+shape. Every source — including `manual_json` — always sends its raw upload
+as `payload` and gets parsed by its own dedicated parser, which internally
+handles both a bare array and a wrapped-object shape. A second, related bug
+was caught while verifying the fix: the ingest route's Zod schema
+(`payload: z.record(z.any())`) rejected bare arrays outright regardless of
+routing — fixed to `z.union([z.record(z.any()), z.array(z.any())])`.
+
+- `src/lib/parsers/manualJson.ts` — new parser for the `manual_json` source;
+  infers a sensible `event_type` from context if one isn't provided, rather
+  than rejecting the event outright.
+- `src/lib/parsers/langsmith.ts` — now also flattens nested `child_runs`
+  into individual events (preserving `parent_run_id` for the relationship),
+  and preserves `trace_id`/`tags` from the source run.
+- `src/app/api/traces/ingest/route.ts` — added the `manual_json` routing
+  branch; fixed the `payload` schema to accept arrays.
+- `src/app/dashboard/systems/[id]/traces/page.tsx` — removed the
+  shape-guessing heuristic; always sends `payload`.
+- OpenTelemetry and AgentOps parsers: **unmodified**, verified via regression
+  test below.
+
+### Verification (real code executed, not claimed)
+
+`scripts/test-parsers.ts` and `scripts/test-ingest-e2e.ts`, run against
+fixtures in `scripts/fixtures/` (including a bare-array LangSmith export with
+nested `child_runs`, and the `{ events: [...] }` manual_json shape from the
+spec):
+
+```
+PASS — OpenTelemetry (unmodified, regression check): 1 event(s) parsed
+PASS — AgentOps (unmodified, regression check): 2 event(s) parsed
+PASS — LangSmith (bare array + nested child_runs): 4 event(s) parsed
+  → trace_id preserved: true | tags preserved: true
+PASS — manual_json ({ events: [...] } wrapper): 5 event(s) parsed
+  → extended fields preserved: true
+PASS — manual_json (bare array, backward compatible): 1 event(s) parsed
+
+End-to-end ingest simulation (real Zod schema + routing + parser, all four sources):
+PASS — opentelemetry: 1 events imported
+PASS — agentops: 2 events imported
+PASS — langsmith: 4 events imported
+PASS — manual_json: 5 events imported
+```
+
+Re-run anytime with `npx tsx scripts/test-parsers.ts` or
+`npx tsx scripts/test-ingest-e2e.ts`. Imported events land in the same
+`events` table and flow through the same compliance-mapping/documentation
+pipeline regardless of source — nothing downstream needed to change, since
+all four parsers converge on the same `NormalizedEvent` shape.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,

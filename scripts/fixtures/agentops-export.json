@@ -1,0 +1,17 @@
+{
+  "events": [
+    {
+      "event_type": "tool_call",
+      "action_type": "search_kb",
+      "init_timestamp": "2026-09-01T11:00:00Z",
+      "agent_id": "agent-1",
+      "params": { "query": "billing" }
+    },
+    {
+      "event_type": "llm",
+      "name": "gpt-4o-mini",
+      "init_timestamp": "2026-09-01T11:00:02Z",
+      "model": "gpt-4o-mini"
+    }
+  ]
+}

@@ -52,12 +52,12 @@ export default function TracesPage({ params }: { params: { id: string } }) {
       const text = await file.text();
       const json = JSON.parse(text);
 
-      // If the file already looks like our normalized shape (an array), send
-      // it as `events`. Otherwise treat it as a raw trace for the chosen
-      // source's parser (e.g. a raw OpenTelemetry export object).
-      const body = Array.isArray(json)
-        ? { ai_system_id: aiSystemId, source, events: json }
-        : { ai_system_id: aiSystemId, source, payload: json };
+      // Route strictly by the selected source, not by guessing from the
+      // JSON's shape — a bare array can be either "already normalized" or
+      // "a raw export that happens to be an array" (e.g. LangSmith), and
+      // guessing wrong was the root cause of two import bugs. Every source,
+      // including manual_json, now goes through its own server-side parser.
+      const body = { ai_system_id: aiSystemId, source, payload: json };
 
       const res = await fetch("/api/traces/ingest", {
         method: "POST",

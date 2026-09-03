@@ -1,0 +1,60 @@
+[
+  {
+    "id": "1a2b3c4d-0001-4a5b-8c9d-000000000001",
+    "trace_id": "trace-abc-123",
+    "parent_run_id": null,
+    "name": "customer_support_agent",
+    "run_type": "chain",
+    "start_time": "2026-09-01T10:00:00.000Z",
+    "end_time": "2026-09-01T10:00:08.000Z",
+    "status": "success",
+    "tags": ["production", "support"],
+    "inputs": { "query": "How do I reset my password?" },
+    "outputs": { "response": "Here are the steps to reset your password..." },
+    "error": null,
+    "child_runs": [
+      {
+        "id": "1a2b3c4d-0002-4a5b-8c9d-000000000002",
+        "parent_run_id": "1a2b3c4d-0001-4a5b-8c9d-000000000001",
+        "trace_id": "trace-abc-123",
+        "name": "gpt-4o-mini",
+        "run_type": "llm",
+        "start_time": "2026-09-01T10:00:01.000Z",
+        "end_time": "2026-09-01T10:00:03.000Z",
+        "status": "success",
+        "tags": ["model-call"],
+        "inputs": { "messages": [{ "role": "user", "content": "How do I reset my password?" }] },
+        "outputs": { "content": "Steps to reset password..." },
+        "error": null
+      },
+      {
+        "id": "1a2b3c4d-0003-4a5b-8c9d-000000000003",
+        "parent_run_id": "1a2b3c4d-0001-4a5b-8c9d-000000000001",
+        "trace_id": "trace-abc-123",
+        "name": "kb_lookup",
+        "run_type": "tool",
+        "start_time": "2026-09-01T10:00:03.500Z",
+        "end_time": "2026-09-01T10:00:04.200Z",
+        "status": "success",
+        "tags": ["tool-call"],
+        "inputs": { "query": "password reset" },
+        "outputs": { "result": "KB article #451" },
+        "error": null
+      }
+    ]
+  },
+  {
+    "id": "1a2b3c4d-0004-4a5b-8c9d-000000000004",
+    "trace_id": "trace-abc-124",
+    "parent_run_id": null,
+    "name": "escalation_check",
+    "run_type": "chain",
+    "start_time": "2026-09-01T10:05:00.000Z",
+    "end_time": "2026-09-01T10:05:01.000Z",
+    "status": "error",
+    "tags": ["production"],
+    "inputs": { "ticket_id": "T-991" },
+    "outputs": null,
+    "error": "Timeout contacting escalation service"
+  }
+]

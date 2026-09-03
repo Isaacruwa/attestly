@@ -4,6 +4,7 @@ import { z } from "zod";
 import { parseOpenTelemetryTrace } from "@/lib/parsers/opentelemetry";
 import { parseLangSmithTrace } from "@/lib/parsers/langsmith";
 import { parseAgentOpsTrace } from "@/lib/parsers/agentops";
+import { parseManualJsonTrace } from "@/lib/parsers/manualJson";
 
 // Accepts either:
 //  (a) a generic pre-normalized `events` array (manual_json, or any source
@@ -34,7 +35,10 @@ const IngestBody = z.object({
   ai_system_id: z.string().uuid(),
   source: z.enum(["opentelemetry", "langsmith", "agentops", "mcp_logs", "api_history", "manual_json"]),
   events: z.array(RawEvent).min(1).optional(),
-  payload: z.record(z.any()).optional(),
+  // Accepts an object OR a bare array — z.record() alone rejects arrays,
+  // and several real export formats (notably LangSmith) are commonly a
+  // top-level array rather than a wrapped object.
+  payload: z.union([z.record(z.any()), z.array(z.any())]).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -61,9 +65,11 @@ export async function POST(req: NextRequest) {
       events = parseLangSmithTrace(payload);
     } else if (source === "agentops") {
       events = parseAgentOpsTrace(payload);
+    } else if (source === "manual_json") {
+      events = parseManualJsonTrace(payload);
     } else {
       return NextResponse.json(
-        { error: `No parser yet for source "${source}" — send pre-normalized "events" instead, or use source "opentelemetry"/"langsmith"/"agentops"/"manual_json".` },
+        { error: `No parser yet for source "${source}" — supported sources are opentelemetry, langsmith, agentops, and manual_json.` },
         { status: 400 }
       );
     }
