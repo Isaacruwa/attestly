@@ -8,6 +8,7 @@ Attestly is a SaaS product for companies deploying autonomous AI agents that nee
 
 - [Homepage](https://attestly.online): overview of the product, how it works, who it's for, and what it generates.
 - [EU AI Act Risk Checker](https://attestly.online/eu-ai-act-risk-checker): free interactive tool giving a directional EU AI Act risk classification based on Article 5 and Annex III. No signup required.
+- [Glossary](https://attestly.online/glossary): plain-language explanations of Annex IV, Annex III, conformity assessment, high-risk classification, and AI agent compliance documentation.
 - [Pricing](https://attestly.online/pricing): self-serve plans, no sales call required.
 - [Terms of Service](https://attestly.online/terms)
 - [Privacy Policy](https://attestly.online/privacy)

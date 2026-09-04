@@ -146,6 +146,7 @@ export default function LandingPage() {
           Attestly
         </span>
         <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+          <Link href="/glossary" className="site-nav__link">Glossary</Link>
           <Link href="/eu-ai-act-risk-checker" className="site-nav__link">Risk Checker</Link>
           <Link href="/pricing" className="site-nav__link">Pricing</Link>
           <Link href="/login" className="site-nav__link">Sign in</Link>

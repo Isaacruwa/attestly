@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { GLOSSARY_TERMS } from "@/lib/glossary";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://attestly.online";
@@ -9,6 +10,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: `${base}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...GLOSSARY_TERMS.map((t) => ({
+      url: `${base}/glossary/${t.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     {
       url: `${base}/login`,
       lastModified: new Date(),

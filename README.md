@@ -297,6 +297,26 @@ allowed to view `/admin` (e.g. `iamswishkenya@gmail.com,swishmilnet@gmail.com`).
 4. A blog (needs ongoing content, not a one-time build)
 5. Core Web Vitals check once real traffic exists
 
+## Glossary (organic traffic play #2)
+
+- `/glossary` (index) + `/glossary/[slug]` (5 terms, one dynamic route
+  driven by `src/lib/glossary.ts` — add a new term by adding one array
+  entry, not a new page file).
+- Terms: Annex IV technical documentation, Annex III high-risk domains,
+  conformity assessment, high-risk AI system, AI agent compliance
+  documentation. Each targets a specific real search query the homepage
+  alone can't rank for.
+- Content verified via live search against current sources (same
+  verification pass as the risk checker) — includes the correct
+  internal-control-vs-notified-body split (Annex III points 2–8 always
+  self-assess; point 1/biometrics needs a notified body only if harmonized
+  standards weren't applied).
+- `DefinedTermSet`/`DefinedTerm` JSON-LD on the index page — the actual
+  correct Schema.org type for glossary content.
+- Every term page ends with a CTA into the risk checker and pricing, so
+  organic glossary traffic has somewhere to go besides the search result.
+- All 6 pages (index + 5 terms) added to the sitemap and `llms.txt`.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
