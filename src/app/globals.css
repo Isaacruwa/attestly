@@ -66,6 +66,7 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   max-width: 1080px;
   margin: 0 auto;
   padding: 20px 24px;
+  position: relative;
 }
 .site-nav__brand {
   font-family: var(--font-mono);
@@ -76,6 +77,7 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 .site-nav__mark {
   width: 18px;
@@ -95,6 +97,66 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   font-size: 14px;
   color: var(--color-ink-muted);
   text-decoration: none;
+  white-space: nowrap;
+}
+.site-nav__cta {
+  font-size: 14px;
+  color: white !important;
+  background: var(--color-primary);
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.site-nav__toggle-checkbox { display: none; }
+.site-nav__toggle-label { display: none; }
+
+/* Below this width, four text links plus a wordmark simply don't fit on one
+   line — rather than let them wrap unpredictably, collapse into a proper
+   mobile menu instead. */
+@media (max-width: 640px) {
+  .site-nav__links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    background: var(--color-paper-raised);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 24px;
+    box-shadow: 0 8px 24px rgba(20, 24, 28, 0.08);
+    z-index: 40;
+  }
+  .site-nav__links .site-nav__link,
+  .site-nav__links .site-nav__cta {
+    padding: 12px 14px;
+    border-radius: 6px;
+    text-align: left;
+  }
+  .site-nav__links .site-nav__link:hover { background: var(--color-primary-tint); }
+  .site-nav__toggle-checkbox:checked ~ .site-nav__links { display: flex; }
+  .site-nav__toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--color-ink);
+    flex-shrink: 0;
+  }
 }
 
 .hero {

@@ -141,15 +141,19 @@ export default function LandingPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="site-nav">
-        <span className="site-nav__brand">
+        <Link href="/" className="site-nav__brand" style={{ textDecoration: "none" }}>
           <span className="site-nav__mark" aria-hidden="true" />
           Attestly
-        </span>
-        <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+        </Link>
+
+        <input type="checkbox" id="nav-toggle" className="site-nav__toggle-checkbox" />
+        <label htmlFor="nav-toggle" className="site-nav__toggle-label" aria-label="Menu">☰</label>
+
+        <div className="site-nav__links">
           <Link href="/glossary" className="site-nav__link">Glossary</Link>
           <Link href="/eu-ai-act-risk-checker" className="site-nav__link">Risk Checker</Link>
           <Link href="/pricing" className="site-nav__link">Pricing</Link>
-          <Link href="/login" className="site-nav__link">Sign in</Link>
+          <Link href="/login" className="site-nav__cta">Sign in</Link>
         </div>
       </nav>
 
