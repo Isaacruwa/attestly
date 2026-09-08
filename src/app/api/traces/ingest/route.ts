@@ -5,6 +5,7 @@ import { parseOpenTelemetryTrace } from "@/lib/parsers/opentelemetry";
 import { parseLangSmithTrace } from "@/lib/parsers/langsmith";
 import { parseAgentOpsTrace } from "@/lib/parsers/agentops";
 import { parseManualJsonTrace } from "@/lib/parsers/manualJson";
+import { hashEventContent } from "@/lib/hashing";
 
 // Accepts either:
 //  (a) a generic pre-normalized `events` array (manual_json, or any source
@@ -98,13 +99,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: importError?.message ?? "import failed" }, { status: 400 });
   }
 
-  const rows = events.map((e) => ({
-    trace_import_id: importRow.id,
-    event_type: e.event_type,
-    occurred_at: e.occurred_at ?? null,
-    summary: e.summary ?? null,
-    structured_data: e.data ?? {},
-  }));
+  const rows = events.map((e) => {
+    const occurred_at = e.occurred_at ?? null;
+    const summary = e.summary ?? null;
+    const structured_data = e.data ?? {};
+    return {
+      trace_import_id: importRow.id,
+      event_type: e.event_type,
+      occurred_at,
+      summary,
+      structured_data,
+      content_hash: hashEventContent({ event_type: e.event_type, occurred_at, summary, structured_data }),
+    };
+  });
 
   const { error: eventsError } = await supabase.from("events").insert(rows);
 

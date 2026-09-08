@@ -24,6 +24,10 @@ Enterprises deploying autonomous AI agents generate operational traces and logs,
 5. A human reviewer must edit, approve, or reject every generated section. Nothing is treated as final without this step.
 6. Approved (and in-progress) documentation exports to a Word document, with each section labeled by its review status and content source (AI-generated, user-provided, or mixed), plus a list of the exact trace events used as evidence.
 
+## Tamper-evident evidence (cryptographic verification)
+
+Every event ingested is hashed (SHA-256) at the moment it's stored. When a documentation section is approved, Attestly records a hash of the exact approved text and a combined hash of the evidence events it was approved against. Recomputing either hash later and comparing it to the stored value reveals whether the content was altered after approval — this is tamper-evidence, not a blockchain or legal certification, but a real, checkable integrity guarantee that goes beyond a written assertion of compliance.
+
 ## What Attestly explicitly is NOT
 
 - Not a source of legal advice.

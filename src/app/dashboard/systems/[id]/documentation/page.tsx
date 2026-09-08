@@ -11,6 +11,9 @@ type SectionRow = {
   content: string | null;
   content_source: string | null;
   gap_notes: string | null;
+  content_hash: string | null;
+  evidence_hash: string | null;
+  approved_at: string | null;
   compliance_requirements: { title: string; description: string | null; section_key: string } | null;
   evidence_count: number;
 };
@@ -60,7 +63,7 @@ export default function DocumentationPage({ params }: { params: { id: string } }
 
     const { data: sectionRows } = await supabase
       .from("documentation_sections")
-      .select("id, status, content, content_source, gap_notes, compliance_requirements(title, description, section_key)")
+      .select("id, status, content, content_source, gap_notes, content_hash, evidence_hash, approved_at, compliance_requirements(title, description, section_key)")
       .eq("documentation_project_id", project.id);
 
     const withCounts: SectionRow[] = [];
@@ -212,6 +215,16 @@ export default function DocumentationPage({ params }: { params: { id: string } }
                     {s.content_source && (
                       <p className="mono" style={{ fontSize: 11, color: "var(--color-ink-faint)", marginBottom: 8 }}>
                         {SOURCE_LABEL[s.content_source] ?? s.content_source}
+                      </p>
+                    )}
+                    {s.status === "approved" && s.content_hash && (
+                      <p
+                        className="mono"
+                        title={`Content hash: ${s.content_hash}\nEvidence hash: ${s.evidence_hash}\nRecomputing these from the exact approved text and linked evidence should match — a mismatch means something changed after approval.`}
+                        style={{ fontSize: 11, color: "var(--color-approved)", marginBottom: 10, display: "flex", alignItems: "center", gap: 6, cursor: "help" }}
+                      >
+                        ✓ Verified · sha256:{s.content_hash.slice(0, 12)}… · approved{" "}
+                        {s.approved_at ? new Date(s.approved_at).toLocaleDateString() : ""}
                       </p>
                     )}
                     <textarea

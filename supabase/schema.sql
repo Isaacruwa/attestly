@@ -74,6 +74,7 @@ create table events (
   summary text,               -- short structured description
   structured_data jsonb default '{}'::jsonb,  -- normalized fields
   raw_snippet jsonb,          -- minimal raw context, only if not sensitive
+  content_hash text,          -- sha256 of the event content at ingestion time — tamper-evidence
   created_at timestamptz not null default now()
 );
 
@@ -116,6 +117,10 @@ create table documentation_sections (
   content_source text check (content_source in ('ai_generated', 'user_provided', 'mixed')),
   gap_notes text,                   -- why info is missing / what's needed
   last_generated_at timestamptz,
+  content_hash text,                -- sha256 of `content` at the moment it was approved
+  evidence_hash text,                -- sha256 of the sorted evidence event hashes it was approved against
+  approved_at timestamptz,
+  approved_by uuid references auth.users(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (documentation_project_id, compliance_requirement_id)

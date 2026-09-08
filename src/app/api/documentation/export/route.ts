@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   const { data: sections } = project
     ? await supabase
         .from("documentation_sections")
-        .select("id, status, content, content_source, gap_notes, compliance_requirements(title, description, section_key)")
+        .select("id, status, content, content_source, gap_notes, content_hash, evidence_hash, approved_at, compliance_requirements(title, description, section_key)")
         .eq("documentation_project_id", project.id)
     : { data: [] as any[] };
 
@@ -125,6 +125,22 @@ export async function GET(req: NextRequest) {
       children.push(
         new Paragraph({
           children: [new TextRun({ text: SOURCE_LABEL[s.content_source] ?? s.content_source, italics: true, size: 16 })],
+          spacing: { after: 120 },
+        })
+      );
+    }
+
+    if (s.status === "approved" && s.content_hash) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `Cryptographic verification — approved ${s.approved_at ? new Date(s.approved_at).toLocaleString() : ""}. Content hash (SHA-256): ${s.content_hash}. Evidence hash (SHA-256): ${s.evidence_hash}. Recomputing SHA-256 of the exact approved text should reproduce the content hash; a mismatch indicates the text was altered after approval.`,
+              italics: true,
+              size: 14,
+              color: "5B6470",
+            }),
+          ],
           spacing: { after: 120 },
         })
       );

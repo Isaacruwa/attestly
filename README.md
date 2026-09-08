@@ -317,6 +317,47 @@ allowed to view `/admin` (e.g. `iamswishkenya@gmail.com,swishmilnet@gmail.com`).
   organic glossary traffic has somewhere to go besides the search result.
 - All 6 pages (index + 5 terms) added to the sitemap and `llms.txt`.
 
+## Evidence hashing — tamper-evident audit trail ("Evidence Engine" moat)
+
+Real, tested cryptographic tamper-evidence, not a written claim:
+
+- `events.content_hash` — every ingested event gets a SHA-256 hash computed
+  at ingestion time, in `src/lib/hashing.ts`, wired into `/api/traces/ingest`.
+- `documentation_sections.content_hash` / `.evidence_hash` /
+  `.approved_at` / `.approved_by` — computed the moment a section is
+  approved (`/api/documentation/review`), hashing the exact approved text
+  and a combined, order-independent hash of every evidence event it was
+  approved against.
+- A green "✓ Verified" badge with the truncated hash shows on approved
+  sections in the review UI; the full hashes and an explanation of how to
+  verify them are baked directly into the exported Word document.
+- `scripts/test-hashing.ts` proves the actual property that matters —
+  identical content always hashes identically, any change to content or to
+  the evidence set changes the hash — rather than just asserting it works:
+
+```
+PASS — Same event content produces the same hash
+PASS — Changing event content changes the hash (tamper-evidence)
+PASS — Hash is a real SHA-256 hex digest (64 chars)
+PASS — Same approved content produces the same hash
+PASS — Altering approved content after the fact changes the hash
+PASS — Evidence hash is order-independent for the same set
+PASS — Evidence hash changes if evidence is added or removed
+```
+
+**Honest scope note:** this is hashing for tamper-evidence, not a
+blockchain, notarization service, or legal certification — it proves
+content integrity since a point in time, nothing more, and the product
+messaging is written to reflect exactly that.
+
+### Baked into SEO/GEO as it shipped
+
+- New glossary term: `/glossary/tamper-evident-compliance-evidence`
+  (auto-included in sitemap since it's driven by the same array).
+- Homepage: `SoftwareApplication.featureList` JSON-LD and the visible
+  "Audit-ready evidence trails" deliverable description both updated.
+- `llms.txt` and `llms-full.txt` both updated with the capability.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,

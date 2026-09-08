@@ -105,6 +105,28 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       },
     ],
   },
+  {
+    slug: "tamper-evident-compliance-evidence",
+    title: "What is tamper-evident compliance evidence?",
+    metaDescription:
+      "How cryptographic hashing makes compliance evidence tamper-evident, and why that matters more than a written assertion of compliance.",
+    intro:
+      "Tamper-evident evidence means that if a piece of compliance evidence or an approved document is altered after the fact, that alteration can be detected — not prevented outright, but made provable rather than deniable.",
+    sections: [
+      {
+        heading: "How it works",
+        body: "Each piece of evidence is run through a cryptographic hash function (SHA-256) at the moment it's recorded, producing a fixed-length fingerprint unique to that exact content. Any later change to the content — even a single character — produces a completely different hash. Recomputing the hash and comparing it to the one recorded at the time is how tampering gets caught: a match proves nothing changed, a mismatch proves something did.",
+      },
+      {
+        heading: "Why this matters more than a written assertion",
+        body: "A document that simply states 'this system is compliant' is an assertion — it's only as trustworthy as the process that produced it, and there's no way to later prove it wasn't edited after being signed off. A cryptographic hash recorded at approval time turns that same claim into something checkable: anyone with the original content can independently verify it matches what was actually approved, without having to simply trust that no one touched it since.",
+      },
+      {
+        heading: "What it doesn't claim to be",
+        body: "This is hashing for tamper-evidence, not a blockchain, a legal certification, or a notarization service. It proves content integrity — that specific text hasn't changed since a specific point in time — not that the underlying compliance claim itself is legally sufficient.",
+      },
+    ],
+  },
 ];
 
 export function getGlossaryTerm(slug: string): GlossaryTerm | undefined {

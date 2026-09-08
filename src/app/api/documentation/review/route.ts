@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { hashApprovedContent, hashEvidenceSet } from "@/lib/hashing";
 import { z } from "zod";
 
 const Body = z.object({
@@ -38,7 +39,24 @@ export async function POST(req: NextRequest) {
   let reviewNewContent = section.content;
 
   if (action === "approve") {
-    update = { status: "approved" };
+    if (!section.content) {
+      return NextResponse.json({ error: "Can't approve a section with no content" }, { status: 400 });
+    }
+
+    const { data: links } = await supabase
+      .from("evidence_links")
+      .select("events(content_hash)")
+      .eq("documentation_section_id", documentation_section_id);
+
+    const eventHashes = (links ?? []).map((l: any) => l.events?.content_hash).filter(Boolean);
+
+    update = {
+      status: "approved",
+      content_hash: hashApprovedContent(section.content),
+      evidence_hash: hashEvidenceSet(eventHashes),
+      approved_at: new Date().toISOString(),
+      approved_by: user.id,
+    };
   } else if (action === "reject") {
     update = { status: "rejected" };
   } else if (action === "edit" || action === "manual_add") {

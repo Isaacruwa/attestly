@@ -79,6 +79,7 @@ const jsonLd = {
       ],
       featureList: [
         "Free EU AI Act risk classification tool",
+        "Cryptographically verified, tamper-evident evidence and approvals",
         "EU AI Act Annex IV technical documentation generation",
         "Risk-management summaries",
         "Conformity-assessment checklists",
@@ -132,7 +133,7 @@ const DELIVERABLES = [
   },
   {
     title: "Audit-ready evidence trails",
-    desc: "Every generated sentence links to the specific trace event that justified it.",
+    desc: "Every generated sentence links to the specific trace event that justified it, and every approval is cryptographically hashed — tamper-evident, not just asserted.",
   },
 ];
 
