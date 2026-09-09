@@ -381,5 +381,5 @@ messaging is written to reflect exactly that.
   that makes the documentation actually audit-ready rather than just
   AI-sounding prose.
 - `documentation_sections.content_source` distinguishes AI-generated text from
-  user-provided text at the field level, per the product's human-in-the-loop
-  requirement.
+  user-provided text at the field level, per the product's human-in-the-loop requirement.
+  www.attestly.online 
