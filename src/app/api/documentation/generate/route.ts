@@ -13,6 +13,17 @@ const Body = z.object({ documentation_section_id: z.string().uuid() });
 // stores the result as a draft — never auto-approved. Human review is a
 // separate, required step (see section_reviews table).
 export async function POST(req: NextRequest) {
+  try {
+    return await handleGenerate(req);
+  } catch (err: any) {
+    // Last-resort safety net: whatever went wrong, the person should see a
+    // real error message, never Next.js's generic HTML 500 page (which is
+    // what an uncaught exception here used to produce).
+    return NextResponse.json({ error: err?.message ?? "Unexpected server error" }, { status: 500 });
+  }
+}
+
+async function handleGenerate(req: NextRequest) {
   const supabase = createClient();
   const {
     data: { user },
@@ -34,13 +45,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "section not found" }, { status: 404 });
   }
 
-  const { data: project } = await supabase
+  const { data: project, error: projectError } = await supabase
     .from("documentation_projects")
     .select("ai_system_id")
     .eq("id", (section as any).documentation_project_id)
     .single();
 
-  const { data: aiSystem } = await supabase.from("ai_systems").select("organization_id").eq("id", project?.ai_system_id).single();
+  if (projectError || !project) {
+    return NextResponse.json({ error: "Couldn't find the documentation project for this section" }, { status: 404 });
+  }
+
+  const { data: aiSystem } = await supabase.from("ai_systems").select("organization_id").eq("id", project.ai_system_id).single();
 
   if (!aiSystem) return NextResponse.json({ error: "AI system not found" }, { status: 404 });
 
@@ -82,17 +97,32 @@ export async function POST(req: NextRequest) {
     "document, not a chat interface, so it must read as normal written paragraphs. " +
     "This draft is not legal advice and does not itself establish compliance.";
 
-  const response = await genAI.models.generateContent({
-    model: "gemini-2.5-flash",
-    config: { systemInstruction },
-    contents: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
-      evidence,
-      null,
-      2
-    )}`,
-  });
-
-  const rawDraft = response.text ?? "";
+  let rawDraft: string;
+  try {
+    const response = await genAI.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: { systemInstruction },
+      contents: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
+        evidence,
+        null,
+        2
+      )}`,
+    });
+    rawDraft = response.text ?? "";
+  } catch (err: any) {
+    const message = err?.message ?? "Unknown error calling Gemini";
+    // A quota/rate-limit error from Google's API is the most likely cause
+    // when generating several sections back-to-back on the free tier.
+    const isRateLimit = /quota|rate.?limit|429/i.test(message);
+    return NextResponse.json(
+      {
+        error: isRateLimit
+          ? "Gemini's free-tier rate limit was hit — wait a minute and try generating this section again."
+          : `Draft generation failed: ${message}`,
+      },
+      { status: 502 }
+    );
+  }
 
   // Defensive cleanup: even with an explicit instruction not to, models
   // occasionally slip into markdown. Strip every common case so approved
