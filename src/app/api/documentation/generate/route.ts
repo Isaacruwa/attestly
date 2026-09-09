@@ -16,10 +16,11 @@ export async function POST(req: NextRequest) {
   try {
     return await handleGenerate(req);
   } catch (err: any) {
-    // Last-resort safety net: whatever went wrong, the person should see a
-    // real error message, never Next.js's generic HTML 500 page (which is
-    // what an uncaught exception here used to produce).
-    return NextResponse.json({ error: err?.message ?? "Unexpected server error" }, { status: 500 });
+    // Last-resort safety net: whatever went wrong, log the real details for
+    // debugging, but the person using the product only ever sees one clean,
+    // professional message — never raw exception/API internals.
+    console.error("Unexpected error in documentation generate route:", err);
+    return NextResponse.json({ error: "Something went wrong generating this draft. Please try again." }, { status: 500 });
   }
 }
 
@@ -100,7 +101,7 @@ async function handleGenerate(req: NextRequest) {
   let rawDraft: string;
   try {
     const response = await genAI.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.6-flash",
       config: { systemInstruction },
       contents: `Requirement: ${requirement?.title}\n${requirement?.description}\n\nEvidence:\n${JSON.stringify(
         evidence,
@@ -110,15 +111,17 @@ async function handleGenerate(req: NextRequest) {
     });
     rawDraft = response.text ?? "";
   } catch (err: any) {
-    const message = err?.message ?? "Unknown error calling Gemini";
-    // A quota/rate-limit error from Google's API is the most likely cause
-    // when generating several sections back-to-back on the free tier.
-    const isRateLimit = /quota|rate.?limit|429/i.test(message);
+    // Log the full error server-side for debugging — but the person using
+    // the product should never see raw API/JSON internals. Whatever the
+    // underlying cause, they get one clean, professional sentence.
+    console.error("Gemini generation failed:", err);
+    const rawMessage = String(err?.message ?? "");
+    const isRateLimit = /quota|rate.?limit|429/i.test(rawMessage);
     return NextResponse.json(
       {
         error: isRateLimit
-          ? "Gemini's free-tier rate limit was hit — wait a minute and try generating this section again."
-          : `Draft generation failed: ${message}`,
+          ? "The AI drafting service is temporarily busy — please wait a minute and try again."
+          : "Drafting failed unexpectedly. Please try again, or contact support if this keeps happening.",
       },
       { status: 502 }
     );

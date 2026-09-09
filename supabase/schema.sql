@@ -10,6 +10,8 @@ create extension if not exists "uuid-ossp";
 create table organizations (
   id uuid primary key default uuid_generate_v4(),
   name text not null,
+  trust_center_enabled boolean not null default false,
+  trust_center_slug text unique,
   created_at timestamptz not null default now()
 );
 
@@ -220,6 +222,9 @@ create policy "members see their org" on organizations
 
 create policy "authenticated users can create an organization" on organizations
   for insert with check (auth.uid() is not null);
+
+create policy "members can update their own org" on organizations
+  for update using (is_org_member(id)) with check (is_org_member(id));
 
 create policy "members see membership rows" on organization_members
   for select using (is_org_member(organization_id));
