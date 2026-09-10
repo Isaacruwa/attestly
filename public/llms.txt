@@ -22,5 +22,6 @@ Attestly is a SaaS product for companies deploying autonomous AI agents that nee
 - Supported trace sources: OpenTelemetry, LangSmith, AgentOps, generic JSON.
 - Free tier: 1 AI system, 10 lifetime documentation generations.
 - Every approved section is cryptographically hashed (SHA-256) for tamper-evidence, alongside the evidence it was approved against.
+- Customers can optionally publish a public Trust Center page showing aggregate compliance status (never document content or evidence) at attestly.online/trust/[their-slug].
 - Explicitly not: a legal advice service, a compliance guarantee, or a generic AI governance dashboard.
 - Contact: support@attestly.online

@@ -79,6 +79,7 @@ const jsonLd = {
       ],
       featureList: [
         "Free EU AI Act risk classification tool",
+        "Public Trust Center pages for sharing compliance status",
         "Cryptographically verified, tamper-evident evidence and approvals",
         "EU AI Act Annex IV technical documentation generation",
         "Risk-management summaries",

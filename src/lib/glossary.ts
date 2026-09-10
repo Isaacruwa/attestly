@@ -127,6 +127,28 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       },
     ],
   },
+  {
+    slug: "compliance-trust-center",
+    title: "What is a compliance trust center?",
+    metaDescription:
+      "What a public compliance trust center page is, who it's for, and what information it should and shouldn't expose.",
+    intro:
+      "A compliance trust center is a public, shareable page showing an organization's compliance status — typically to customers, partners, or auditors who need reassurance without requesting a full audit report for every conversation.",
+    sections: [
+      {
+        heading: "What it should show",
+        body: "Aggregate, non-sensitive status: how many requirements are documented and approved, which systems are covered, and when it was last updated. This is the pattern used by established compliance platforms like Vanta and Drata for SOC 2 and similar frameworks — a public summary that builds trust without exposing the underlying detail.",
+      },
+      {
+        heading: "What it should never show",
+        body: "The actual document content, raw evidence, trace data, or anything else that would be sensitive if seen by a competitor or the general public. A trust center is a summary and a signal, not a substitute for the real documentation shared privately with someone who actually needs to review it (an auditor, a regulator, an enterprise customer's security team).",
+      },
+      {
+        heading: "Why it's useful beyond the obvious",
+        body: "A public trust center also gives you something concrete to link to from your own website, sales materials, and outreach — turning a private compliance effort into a visible trust signal other people can find and reference.",
+      },
+    ],
+  },
 ];
 
 export function getGlossaryTerm(slug: string): GlossaryTerm | undefined {

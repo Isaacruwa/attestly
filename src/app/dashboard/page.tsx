@@ -55,6 +55,9 @@ export default async function DashboardPage() {
           <Link href="/dashboard/team" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             Team
           </Link>
+          <Link href="/dashboard/trust-center" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+            Trust Center
+          </Link>
           <Link href="/dashboard/systems/new" style={{ fontSize: 14, color: "var(--color-primary)" }}>
             + Add AI system
           </Link>

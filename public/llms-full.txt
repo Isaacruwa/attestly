@@ -28,6 +28,10 @@ Enterprises deploying autonomous AI agents generate operational traces and logs,
 
 Every event ingested is hashed (SHA-256) at the moment it's stored. When a documentation section is approved, Attestly records a hash of the exact approved text and a combined hash of the evidence events it was approved against. Recomputing either hash later and comparing it to the stored value reveals whether the content was altered after approval — this is tamper-evidence, not a blockchain or legal certification, but a real, checkable integrity guarantee that goes beyond a written assertion of compliance.
 
+## Public Trust Center pages
+
+Customers can opt in to a public, shareable page (attestly.online/trust/[their-chosen-slug]) showing aggregate EU AI Act documentation status: percentage of requirements approved, which AI systems are covered, and when it was last updated. This never exposes actual document content, evidence, or trace data — only aggregate status. Off by default; each organization controls whether theirs is public and what its URL slug is.
+
 ## What Attestly explicitly is NOT
 
 - Not a source of legal advice.

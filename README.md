@@ -358,6 +358,32 @@ messaging is written to reflect exactly that.
   "Audit-ready evidence trails" deliverable description both updated.
 - `llms.txt` and `llms-full.txt` both updated with the capability.
 
+## Public Trust Center pages
+
+Real feature, not just a settings toggle:
+
+- `organizations.trust_center_enabled` / `.trust_center_slug` — opt-in,
+  off by default. New RLS policy lets org owner/admin update their own org
+  row (previously only select/insert existed).
+- `/dashboard/trust-center` — settings page: toggle it on, pick/edit a
+  shareable slug, live preview of the public URL, save via
+  `POST /api/trust-center/settings` (owner/admin only, validates slug
+  format and uniqueness).
+- `/trust/[slug]` — the actual public page, using the service-role client
+  gated explicitly by `trust_center_enabled = true` in the query itself
+  (no public RLS policy needed — the gate is in application logic, same
+  pattern as `/admin` and `/invite`). Shows only aggregate status (% of
+  Annex IV requirements approved, per-system breakdown, last-updated date)
+  — **never** actual document content, evidence, or trace data.
+- Deliberately indexable (not blocked in `robots.txt`) — the whole point
+  is customers can share and be found via it.
+
+### Baked into SEO/GEO as it shipped
+
+- New glossary term: `/glossary/compliance-trust-center`.
+- Homepage `SoftwareApplication.featureList` updated.
+- `llms.txt` and `llms-full.txt` both updated.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,
