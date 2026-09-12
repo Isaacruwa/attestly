@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Terms of Service — Attestly",
   description: "The terms governing use of Attestly's EU AI Act documentation platform.",
   alternates: { canonical: "https://attestly.online/terms" },
+  robots: { index: false, follow: false },
 };
 
 export default function TermsPage() {
