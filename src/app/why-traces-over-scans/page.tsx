@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Why Annex IV Documentation Needs Runtime Evidence, Not Code Scans",
-  description:
-    "EU AI Act Annex IV evidence has to show what an AI agent actually did at runtime. Static source-code scans can't capture that. Here's what runtime traces provide that code can't.",
-  alternates: { canonical: "https://attestly.online/why-traces-over-scans" },
-};
+  description: "EU AI Act Annex IV evidence has to show what an AI agent actually did at runtime. Static source-code scans can't capture that. Here's what runtime traces provide that code can't.",
+  path: "/why-traces-over-scans",
+});
 
 const jsonLd = {
   "@context": "https://schema.org",
