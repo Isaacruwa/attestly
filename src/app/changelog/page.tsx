@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Changelog — Attestly",
   description: "What's new in Attestly: product updates, new trace-source support, and documentation improvements.",
-  alternates: { canonical: "https://attestly.online/changelog" },
-};
+  path: "/changelog",
+});
 
 const ENTRIES = [
   {
