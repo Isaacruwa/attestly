@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GLOSSARY_TERMS, getGlossaryTerm } from "@/lib/glossary";
@@ -10,11 +11,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const term = getGlossaryTerm(params.slug);
   if (!term) return {};
-  return {
+  return buildMetadata({
     title: `${term.title} — Attestly`,
     description: term.metaDescription,
-    alternates: { canonical: `https://attestly.online/glossary/${term.slug}` },
-  };
+    path: `/glossary/${term.slug}`,
+  });
 }
 
 export default function GlossaryTermPage({ params }: { params: { slug: string } }) {
