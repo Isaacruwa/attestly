@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — Attestly",
   description: "How Attestly collects, uses, and protects your data.",
   alternates: { canonical: "https://attestly.online/privacy" },
+  robots: { index: false, follow: false },
 };
 
 export default function PrivacyPage() {
