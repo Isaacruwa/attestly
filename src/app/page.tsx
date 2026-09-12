@@ -35,6 +35,18 @@ const FAQS = [
     q: "What format is the exported documentation in?",
     a: "Attestly exports a Word (.docx) document containing every requirement, its current review status, whether it's AI-generated or human-edited, and a list of the exact trace events used as supporting evidence.",
   },
+  {
+    q: "How is Attestly different from attestly.dev?",
+    a: "attestly.dev performs static analysis of your source code to produce generic SaaS privacy/compliance documentation. Attestly reads your AI agents' runtime traces (OpenTelemetry, LangSmith, AgentOps, MCP logs) and drafts EU AI Act Annex IV documentation with evidence links back to specific trace events. A code scan can tell you an SDK is imported; it can't tell you what the agent actually did — which tool calls it made, when a human intervened, what errors occurred, or how behavior changed between deployments. That's a different product for a different requirement.",
+  },
+  {
+    q: "Can I use Attestly alongside a GRC platform?",
+    a: "Yes. A GRC platform tracks which AI systems exist, who owns them, and their overall policy status. Attestly produces the underlying Annex IV documentation draft for a specific system, grounded in that system's actual runtime evidence. Most customers use both: GRC for inventory and ownership, Attestly for the evidence-backed documentation itself.",
+  },
+  {
+    q: "What if my agent framework isn't listed?",
+    a: "Attestly accepts generic pre-normalized JSON in addition to OpenTelemetry, LangSmith, AgentOps, and MCP logs, so any framework that can export its trace events as JSON can be ingested even without native support.",
+  },
 ];
 
 const jsonLd = {
@@ -154,6 +166,7 @@ export default function LandingPage() {
 
         <div className="site-nav__links">
           <Link href="/glossary" className="site-nav__link">Glossary</Link>
+          <Link href="/guides" className="site-nav__link">Guides</Link>
           <Link href="/eu-ai-act-risk-checker" className="site-nav__link">Risk Checker</Link>
           <Link href="/pricing" className="site-nav__link">Pricing</Link>
           <Link href="/login" className="site-nav__cta">Sign in</Link>
@@ -277,6 +290,128 @@ export default function LandingPage() {
         </div>
       </section>
 
+
+      <section className="section" id="why-traces-not-scans">
+        <p className="section__eyebrow">Why runtime traces, not code scans</p>
+        <h2>A static scan of your repository cannot see what your agent actually did.</h2>
+        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
+          <p>
+            Scanning source code can tell you which SDKs and model calls are wired up. It cannot tell you what
+            happened at runtime: which tools an agent actually invoked, when a human stepped in to override a
+            decision, which calls errored out, or how the system's behavior changed between one deployment and
+            the next. Annex IV specifically asks for that operational evidence — and it only exists in execution
+            traces, not in a repository.
+          </p>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 560 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--color-line)", textAlign: "left" }}>
+                <th style={{ padding: "10px 12px" }}></th>
+                <th style={{ padding: "10px 12px", color: "var(--color-primary)" }}>Attestly (runtime traces)</th>
+                <th style={{ padding: "10px 12px", color: "var(--color-ink-faint)" }}>Code-scanning tools</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Sees actual agent behavior", true, false],
+                ["Captures human interventions", true, false],
+                ["Evidence link per generated sentence", true, false],
+                ["Works with agents you didn't build (MCP, third-party tools)", true, false],
+                ["Updates as behavior changes", true, false],
+              ].map(([label, us, them]) => (
+                <tr key={label as string} style={{ borderBottom: "1px solid var(--color-line)" }}>
+                  <td style={{ padding: "10px 12px", color: "var(--color-ink)" }}>{label as string}</td>
+                  <td style={{ padding: "10px 12px" }}>{us ? "✓" : "—"}</td>
+                  <td style={{ padding: "10px 12px", color: "var(--color-ink-faint)" }}>{them ? "✓" : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p style={{ marginTop: 16 }}>
+          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 14 }}>
+            Read the full breakdown of why Annex IV needs runtime evidence →
+          </Link>
+        </p>
+      </section>
+
+      <section className="section" id="supported-trace-sources">
+        <p className="section__eyebrow">Supported trace sources</p>
+        <h2>Ingest whatever your agents already emit.</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 8 }}>
+          {[
+            { name: "OpenTelemetry", href: "#supported-trace-sources" },
+            { name: "LangSmith", href: "#supported-trace-sources" },
+            { name: "AgentOps", href: "#supported-trace-sources" },
+            { name: "MCP", href: "#supported-trace-sources" },
+            { name: "Pre-normalized JSON", href: "#supported-trace-sources" },
+          ].map((s) => (
+            <a
+              key={s.name}
+              href={s.href}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "8px 16px",
+                borderRadius: 999,
+                border: "1px solid var(--color-line)",
+                fontSize: 13.5,
+                fontFamily: "var(--font-mono)",
+                color: "var(--color-ink)",
+                textDecoration: "none",
+                background: "var(--color-primary-tint)",
+              }}
+            >
+              {s.name}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="section" id="live-example">
+        <p className="section__eyebrow">Live example</p>
+        <h2>From trace event to Annex IV sentence.</h2>
+        <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
+          A simplified, illustrative walkthrough of how a handful of normalized trace events map to a single
+          drafted documentation sentence — with a link back to the exact event that justified it.
+        </p>
+        <pre
+          className="mono"
+          style={{
+            background: "var(--color-ink)",
+            color: "#e6f2ef",
+            padding: 20,
+            borderRadius: 8,
+            fontSize: 12.5,
+            lineHeight: 1.6,
+            overflowX: "auto",
+          }}
+        >
+{`[
+  { "event": "tool_call", "tool": "refund_api", "id": "a91f02c1", "status": "success" },
+  { "event": "human_intervention", "actor": "reviewer@acme.eu", "id": "a91f02c2", "action": "approved" },
+  { "event": "error", "id": "a91f02c3", "message": "timeout on retry 2" },
+  { "event": "deployment_change", "id": "a91f02c4", "from": "v1.4", "to": "v1.5" }
+]`}
+        </pre>
+        <div style={{ marginTop: 16, padding: 18, border: "1px solid var(--color-line)", borderRadius: 8, background: "white" }}>
+          <p style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
+            Drafted Annex IV section — Monitoring measures
+          </p>
+          <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--color-ink)" }}>
+            &ldquo;The system autonomously invoked the refund API, which a human reviewer subsequently approved
+            after an initial retry timeout; the system was updated from v1.4 to v1.5 shortly after.&rdquo;{" "}
+            <span
+              className="mono"
+              style={{ fontSize: 12, color: "var(--color-primary)", whiteSpace: "nowrap" }}
+            >
+              [evidence: trace #a91f02c1]
+            </span>
+          </p>
+        </div>
+      </section>
+
       <section className="section">
         <div className="trust-strip">
           Attestly does not provide legal advice and does not guarantee regulatory compliance.
@@ -315,6 +450,9 @@ export default function LandingPage() {
           Attestly
         </span>
         <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
+          <Link href="/guides" className="site-footer__meta" style={{ textDecoration: "none" }}>Guides</Link>
+          <Link href="/about" className="site-footer__meta" style={{ textDecoration: "none" }}>About</Link>
+          <Link href="/changelog" className="site-footer__meta" style={{ textDecoration: "none" }}>Changelog</Link>
           <Link href="/terms" className="site-footer__meta" style={{ textDecoration: "none" }}>Terms</Link>
           <Link href="/privacy" className="site-footer__meta" style={{ textDecoration: "none" }}>Privacy</Link>
           <Link href="/refund-policy" className="site-footer__meta" style={{ textDecoration: "none" }}>Refunds</Link>
