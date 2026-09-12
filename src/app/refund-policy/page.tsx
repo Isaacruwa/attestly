@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Refund Policy — Attestly",
   description: "Attestly's refund and cancellation policy for paid subscriptions.",
-  alternates: { canonical: "https://attestly.online/refund-policy" },
-  robots: { index: false, follow: false },
-};
+  path: "/refund-policy",
+  noindex: true,
+});
 
 export default function RefundPolicyPage() {
   return (
