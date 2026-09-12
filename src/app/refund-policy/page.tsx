@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Refund Policy — Attestly",
   description: "Attestly's refund and cancellation policy for paid subscriptions.",
   alternates: { canonical: "https://attestly.online/refund-policy" },
+  robots: { index: false, follow: false },
 };
 
 export default function RefundPolicyPage() {
