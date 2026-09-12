@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "EU AI Act Guides — Attestly",
-  description:
-    "Practical guides on EU AI Act Annex IV documentation, Article 72 monitoring, and Annex III high-risk classification.",
-  alternates: { canonical: "https://attestly.online/guides" },
-};
+  description: "Practical guides on EU AI Act Annex IV documentation, Article 72 monitoring, and Annex III high-risk classification.",
+  path: "/guides",
+});
 
 const GUIDES = [
   {
