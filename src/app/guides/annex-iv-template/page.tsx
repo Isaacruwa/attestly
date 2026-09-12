@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Annex IV Technical Documentation Template (With Examples)",
-  description:
-    "A practical, section-by-section Annex IV documentation template with example language, for teams drafting their first EU AI Act technical file.",
-  alternates: { canonical: "https://attestly.online/guides/annex-iv-template" },
-};
+  description: "A practical, section-by-section Annex IV documentation template with example language, for teams drafting their first EU AI Act technical file.",
+  path: "/guides/annex-iv-template",
+});
 
 export default function GuideAnnexIVTemplate() {
   return (
