@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "High-Risk AI Systems Under Annex III: Classification Examples",
-  description:
-    "Worked examples of AI systems that do and don't fall into the EU AI Act's Annex III high-risk categories, to help you reason about your own system.",
-  alternates: { canonical: "https://attestly.online/guides/high-risk-ai-examples" },
-};
+  description: "Worked examples of AI systems that do and don't fall into the EU AI Act's Annex III high-risk categories, to help you reason about your own system.",
+  path: "/guides/high-risk-ai-examples",
+});
 
 const EXAMPLES = [
   {
