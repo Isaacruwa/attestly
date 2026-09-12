@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Post-Market Monitoring Under Article 72: What to Log",
-  description:
-    "What EU AI Act Article 72 requires providers to monitor after deployment, and what that means for the logs and traces you need to keep.",
-  alternates: { canonical: "https://attestly.online/guides/ai-act-article-72-monitoring" },
-};
+  description: "What EU AI Act Article 72 requires providers to monitor after deployment, and what that means for the logs and traces you need to keep.",
+  path: "/guides/ai-act-article-72-monitoring",
+});
 
 export default function GuideArticle72() {
   return (
