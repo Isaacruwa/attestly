@@ -353,3 +353,19 @@ end;
 $$;
 
 grant execute on function create_organization_for_current_user(text) to authenticated;
+
+
+-- Anonymous lead capture from the free EU AI Act risk checker. Written only
+-- via the service-role key from the /api/leads/capture route handler, never
+-- directly from the browser, so RLS has no public policies (deny-all by
+-- default other than the service role, which bypasses RLS).
+create table if not exists risk_checker_leads (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  classification text not null,
+  source text not null default 'risk_checker',
+  created_at timestamptz not null default now()
+);
+
+alter table risk_checker_leads enable row level security;
+-- No policies: only the service-role key (used server-side only) can read/write this table.
