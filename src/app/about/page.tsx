@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "About Attestly — EU AI Act Agent Documentation",
-  description:
-    "Attestly is EU AI Act agent documentation: we turn AI-agent runtime traces into Annex IV technical documentation with evidence links. Contact support@attestly.online.",
-  alternates: { canonical: "https://attestly.online/about" },
-};
+  description: "Attestly is EU AI Act agent documentation: we turn AI-agent runtime traces into Annex IV technical documentation with evidence links. Contact support@attestly.online.",
+  path: "/about",
+});
 
 const jsonLd = {
   "@context": "https://schema.org",
