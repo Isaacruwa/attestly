@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Privacy Policy — Attestly",
   description: "How Attestly collects, uses, and protects your data.",
-  alternates: { canonical: "https://attestly.online/privacy" },
-  robots: { index: false, follow: false },
-};
+  path: "/privacy",
+  noindex: true,
+});
 
 export default function PrivacyPage() {
   return (
