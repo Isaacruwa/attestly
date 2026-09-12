@@ -384,6 +384,33 @@ Real feature, not just a settings toggle:
 - Homepage `SoftwareApplication.featureList` updated.
 - `llms.txt` and `llms-full.txt` both updated.
 
+## Formal audit evidence packages
+
+- `src/lib/buildDocumentationDocx.ts` — extracted the docx-building logic
+  out of the plain export route so it's shared, not duplicated, between
+  the plain export and the new package export.
+- `GET /api/documentation/export-evidence-package?ai_system_id=...` —
+  returns a real `.zip` (verified locally that JSZip actually produces a
+  valid zip, not just assumed) containing:
+  - the Word document (same as the plain export)
+  - `evidence-package.json` — every piece of evidence in full detail
+    (not just summary strings) including each event's own hash, plus the
+    complete review/approval history per section with reviewer emails
+    resolved via the service-role client (safe here specifically because
+    it only names people who already appear in this org's own review
+    history — not cross-org exposure)
+  - `VERIFICATION.txt` — a plain-language guide to independently
+    recomputing the hashes, plus every verified section's hashes listed
+    for reference
+- New "Export evidence package (.zip)" button sits next to the existing
+  "Export .docx" button on the documentation page.
+
+### Baked into SEO/GEO as it shipped
+
+- New glossary term: `/glossary/audit-evidence-package`.
+- Homepage `SoftwareApplication.featureList` updated.
+- `llms.txt` and `llms-full.txt` both updated.
+
 ## What's intentionally not built yet (other)
 
 - MCP-log and API-history parsers (same plug-in pattern — one file each,

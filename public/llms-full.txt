@@ -32,6 +32,10 @@ Every event ingested is hashed (SHA-256) at the moment it's stored. When a docum
 
 Customers can opt in to a public, shareable page (attestly.online/trust/[their-chosen-slug]) showing aggregate EU AI Act documentation status: percentage of requirements approved, which AI systems are covered, and when it was last updated. This never exposes actual document content, evidence, or trace data — only aggregate status. Off by default; each organization controls whether theirs is public and what its URL slug is.
 
+## Formal audit evidence packages
+
+Beyond the plain Word document export, Attestly can generate a complete evidence package (a zip file) for handing to an auditor, regulator, or enterprise security reviewer: the Word document itself, a machine-readable JSON file with every piece of evidence in full detail (including per-event cryptographic hashes), the complete review and approval history for every section, and a verification guide explaining how to independently confirm nothing was altered since it was recorded.
+
 ## What Attestly explicitly is NOT
 
 - Not a source of legal advice.

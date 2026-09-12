@@ -81,6 +81,7 @@ const jsonLd = {
         "Free EU AI Act risk classification tool",
         "Public Trust Center pages for sharing compliance status",
         "Cryptographically verified, tamper-evident evidence and approvals",
+        "Formal audit-ready evidence packages for auditors and regulators",
         "EU AI Act Annex IV technical documentation generation",
         "Risk-management summaries",
         "Conformity-assessment checklists",

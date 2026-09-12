@@ -149,6 +149,24 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       },
     ],
   },
+  {
+    slug: "audit-evidence-package",
+    title: "What is an audit evidence package?",
+    metaDescription:
+      "What a formal audit evidence package for EU AI Act compliance contains, and how it differs from a plain documentation export.",
+    intro:
+      "An audit evidence package is a complete, structured bundle handed to an auditor, regulator, or enterprise security reviewer — going beyond a single document to include the underlying evidence, review history, and a way to independently verify none of it was altered.",
+    sections: [
+      {
+        heading: "What it typically contains",
+        body: "A human-readable document (the technical documentation itself), a machine-readable evidence file listing every piece of supporting evidence in full detail, the complete review and approval history (who edited, approved, or rejected each section and when), and cryptographic hashes that let a reviewer independently confirm the content hasn't changed since it was recorded or approved.",
+      },
+      {
+        heading: "Why a plain document isn't enough for a real audit",
+        body: "A single exported document is convenient to read, but an auditor's actual job is to test whether a claim is trustworthy — that means looking at the underlying evidence and the process that produced the document, not just the final prose. A package that surfaces both, with verifiable integrity checks, holds up to that kind of scrutiny in a way a document alone doesn't.",
+      },
+    ],
+  },
 ];
 
 export function getGlossaryTerm(slug: string): GlossaryTerm | undefined {

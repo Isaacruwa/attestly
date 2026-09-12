@@ -149,6 +149,20 @@ export default function DocumentationPage({ params }: { params: { id: string } }
           >
             Export .docx
           </a>
+          <a
+            href={`/api/documentation/export-evidence-package?ai_system_id=${aiSystemId}`}
+            style={{
+              fontSize: 13,
+              padding: "8px 16px",
+              border: "1px solid var(--color-primary)",
+              borderRadius: 4,
+              color: "var(--color-primary)",
+              textDecoration: "none",
+            }}
+            title="A full package for auditors: the Word doc, machine-readable evidence data, review history, and a verification guide"
+          >
+            Export evidence package (.zip)
+          </a>
         </div>
       </div>
 
