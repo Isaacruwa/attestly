@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "EU AI Act Glossary — Attestly",
   description: "Plain-language explanations of key EU AI Act terms: Annex IV, Annex III, conformity assessment, high-risk classification, and more.",
-  alternates: { canonical: "https://attestly.online/glossary" },
-};
+  path: "/glossary",
+});
 
 export default function GlossaryIndexPage() {
   const jsonLd = {
