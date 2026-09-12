@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import RiskChecker from "./RiskChecker";
+import { buildMetadata } from "@/lib/pageMetadata";
 
 const CLASSIFICATION_LABEL: Record<string, string> = {
   prohibited: "Prohibited",
@@ -14,24 +15,19 @@ export function generateMetadata({ searchParams }: { searchParams: { result?: st
   const label = result ? CLASSIFICATION_LABEL[result] : undefined;
 
   if (!label) {
-    return {
+    return buildMetadata({
       title: "EU AI Act Risk Checker — Free Tool | Attestly",
       description:
         "Answer a few questions about your AI system and get a directional EU AI Act risk classification (prohibited, high-risk, limited, or minimal) based on Article 5 and Annex III. Free, no signup required.",
-      alternates: { canonical: "https://attestly.online/eu-ai-act-risk-checker" },
-    };
+      path: "/eu-ai-act-risk-checker",
+    });
   }
 
-  const title = `My AI system is ${label}-risk under the EU AI Act`;
-  const description =
-    "Check your own AI system's directional EU AI Act risk classification — free, no signup required.";
-  return {
-    title,
-    description,
-    alternates: { canonical: "https://attestly.online/eu-ai-act-risk-checker" },
-    openGraph: { title, description, type: "website" },
-    twitter: { card: "summary_large_image", title, description },
-  };
+  return buildMetadata({
+    title: `My AI system is ${label}-risk under the EU AI Act`,
+    description: "Check your own AI system's directional EU AI Act risk classification — free, no signup required.",
+    path: "/eu-ai-act-risk-checker",
+  });
 }
 
 export default function RiskCheckerPage({ searchParams }: { searchParams: { result?: string } }) {
