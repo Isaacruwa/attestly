@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Result = "prohibited" | "high" | "limited" | "minimal" | null;
 
@@ -34,14 +35,50 @@ const LIMITED_ITEMS = [
   "Recognizes emotions or biometrically categorizes people (outside the prohibited/high-risk cases above)",
 ];
 
-export default function RiskChecker() {
+export default function RiskChecker({ initialResult = null }: { initialResult?: Result }) {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [prohibited, setProhibited] = useState<Set<string>>(new Set());
   const [safetyComponent, setSafetyComponent] = useState<boolean | null>(null);
   const [annexIII, setAnnexIII] = useState<Set<string>>(new Set());
   const [narrowTask, setNarrowTask] = useState<boolean | null>(null);
   const [limited, setLimited] = useState<Set<string>>(new Set());
-  const [result, setResult] = useState<Result>(null);
+  const [result, setResult] = useState<Result>(initialResult);
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadStatus, setLeadStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied">("idle");
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (result) {
+      url.searchParams.set("result", result);
+    } else {
+      url.searchParams.delete("result");
+    }
+    router.replace(`${url.pathname}${url.search}`, { scroll: false });
+  }, [result, router]);
+
+  async function submitLead() {
+    if (!leadEmail || !result) return;
+    setLeadStatus("sending");
+    try {
+      const res = await fetch("/api/leads/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: leadEmail, classification: result, source: "risk_checker" }),
+      });
+      setLeadStatus(res.ok ? "sent" : "error");
+    } catch {
+      setLeadStatus("error");
+    }
+  }
+
+  function copyShareLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopyStatus("copied");
+      setTimeout(() => setCopyStatus("idle"), 2000);
+    });
+  }
 
   function toggle(set: Set<string>, setter: (s: Set<string>) => void, item: string) {
     const next = new Set(set);
@@ -118,6 +155,53 @@ export default function RiskChecker() {
             Start documenting this system with Attestly →
           </Link>
         )}
+
+        <div style={{ marginTop: 24, padding: 20, background: "var(--color-primary-tint)", borderRadius: 8 }}>
+          <p style={{ fontWeight: 600, fontSize: 14.5, marginBottom: 4 }}>
+            Get this classification as a documented Annex IV starting point
+          </p>
+          <p style={{ fontSize: 13, color: "var(--color-ink-muted)", marginBottom: 12 }}>
+            We&apos;ll email you a free-tier link to start building the documentation for this system.
+          </p>
+          {leadStatus === "sent" ? (
+            <p style={{ fontSize: 13.5, color: "var(--color-approved)" }}>Sent — check your inbox.</p>
+          ) : (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <input
+                type="email"
+                value={leadEmail}
+                onChange={(e) => setLeadEmail(e.target.value)}
+                placeholder="you@company.com"
+                style={{ flex: 1, minWidth: 180, padding: "8px 12px", borderRadius: 4, border: "1px solid var(--color-line)" }}
+              />
+              <button
+                onClick={submitLead}
+                disabled={leadStatus === "sending"}
+                className="btn-primary"
+                style={{ border: "none" }}
+              >
+                {leadStatus === "sending" ? "Sending…" : "Send me this"}
+              </button>
+            </div>
+          )}
+          {leadStatus === "error" && (
+            <p style={{ fontSize: 12.5, color: "var(--color-missing)", marginTop: 8 }}>
+              Something went wrong — please try again.
+            </p>
+          )}
+        </div>
+
+        <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+          <button onClick={copyShareLink} style={{ background: "none", border: "1px solid var(--color-line)", borderRadius: 4, padding: "6px 12px", fontSize: 12.5, color: "var(--color-ink-muted)", cursor: "pointer" }}>
+            {copyStatus === "copied" ? "Link copied ✓" : "Copy shareable result link"}
+          </button>
+          <Link href="/guides/high-risk-ai-examples" style={{ fontSize: 12.5, color: "var(--color-primary)" }}>
+            High-risk classification examples →
+          </Link>
+          <Link href="/guides/eu-ai-act-annex-iv-explained" style={{ fontSize: 12.5, color: "var(--color-primary)" }}>
+            What Annex IV requires →
+          </Link>
+        </div>
 
         <div style={{ marginTop: 16 }}>
           <button onClick={reset} style={{ background: "none", border: "none", color: "var(--color-ink-muted)", fontSize: 13, textDecoration: "underline", cursor: "pointer" }}>
