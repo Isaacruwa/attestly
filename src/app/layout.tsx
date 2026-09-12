@@ -67,10 +67,26 @@ export const viewport: Viewport = {
   themeColor: "#1F3A3D",
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${siteUrl}/#organization`,
+  name: "Attestly",
+  description: "EU AI Act Annex IV technical documentation generated from AI-agent runtime traces.",
+  url: siteUrl,
+  email: "support@attestly.online",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${plexSans.variable} ${plexSerif.variable} ${plexMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
