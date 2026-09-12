@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Terms of Service — Attestly",
   description: "The terms governing use of Attestly's EU AI Act documentation platform.",
-  alternates: { canonical: "https://attestly.online/terms" },
-  robots: { index: false, follow: false },
-};
+  path: "/terms",
+  noindex: true,
+});
 
 export default function TermsPage() {
   return (
