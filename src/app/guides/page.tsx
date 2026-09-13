@@ -58,6 +58,20 @@ export default function GuidesIndexPage() {
           </Link>
         ))}
       </div>
+
+      <div style={{ marginTop: 40, paddingTop: 24, borderTop: "1px solid var(--color-line)" }}>
+        <p style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 10 }}>
+          Comparisons
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <Link href="/attestly-vs-aiacto" style={{ padding: "10px 4px", color: "var(--color-primary)", fontSize: 14 }}>
+            Attestly vs AiActo →
+          </Link>
+          <Link href="/attestly-vs-openlayer" style={{ padding: "10px 4px", color: "var(--color-primary)", fontSize: 14 }}>
+            Attestly vs Openlayer →
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }
