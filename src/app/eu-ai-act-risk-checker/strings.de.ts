@@ -2,7 +2,7 @@ import type { RiskCheckerStrings } from "./strings";
 
 export const DE_STRINGS: RiskCheckerStrings = {
   prohibitedItems: [
-    "Verwendet unterschärft, manipulative oder täuschende Techniken, die geeignet sind, einer Person körperlichen oder psychischen Schaden zuzufügen",
+    "Verwendet unterschwellige, manipulative oder täuschende Techniken, die geeignet sind, einer Person körperlichen oder psychischen Schaden zuzufügen",
     "Nutzt die Schwachstellen einer bestimmten Gruppe (Alter, Behinderung oder soziale bzw. wirtschaftliche Situation) aus, um deren Verhalten in schädlicher Weise zu beeinflussen",
     "Bewertet oder klassifiziert Personen im Auftrag einer Behörde anhand ihrer Vertrauenswürdigkeit oder ihres Sozialverhaltens (Social Scoring)",
     "Sagt allein anhand von Profiling oder Persönlichkeitsmerkmalen die Wahrscheinlichkeit voraus, dass eine Person eine Straftat begeht",
