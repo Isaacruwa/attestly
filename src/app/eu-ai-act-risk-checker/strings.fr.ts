@@ -1,0 +1,83 @@
+import type { RiskCheckerStrings } from "./strings";
+
+export const FR_STRINGS: RiskCheckerStrings = {
+  prohibitedItems: [
+    "Utilise des techniques subliminales, manipulatrices ou trompeuses susceptibles de causer un préjudice physique ou psychologique à une personne",
+    "Exploite les vulnérabilités d'un groupe spécifique (âge, handicap ou situation socio-économique) pour altérer son comportement de manière préjudiciable",
+    "Évalue ou classe les personnes selon leur fiabilité ou leur comportement social pour le compte d'une autorité publique (notation sociale)",
+    "Prédit la probabilité qu'une personne commette une infraction en se fondant uniquement sur le profilage ou les traits de personnalité",
+    "Constitue ou étend une base de données de reconnaissance faciale par extraction non ciblée d'images sur internet ou de la vidéosurveillance",
+    "Déduit les émotions sur le lieu de travail ou dans un établissement d'enseignement (hors exceptions médicales ou de sécurité limitées)",
+    "Catégorise biométriquement les personnes pour déduire leur origine raciale, leurs opinions politiques, leur religion, leur orientation sexuelle ou des caractéristiques sensibles similaires",
+    "Réalise une identification biométrique à distance en temps réel dans des espaces accessibles au public à des fins répressives",
+    "Génère ou manipule des contenus intimes non consentis, ou génère/manipule du matériel pédopornographique",
+  ],
+  annexIIIItems: [
+    "Identification ou catégorisation biométrique des personnes",
+    "Gestion ou exploitation d'infrastructures critiques (énergie, eau, transports, infrastructures numériques)",
+    "Éducation ou formation professionnelle (par ex. notation des examens, admissions, surveillance des élèves)",
+    "Emploi, gestion des travailleurs ou accès au travail indépendant (par ex. recrutement, promotion, décisions de licenciement)",
+    "Accès aux services essentiels (notation de crédit, tarification des assurances, éligibilité aux prestations, répartition des secours d'urgence)",
+    "Répression pénale (hors le cas d'identification biométrique en temps réel interdit ci-dessus)",
+    "Gestion de la migration, de l'asile ou du contrôle aux frontières",
+    "Administration de la justice ou des processus démocratiques",
+  ],
+  limitedItems: [
+    "Interagit directement avec des personnes d'une manière qu'elles pourraient prendre pour un être humain (par ex. un chatbot)",
+    "Génère ou manipule des images, de l'audio ou de la vidéo pouvant être pris pour authentiques",
+    "Reconnaît les émotions ou catégorise biométriquement les personnes (hors cas interdits ou à haut risque ci-dessus)",
+  ],
+  resultCopy: {
+    prohibited: {
+      label: "Probablement une pratique interdite",
+      color: "var(--color-missing)",
+      body: "D'après vos réponses, ce système pourrait relever des pratiques interdites de l'article 5 — applicables depuis février 2025 (avec deux ajouts, les outils de « nudification » par IA et les contenus pédopornographiques générés par IA, applicables à partir du 2 décembre 2026). Il n'existe aucune voie de mise en conformité pour une pratique interdite : elle doit cesser ou être repensée pour sortir de ces critères.",
+    },
+    high: {
+      label: "Probablement à haut risque",
+      color: "var(--color-review)",
+      body: "D'après vos réponses, ce système relève probablement de l'annexe III (ou constitue un composant de sécurité d'un produit déjà réglementé) et serait classé comme système d'IA à haut risque. À la suite de la modification « Omnibus numérique » de 2026, l'échéance de mise en conformité pour les systèmes de l'annexe III est désormais fixée au 2 décembre 2027 (2 août 2028 pour les systèmes intégrés à des produits relevant de l'annexe I) — plus tardive que la date initiale d'août 2026, mais c'est exactement la catégorie pour laquelle la documentation Annexe IV d'Attestly est conçue.",
+    },
+    limited: {
+      label: "Probablement à risque limité",
+      color: "var(--color-updated)",
+      body: "D'après vos réponses, ce système relève probablement des obligations de transparence de l'article 50 — informer les personnes qu'elles interagissent avec une IA et étiqueter le contenu synthétique. L'obligation de marquage du contenu synthétique côté fournisseur (article 50, paragraphe 2) bénéficie d'un délai de grâce jusqu'au 2 décembre 2026 pour les systèmes déjà sur le marché.",
+    },
+    minimal: {
+      label: "Probablement à risque minimal",
+      color: "var(--color-approved)",
+      body: "D'après vos réponses, ce système ne semble pas déclencher les obligations spécifiques du règlement sur l'intelligence artificielle. Les codes de conduite volontaires restent encouragés, et il est recommandé de revérifier la classification si la finalité ou les capacités du système évoluent.",
+    },
+  },
+  resultLabel: "Résultat",
+  trustStrip:
+    "Il s'agit d'un indicateur directionnel à visée pédagogique fondé sur les catégories publiées du règlement, et non d'une qualification juridique ou d'un conseil juridique. Le calendrier de mise en œuvre du règlement sur l'IA a changé à plusieurs reprises en 2026 — vérifiez le statut actuel et obtenez un avis juridique qualifié avant toute décision de mise en conformité.",
+  startDocumenting: "Commencer à documenter ce système avec Attestly →",
+  leadTitle: "Recevoir cette classification comme point de départ documenté pour l'annexe IV",
+  leadSubtitle: "Nous vous enverrons par e-mail un lien vers l'offre gratuite pour commencer à documenter ce système.",
+  leadSent: "Envoyé — consultez votre boîte de réception.",
+  emailPlaceholder: "vous@entreprise.com",
+  sendButton: "Envoyer",
+  sendingButton: "Envoi…",
+  leadError: "Une erreur s'est produite — veuillez réessayer.",
+  copyLinkDefault: "Copier le lien du résultat",
+  copyLinkCopied: "Lien copié ✓",
+  highRiskExamplesLink: "Exemples de classification à haut risque →",
+  annexIVLink: "Ce que requiert l'annexe IV →",
+  checkAnother: "Vérifier un autre système",
+  step1Title: "Étape 1 — Votre système fait-il l'une des choses suivantes ?",
+  step1Subtitle: "Cochez tout ce qui s'applique. Il s'agit des pratiques interdites par l'article 5.",
+  continueButton: "Continuer →",
+  step2Title: "Étape 2 — Est-il utilisé dans un domaine sensible ?",
+  step2SafetyQuestion:
+    "Votre système est-il un composant de sécurité d'un produit déjà réglementé par le droit européen de la sécurité des produits (dispositifs médicaux, machines, jouets, véhicules, ascenseurs) et soumis à une évaluation de conformité par un tiers ?",
+  yes: "Oui",
+  no: "Non",
+  step2AnnexIIIPrompt: "Relève-t-il de l'un des domaines de l'annexe III ? Cochez tout ce qui s'applique.",
+  step2NarrowTaskPrompt:
+    "Une dernière vérification — en vertu de l'article 6, paragraphe 3, un système à tâche étroite peut échapper à la classification à haut risque. Votre système se limite-t-il uniquement à effectuer une tâche procédurale étroite, à améliorer le résultat d'une décision humaine déjà prise, à détecter des schémas sans remplacer le jugement humain, ou à effectuer un travail préparatoire, sans profiler de personnes ?",
+  yesNarrowTaskOnly: "Oui, tâche étroite uniquement",
+  step3Title: "Étape 3 — Déclencheurs de transparence",
+  step3Subtitle: "Cochez tout ce qui s'applique.",
+  seeResultButton: "Voir mon résultat →",
+};
