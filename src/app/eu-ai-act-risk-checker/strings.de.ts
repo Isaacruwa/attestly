@@ -1,0 +1,83 @@
+import type { RiskCheckerStrings } from "./strings";
+
+export const DE_STRINGS: RiskCheckerStrings = {
+  prohibitedItems: [
+    "Verwendet unterschärft, manipulative oder täuschende Techniken, die geeignet sind, einer Person körperlichen oder psychischen Schaden zuzufügen",
+    "Nutzt die Schwachstellen einer bestimmten Gruppe (Alter, Behinderung oder soziale bzw. wirtschaftliche Situation) aus, um deren Verhalten in schädlicher Weise zu beeinflussen",
+    "Bewertet oder klassifiziert Personen im Auftrag einer Behörde anhand ihrer Vertrauenswürdigkeit oder ihres Sozialverhaltens (Social Scoring)",
+    "Sagt allein anhand von Profiling oder Persönlichkeitsmerkmalen die Wahrscheinlichkeit voraus, dass eine Person eine Straftat begeht",
+    "Erstellt oder erweitert eine Gesichtserkennungsdatenbank durch ungezieltes Auslesen von Bildern aus dem Internet oder von Videoüberwachungsaufnahmen",
+    "Leitet Emotionen am Arbeitsplatz oder in Bildungseinrichtungen ab (außer in engen medizinischen oder sicherheitsbezogenen Ausnahmefällen)",
+    "Kategorisiert Personen biometrisch, um Rasse, politische Meinung, Religion, sexuelle Orientierung oder ähnliche sensible Merkmale abzuleiten",
+    "Führt biometrische Echtzeit-Fernidentifizierung im öffentlichen Raum zu Strafverfolgungszwecken durch",
+    "Erzeugt oder manipuliert nicht einvernehmliche intime Aufnahmen oder erzeugt/manipuliert Missbrauchsdarstellungen von Kindern",
+  ],
+  annexIIIItems: [
+    "Biometrische Identifizierung oder Kategorisierung von Personen",
+    "Betrieb kritischer Infrastrukturen (Energie, Wasser, Verkehr, digitale Infrastruktur)",
+    "Allgemeine und berufliche Bildung (z. B. Bewertung von Prüfungen, Zulassung, Überwachung von Lernenden)",
+    "Beschäftigung, Personalmanagement oder Zugang zur Selbstständigkeit (z. B. Einstellung, Beförderung, Kündigungsentscheidungen)",
+    "Zugang zu wesentlichen Dienstleistungen (Bonitätsbewertung, Versicherungstarifierung, Leistungsberechtigung, Notfalldisposition)",
+    "Strafverfolgung (außer dem oben genannten verbotenen Fall der biometrischen Echtzeitidentifizierung)",
+    "Migration, Asyl oder Grenzkontrolle",
+    "Rechtspflege oder demokratische Prozesse",
+  ],
+  limitedItems: [
+    "Interagiert direkt mit Personen in einer Weise, die sie für einen Menschen halten könnten (z. B. ein Chatbot)",
+    "Erzeugt oder manipuliert Bild-, Audio- oder Videoinhalte, die für authentisch gehalten werden könnten",
+    "Erkennt Emotionen oder kategorisiert Personen biometrisch (außer in den oben genannten verbotenen oder Hochrisikofällen)",
+  ],
+  resultCopy: {
+    prohibited: {
+      label: "Wahrscheinlich eine verbotene Praktik",
+      color: "var(--color-missing)",
+      body: "Basierend auf Ihren Angaben könnte dieses System unter die verbotenen Praktiken nach Artikel 5 fallen — diese gelten bereits seit Februar 2025 (mit zwei Ergänzungen, KI-„Nudifizierungs“-Tools und KI-generiertem Missbrauchsmaterial von Kindern, die ab dem 2. Dezember 2026 gelten). Für eine verbotene Praktik gibt es keinen Weg zur Konformität: Sie muss eingestellt oder so umgestaltet werden, dass sie außerhalb dieser Kriterien liegt.",
+    },
+    high: {
+      label: "Wahrscheinlich hochriskant",
+      color: "var(--color-review)",
+      body: "Basierend auf Ihren Angaben fällt dieses System wahrscheinlich unter Anhang III (oder ist eine Sicherheitskomponente eines bereits regulierten Produkts) und würde als Hochrisiko-KI-System eingestuft. Nach der Digital-Omnibus-Änderung von 2026 liegt die Frist zur Einhaltung für Systeme nach Anhang III nun beim 2. Dezember 2027 (2. August 2028 für in Produkte nach Anhang I eingebettete Systeme) — später als das ursprüngliche Datum im August 2026, aber genau für diese Kategorie ist die Anhang-IV-Dokumentation von Attestly gebaut.",
+    },
+    limited: {
+      label: "Wahrscheinlich begrenztes Risiko",
+      color: "var(--color-updated)",
+      body: "Basierend auf Ihren Angaben unterliegt dieses System wahrscheinlich den Transparenzpflichten nach Artikel 50 — der Offenlegung, dass Personen mit einer KI interagieren, und der Kennzeichnung synthetischer Inhalte. Die Kennzeichnungspflicht für synthetische Inhalte auf Anbieterseite (Artikel 50 Absatz 2) hat für bereits auf dem Markt befindliche Systeme eine Übergangsfrist bis zum 2. Dezember 2026.",
+    },
+    minimal: {
+      label: "Wahrscheinlich minimales Risiko",
+      color: "var(--color-approved)",
+      body: "Basierend auf Ihren Angaben scheint dieses System keine spezifischen Pflichten der KI-Verordnung auszulösen. Freiwillige Verhaltenskodizes werden weiterhin empfohlen, und es lohnt sich, die Einstufung erneut zu prüfen, falls sich Zweck oder Fähigkeiten des Systems ändern.",
+    },
+  },
+  resultLabel: "Ergebnis",
+  trustStrip:
+    "Dies ist ein pädagogischer, richtungsweisender Indikator auf Grundlage der veröffentlichten Kategorien der Verordnung, keine rechtliche Einstufung oder Rechtsberatung. Der Umsetzungszeitplan der KI-Verordnung hat sich 2026 mehrfach geändert — prüfen Sie den aktuellen Stand und holen Sie eine qualifizierte Rechtsberatung ein, bevor Sie Compliance-Entscheidungen treffen.",
+  startDocumenting: "Dieses System mit Attestly dokumentieren →",
+  leadTitle: "Diese Einstufung als dokumentierten Ausgangspunkt für Anhang IV erhalten",
+  leadSubtitle: "Wir senden Ihnen per E-Mail einen Link zur kostenlosen Stufe, um mit der Dokumentation dieses Systems zu beginnen.",
+  leadSent: "Gesendet — prüfen Sie Ihr Postfach.",
+  emailPlaceholder: "sie@unternehmen.de",
+  sendButton: "Senden",
+  sendingButton: "Wird gesendet…",
+  leadError: "Etwas ist schiefgelaufen — bitte versuchen Sie es erneut.",
+  copyLinkDefault: "Link zum Ergebnis kopieren",
+  copyLinkCopied: "Link kopiert ✓",
+  highRiskExamplesLink: "Beispiele für Hochrisiko-Einstufungen →",
+  annexIVLink: "Was Anhang IV verlangt →",
+  checkAnother: "Weiteres System prüfen",
+  step1Title: "Schritt 1 — Trifft eines der Folgenden auf Ihr System zu?",
+  step1Subtitle: "Wählen Sie alles Zutreffende aus. Dies sind die verbotenen Praktiken nach Artikel 5.",
+  continueButton: "Weiter →",
+  step2Title: "Schritt 2 — Wird es in einem sensiblen Bereich eingesetzt?",
+  step2SafetyQuestion:
+    "Ist Ihr System eine Sicherheitskomponente eines Produkts, das bereits nach EU-Produktsicherheitsrecht reguliert ist (Medizinprodukte, Maschinen, Spielzeug, Fahrzeuge, Aufzüge) und einer Konformitätsbewertung durch Dritte unterliegt?",
+  yes: "Ja",
+  no: "Nein",
+  step2AnnexIIIPrompt: "Fällt es in einen der Bereiche von Anhang III? Wählen Sie alles Zutreffende aus.",
+  step2NarrowTaskPrompt:
+    "Eine letzte Prüfung — nach Artikel 6 Absatz 3 kann ein System mit eng begrenzter Aufgabe der Hochrisiko-Einstufung entgehen. Führt Ihr System ausschließlich eine eng begrenzte verfahrenstechnische Aufgabe aus, verbessert es lediglich das Ergebnis einer bereits abgeschlossenen menschlichen Entscheidung, erkennt es Muster, ohne die menschliche Beurteilung zu ersetzen, oder leistet es Vorbereitungsarbeit — jeweils ohne Personen zu profilieren?",
+  yesNarrowTaskOnly: "Ja, nur eng begrenzte Aufgabe",
+  step3Title: "Schritt 3 — Transparenzauslöser",
+  step3Subtitle: "Wählen Sie alles Zutreffende aus.",
+  seeResultButton: "Mein Ergebnis ansehen →",
+};
