@@ -1,41 +1,22 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request: { headers: request.headers } });
+// Sets an x-locale request header based on the URL path (/fr/*, /de/*, or
+// default English) so the root layout can render the correct <html lang>
+// attribute. The root layout is a single Server Component shared by every
+// route, so it can't know the current path on its own — middleware is the
+// standard way to thread that through via next/headers.
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const locale = pathname.startsWith("/fr") ? "fr" : pathname.startsWith("/de") ? "de" : "en";
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          response.cookies.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          response.cookies.set({ name, value: "", ...options });
-        },
-      },
-    }
-  );
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-locale", locale);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
-
-  if (isProtectedRoute && !user) {
-    const redirectUrl = new URL("/login", request.url);
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  return response;
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/((?!_next|api|.*\\..*).*)"],
 };
