@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import RiskChecker from "./RiskChecker";
 import { buildMetadata } from "@/lib/pageMetadata";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const CLASSIFICATION_LABEL: Record<string, string> = {
   prohibited: "Prohibited",
@@ -9,6 +10,8 @@ const CLASSIFICATION_LABEL: Record<string, string> = {
   limited: "Limited",
   minimal: "Minimal",
 };
+
+const HREFLANG = { en: "/eu-ai-act-risk-checker", fr: "/fr/eu-ai-act-risk-checker", de: "/de/eu-ai-act-risk-checker" };
 
 export function generateMetadata({ searchParams }: { searchParams: { result?: string } }): Metadata {
   const result = searchParams?.result;
@@ -20,13 +23,18 @@ export function generateMetadata({ searchParams }: { searchParams: { result?: st
       description:
         "Answer a few questions about your AI system and get a directional EU AI Act risk classification (prohibited, high-risk, limited, or minimal) based on Article 5 and Annex III. Free, no signup required.",
       path: "/eu-ai-act-risk-checker",
+      hreflang: HREFLANG,
     });
   }
 
+  const title = `My AI system is ${label}-risk under the EU AI Act`;
+  const description =
+    "Check your own AI system's directional EU AI Act risk classification — free, no signup required.";
   return buildMetadata({
-    title: `My AI system is ${label}-risk under the EU AI Act`,
-    description: "Check your own AI system's directional EU AI Act risk classification — free, no signup required.",
+    title,
+    description,
     path: "/eu-ai-act-risk-checker",
+    hreflang: HREFLANG,
   });
 }
 
@@ -36,12 +44,18 @@ export default function RiskCheckerPage({ searchParams }: { searchParams: { resu
 
   return (
     <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
-      <nav className="site-nav" style={{ padding: 0, marginBottom: 40 }}>
+      <nav className="site-nav" style={{ padding: 0, marginBottom: 40, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Link href="/" className="site-nav__brand" style={{ textDecoration: "none" }}>
           <span className="site-nav__mark" aria-hidden="true" />
           Attestly
         </Link>
-        <Link href="/pricing" className="site-nav__link">Pricing</Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <Link href="/pricing" className="site-nav__link">Pricing</Link>
+          <LanguageSwitcher
+            current="en"
+            paths={{ en: "/eu-ai-act-risk-checker", fr: "/fr/eu-ai-act-risk-checker", de: "/de/eu-ai-act-risk-checker" }}
+          />
+        </div>
       </nav>
 
       <p className="section__eyebrow">Free tool</p>
