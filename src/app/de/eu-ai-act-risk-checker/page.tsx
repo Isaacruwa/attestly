@@ -48,7 +48,7 @@ export default function RiskCheckerPageDE({ searchParams }: { searchParams: { re
           Attestly
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Link href="/de/pricing" className="site-nav__link">Preise</Link>
+          <Link href="/pricing" className="site-nav__link">Pricing</Link>
           <LanguageSwitcher
             current="de"
             paths={{ en: "/eu-ai-act-risk-checker", fr: "/fr/eu-ai-act-risk-checker", de: "/de/eu-ai-act-risk-checker" }}
