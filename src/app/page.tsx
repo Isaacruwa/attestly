@@ -1,6 +1,17 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/pageMetadata";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const SITE_URL = "https://attestly.online";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Attestly — EU AI Act evidence, generated from what your agents already do",
+  description:
+    "Attestly turns your AI agents' operational traces into audit-ready EU AI Act documentation, continuously.",
+  path: "/",
+  hreflang: { en: "/", fr: "/fr", de: "/de" },
+});
 
 const FAQS = [
   {
@@ -169,6 +180,7 @@ export default function LandingPage() {
           <Link href="/guides" className="site-nav__link">Guides</Link>
           <Link href="/eu-ai-act-risk-checker" className="site-nav__link">Risk Checker</Link>
           <Link href="/pricing" className="site-nav__link">Pricing</Link>
+          <LanguageSwitcher current="en" paths={{ en: "/", fr: "/fr", de: "/de" }} />
           <Link href="/login" className="site-nav__cta">Sign in</Link>
         </div>
       </nav>
