@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isPlatformAdmin } from "@/lib/isPlatformAdmin";
+import OrgSwitcher from "./OrgSwitcher";
 
 function summarize(sections: { status: string }[]): { label: string; ledgerStatus: string } {
   if (sections.length === 0) {
@@ -22,28 +23,61 @@ function summarize(sections: { status: string }[]): { label: string; ledgerStatu
   return { label: "No drafts generated yet", ledgerStatus: "missing_information" };
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { org?: string };
+}) {
   const supabase = createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Orgs this user belongs to. Almost every account has exactly one — this
+  // list is what powers the client-workspace switcher for accounts (e.g.
+  // agencies) that manage more than one. RLS on organization_members means
+  // this only ever returns rows for the current user regardless of filter.
+  const { data: memberships } = await supabase
+    .from("organization_members")
+    .select("organization_id, organizations ( id, name )")
+    .eq("user_id", user?.id ?? "");
+
+  const orgs = (memberships ?? [])
+    .map((m: any) => m.organizations)
+    .filter(Boolean);
+
+  const requestedOrgId = searchParams?.org;
+  const selectedOrgId = orgs.some((o: any) => o.id === requestedOrgId) ? (requestedOrgId as string) : null;
+
   // A user's org membership determines what RLS lets them see — no manual
-  // org_id filtering needed here, the policies in schema.sql do that.
-  const { data: aiSystems } = await supabase
+  // org_id filtering is required for security, the policies in schema.sql
+  // already do that. The optional .eq below is an additional narrowing on
+  // top, purely for accounts switching between multiple client workspaces.
+  let query = supabase
     .from("ai_systems")
     .select(
-      `id, name, risk_category, updated_at,
+      `id, name, risk_category, updated_at, organization_id,
        documentation_projects ( id, documentation_sections ( status ) )`
     )
     .order("updated_at", { ascending: false });
 
+  if (selectedOrgId) {
+    query = query.eq("organization_id", selectedOrgId);
+  }
+
+  const { data: aiSystems } = await query;
+
+  const addSystemHref = selectedOrgId ? `/dashboard/systems/new?org=${selectedOrgId}` : "/dashboard/systems/new";
+
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "48px 24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
-        <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>AI systems</h1>
-        <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32, flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: 24 }}>AI systems</h1>
+          {orgs.length > 1 && <OrgSwitcher orgs={orgs} currentOrgId={selectedOrgId} />}
+        </div>
+        <div style={{ display: "flex", gap: 16, alignItems: "baseline", flexWrap: "wrap" }}>
           {isPlatformAdmin(user?.email) && (
             <Link href="/admin" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
               Admin
@@ -58,7 +92,10 @@ export default async function DashboardPage() {
           <Link href="/dashboard/trust-center" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             Trust Center
           </Link>
-          <Link href="/dashboard/systems/new" style={{ fontSize: 14, color: "var(--color-primary)" }}>
+          <Link href="/dashboard/clients/new" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+            + New client workspace
+          </Link>
+          <Link href={addSystemHref} style={{ fontSize: 14, color: "var(--color-primary)" }}>
             + Add AI system
           </Link>
         </div>
