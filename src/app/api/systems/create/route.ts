@@ -8,6 +8,7 @@ const Body = z.object({
   description: z.string().optional(),
   risk_category: z.string().default("unclassified"),
   intended_purpose: z.string().optional(),
+  organization_id: z.string().uuid().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -20,26 +21,44 @@ export async function POST(req: NextRequest) {
   const parsed = Body.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
 
-  let { data: membership } = await supabase
-    .from("organization_members")
-    .select("organization_id")
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
+  let organizationId: string;
 
-  if (!membership) {
-    // Safety net for accounts whose auto-created org didn't land the first time.
-    const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
-    const { data: newOrgId, error: rpcError } = await supabase.rpc("create_organization_for_current_user", {
-      org_name: orgName,
-    });
-    if (rpcError || !newOrgId) {
-      return NextResponse.json({ error: rpcError?.message ?? "Couldn't set up your organization." }, { status: 400 });
+  if (parsed.data.organization_id) {
+    // Caller asked for a specific client workspace (agency/multi-org flow) —
+    // confirm they're actually a member of it before trusting the id, rather
+    // than assuming the ?org= param in the request was honest.
+    const { data: requestedMembership } = await supabase
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", user.id)
+      .eq("organization_id", parsed.data.organization_id)
+      .maybeSingle();
+
+    if (!requestedMembership) {
+      return NextResponse.json({ error: "You're not a member of that organization." }, { status: 403 });
     }
-    membership = { organization_id: newOrgId };
-  }
+    organizationId = requestedMembership.organization_id;
+  } else {
+    let { data: membership } = await supabase
+      .from("organization_members")
+      .select("organization_id")
+      .eq("user_id", user.id)
+      .limit(1)
+      .maybeSingle();
 
-  const organizationId = membership.organization_id;
+    if (!membership) {
+      // Safety net for accounts whose auto-created org didn't land the first time.
+      const orgName = user.email ? `${user.email.split("@")[0]}'s organization` : "My organization";
+      const { data: newOrgId, error: rpcError } = await supabase.rpc("create_organization_for_current_user", {
+        org_name: orgName,
+      });
+      if (rpcError || !newOrgId) {
+        return NextResponse.json({ error: rpcError?.message ?? "Couldn't set up your organization." }, { status: 400 });
+      }
+      membership = { organization_id: newOrgId };
+    }
+    organizationId = membership.organization_id;
+  }
 
   const { plan, status } = await getSubscription(supabase, organizationId);
   const { maxAiSystems } = limitsFor(plan, status);
@@ -63,7 +82,14 @@ export async function POST(req: NextRequest) {
 
   const { data: system, error: insertError } = await supabase
     .from("ai_systems")
-    .insert({ organization_id: organizationId, created_by: user.id, ...parsed.data })
+    .insert({
+      organization_id: organizationId,
+      created_by: user.id,
+      name: parsed.data.name,
+      description: parsed.data.description,
+      risk_category: parsed.data.risk_category,
+      intended_purpose: parsed.data.intended_purpose,
+    })
     .select()
     .single();
 
