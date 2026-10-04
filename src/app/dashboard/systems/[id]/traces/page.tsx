@@ -15,7 +15,7 @@ export default function TracesPage({ params }: { params: { id: string } }) {
   const [recentEvents, setRecentEvents] = useState<EventRow[]>([]);
   const [status, setStatus] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [source, setSource] = useState<"opentelemetry" | "langsmith" | "agentops" | "manual_json">("manual_json");
+  const [source, setSource] = useState<"opentelemetry" | "langsmith" | "agentops" | "mcp_logs" | "manual_json">("manual_json");
 
   async function refresh() {
     const { data: importRows } = await supabase
@@ -101,6 +101,7 @@ export default function TracesPage({ params }: { params: { id: string } }) {
             <option value="opentelemetry">OpenTelemetry export</option>
             <option value="langsmith">LangSmith export</option>
             <option value="agentops">AgentOps export</option>
+            <option value="mcp_logs">MCP session log</option>
           </select>
           <input type="file" accept="application/json" onChange={handleFile} disabled={uploading} />
         </div>

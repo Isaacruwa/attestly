@@ -5,6 +5,7 @@ import { parseOpenTelemetryTrace } from "@/lib/parsers/opentelemetry";
 import { parseLangSmithTrace } from "@/lib/parsers/langsmith";
 import { parseAgentOpsTrace } from "@/lib/parsers/agentops";
 import { parseManualJsonTrace } from "@/lib/parsers/manualJson";
+import { parseMcpLogsTrace } from "@/lib/parsers/mcp";
 import { hashEventContent } from "@/lib/hashing";
 
 // Accepts either:
@@ -66,11 +67,13 @@ export async function POST(req: NextRequest) {
       events = parseLangSmithTrace(payload);
     } else if (source === "agentops") {
       events = parseAgentOpsTrace(payload);
+    } else if (source === "mcp_logs") {
+      events = parseMcpLogsTrace(payload);
     } else if (source === "manual_json") {
       events = parseManualJsonTrace(payload);
     } else {
       return NextResponse.json(
-        { error: `No parser yet for source "${source}" — supported sources are opentelemetry, langsmith, agentops, and manual_json.` },
+        { error: `No parser yet for source "${source}" — supported sources are opentelemetry, langsmith, agentops, mcp_logs, and manual_json.` },
         { status: 400 }
       );
     }
