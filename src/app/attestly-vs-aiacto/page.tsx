@@ -33,16 +33,16 @@ export default function AttestlyVsAiActoPage() {
         <p style={p}>
           <strong>AiActo</strong> is a guided-forms compliance platform covering the AI Act broadly — not just
           Annex IV, but classification diagnostics, an AI Act glossary and obligations reference, and
-          multi-client management for agencies handling several clients&apos; compliance. Its documentation
+          multi-client management for agencies handling several clients' compliance. Its documentation
           generation works by walking you through each Annex IV section with an AI assistant that helps write
           the text based on what you type in — you supply the facts about your system, and it helps structure
-          and phrase them. It&apos;s hosted in France with an EU-sovereignty angle, and works for any type of
+          and phrase them. It's hosted in France with an EU-sovereignty angle, and works for any type of
           high-risk AI system, not just autonomous agents.
         </p>
 
         <p style={p}>
           <strong>Attestly</strong> is narrower by design: it only handles Annex IV documentation, and only for
-          AI agents specifically. Instead of you typing in what your system does, Attestly reads your agent&apos;s
+          AI agents specifically. Instead of you typing in what your system does, Attestly reads your agent's
           actual runtime traces (OpenTelemetry, LangSmith, AgentOps, MCP logs) and drafts the monitoring,
           human-oversight, and change-log sections directly from that evidence — each generated sentence links
           back to the specific trace event that justifies it.
@@ -50,14 +50,18 @@ export default function AttestlyVsAiActoPage() {
 
         <h2 style={h2}>Where each one fits better</h2>
         <p style={p}>
-          If you need one platform to handle AI Act compliance across many different kinds of AI systems —
-          not just agents — or you&apos;re an agency managing this for multiple clients, AiActo&apos;s broader
-          scope and multi-client tooling covers ground Attestly doesn&apos;t try to.
+          If you need one platform to handle AI Act compliance across many different kinds of AI systems — not
+          just agents — AiActo's broader scope covers ground Attestly doesn't try to: classification
+          diagnostics and an obligations reference across the whole Act, not just Annex IV.
+        </p>
+        <p style={p}>
+          If you're an agency managing this for multiple clients specifically, both now support that: Attestly
+          added client-workspace switching so one account can manage separate, isolated workspaces per client.
         </p>
         <p style={p}>
           If your system is specifically an AI agent that calls tools and makes autonomous decisions, and you
           want the monitoring and human-oversight sections of Annex IV backed by evidence from what the agent
-          actually did — not a description you wrote yourself — that&apos;s the gap Attestly is built for. See{" "}
+          actually did — not a description you wrote yourself — that's the gap Attestly is built for. See{" "}
           <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)" }}>
             why that evidence source matters for Annex IV specifically
           </Link>.
@@ -77,7 +81,7 @@ export default function AttestlyVsAiActoPage() {
                 ["Scope", "Annex IV, for AI agents only", "Full AI Act, any AI system"],
                 ["Evidence source", "Agent runtime traces", "User-entered, AI-assisted"],
                 ["Evidence linked per sentence", "Yes", "Not specified publicly"],
-                ["Multi-client / agency tooling", "Not offered", "Yes"],
+                ["Multi-client / agency tooling", "Yes", "Yes"],
                 ["AI Act classification diagnostic", "Free risk checker", "Yes"],
               ].map(([label, us, them]) => (
                 <tr key={label} style={{ borderBottom: "1px solid var(--color-line)" }}>
