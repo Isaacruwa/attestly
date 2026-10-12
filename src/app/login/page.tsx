@@ -1,5 +1,6 @@
 "use client";
 
+// Sign-in screen: card layout; the 6-digit code input intentionally has no placeholder.
 import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
