@@ -114,7 +114,7 @@ export default async function DashboardPage({
             const { label, ledgerStatus } = summarize(sections);
             return (
               <Link key={system.id} href={`/dashboard/systems/${system.id}/traces`} style={{ textDecoration: "none", color: "inherit" }}>
-                <div className="ledger-row" data-status={ledgerStatus} style={{ padding: "12px 16px", background: "white", borderRadius: 4 }}>
+                <div className="ledger-row" data-status={ledgerStatus} style={{ padding: "16px 18px 16px 16px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <strong>{system.name}</strong>
                     <span className="mono" style={{ fontSize: 12, color: "var(--color-ink-muted)" }}>
