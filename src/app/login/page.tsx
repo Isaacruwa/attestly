@@ -6,21 +6,25 @@ import { createClient } from "@/lib/supabase/client";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
+  padding: "11px 13px",
   border: "1px solid var(--color-line)",
-  borderRadius: 4,
-  marginBottom: 12,
+  borderRadius: "var(--radius-sm)",
+  marginBottom: 14,
   fontSize: 15,
+  background: "white",
 };
 
 const buttonStyle: React.CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
+  padding: "11px 13px",
   background: "var(--color-primary)",
   color: "white",
   border: "none",
-  borderRadius: 4,
+  borderRadius: "var(--radius-sm)",
   fontSize: 15,
+  fontWeight: 600,
+  boxShadow: "var(--shadow-sm)",
+  transition: "background 0.15s ease, box-shadow 0.15s ease",
 };
 
 function LoginForm() {
@@ -87,66 +91,79 @@ function LoginForm() {
   }
 
   return (
-    <main style={{ maxWidth: 380, margin: "0 auto", padding: "96px 24px" }}>
-      <h1 style={{ fontFamily: "var(--font-display)", fontSize: 26, marginBottom: 8 }}>Sign in</h1>
+    <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 380,
+          background: "var(--color-paper-raised)",
+          border: "1px solid var(--color-line)",
+          borderRadius: "var(--radius-lg)",
+          boxShadow: "var(--shadow-md)",
+          padding: "40px 32px",
+        }}
+      >
+        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 24, marginBottom: 8 }}>Sign in</h1>
 
-      {step === "email" ? (
-        <>
-          <p style={{ color: "var(--color-ink-muted)", marginBottom: 24 }}>
-            We&apos;ll email you a 6-digit code. No password, no links to click.
-          </p>
-          <form onSubmit={sendCode}>
-            <input
-              type="email"
-              required
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={inputStyle}
-            />
-            <button type="submit" disabled={busy} className="busy-row" style={{ ...buttonStyle, justifyContent: "center" }}>
-              {busy && <span className="spinner" />}
-              {busy ? "Sending…" : "Send code"}
-            </button>
-            {error && <p style={{ color: "var(--color-missing)", marginTop: 12 }}>{error}</p>}
-          </form>
-        </>
-      ) : (
-        <>
-          <p style={{ color: "var(--color-ink-muted)", marginBottom: 24 }}>
-            Enter the 6-digit code sent to <strong>{email}</strong>.
-          </p>
-          <form onSubmit={verifyCode}>
-            <input
-              type="text"
-              autoFocus
-              required
-              placeholder="123456"
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              onPaste={(e) => {
-                e.preventDefault();
-                const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                setCode(pasted);
-              }}
-              maxLength={6}
-              style={{ ...inputStyle, fontSize: 22, letterSpacing: "0.2em", textAlign: "center", fontFamily: "var(--font-mono)" }}
-            />
-            <button type="submit" disabled={busy} className="busy-row" style={{ ...buttonStyle, justifyContent: "center" }}>
-              {busy && <span className="spinner" />}
-              {busy ? "Verifying…" : "Verify and sign in"}
-            </button>
-            {error && <p style={{ color: "var(--color-missing)", marginTop: 12 }}>{error}</p>}
-            <button
-              type="button"
-              onClick={() => setStep("email")}
-              style={{ marginTop: 12, background: "none", border: "none", color: "var(--color-ink-muted)", fontSize: 13, textDecoration: "underline" }}
-            >
-              Use a different email
-            </button>
-          </form>
-        </>
-      )}
+        {step === "email" ? (
+          <>
+            <p style={{ color: "var(--color-ink-muted)", marginBottom: 24, fontSize: 14.5 }}>
+              We&apos;ll email you a 6-digit code. No password, no links to click.
+            </p>
+            <form onSubmit={sendCode}>
+              <input
+                type="email"
+                required
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={inputStyle}
+              />
+              <button type="submit" disabled={busy} className="busy-row" style={{ ...buttonStyle, justifyContent: "center" }}>
+                {busy && <span className="spinner" />}
+                {busy ? "Sending…" : "Send code"}
+              </button>
+              {error && <p style={{ color: "var(--color-missing)", marginTop: 12, fontSize: 13.5 }}>{error}</p>}
+            </form>
+          </>
+        ) : (
+          <>
+            <p style={{ color: "var(--color-ink-muted)", marginBottom: 24, fontSize: 14.5 }}>
+              Enter the 6-digit code sent to <strong>{email}</strong>.
+            </p>
+            <form onSubmit={verifyCode}>
+              <input
+                type="text"
+                autoFocus
+                required
+                inputMode="numeric"
+                aria-label="6-digit verification code"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                  setCode(pasted);
+                }}
+                maxLength={6}
+                style={{ ...inputStyle, fontSize: 24, letterSpacing: "0.35em", textAlign: "center", fontFamily: "var(--font-mono)", paddingLeft: 8 }}
+              />
+              <button type="submit" disabled={busy} className="busy-row" style={{ ...buttonStyle, justifyContent: "center" }}>
+                {busy && <span className="spinner" />}
+                {busy ? "Verifying…" : "Verify and sign in"}
+              </button>
+              {error && <p style={{ color: "var(--color-missing)", marginTop: 12, fontSize: 13.5 }}>{error}</p>}
+              <button
+                type="button"
+                onClick={() => setStep("email")}
+                style={{ marginTop: 12, background: "none", border: "none", color: "var(--color-ink-muted)", fontSize: 13, textDecoration: "underline" }}
+              >
+                Use a different email
+              </button>
+            </form>
+          </>
+        )}
+      </div>
     </main>
   );
 }
