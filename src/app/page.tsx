@@ -195,23 +195,62 @@ export default function LandingPage() {
               technical documentation, risk-management records, and audit-ready evidence —
               continuously, not as a quarterly scramble.
             </p>
-            <Link href="/login" className="btn-primary">Get started →</Link>
+            <div className="hero__ctas">
+              <Link href="/login" className="btn-primary">Get started →</Link>
+              <Link href="/eu-ai-act-risk-checker" className="btn-secondary">Try the free risk checker</Link>
+            </div>
+            <span className="hero__note">Free plan: 1 AI system, 10 lifetime documentation generations.</span>
+            <ul className="hero__chips">
+              <li>Human review before export</li>
+              <li>Row-level data isolation</li>
+              <li>Word (.docx) export</li>
+            </ul>
           </div>
 
-          <div className="pipeline">
-            <p className="pipeline__label">How it works</p>
-            {PIPELINE_STEPS.map((step) => (
-              <div className="pipeline__step" key={step.icon}>
-                <span className="pipeline__step-icon">{step.icon}</span>
-                <div>
-                  <p className="pipeline__step-title">{step.title}</p>
-                  <p className="pipeline__step-desc">{step.desc}</p>
+          <div className="evidence-card" aria-label="Illustrative example of a generated Annex IV section">
+            <div className="evidence-card__head">
+              <span className="evidence-card__label">Annex IV · Monitoring measures</span>
+              <span className="evidence-card__status">Needs review</span>
+            </div>
+            <div className="evidence-card__sentence">
+              The system autonomously invoked the refund API, which a human reviewer subsequently
+              approved after an initial retry timeout.
+              <span className="evidence-card__chip">evidence: trace #a91f02c1</span>
+            </div>
+            <div className="evidence-card__events">
+              <span className="evidence-card__events-label">Linked trace events</span>
+              {[
+                { id: "a91f02c1", kind: "tool_call", detail: "refund_api · success" },
+                { id: "a91f02c2", kind: "human_intervention", detail: "approved by reviewer" },
+                { id: "a91f02c3", kind: "error", detail: "timeout on retry 2" },
+              ].map((ev) => (
+                <div className="evidence-card__event" key={ev.id}>
+                  <span className="evidence-card__event-id">#{ev.id}</span>
+                  <span>{ev.kind} · {ev.detail}</span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="evidence-card__foot">
+              <span>AI-generated draft · human review required before export</span>
+              <span>Illustrative example</span>
+            </div>
           </div>
         </div>
       </header>
+
+      <section className="section">
+        <p className="section__eyebrow">How it works</p>
+        <h2>Three steps, with a person signing off.</h2>
+        <div className="steps-grid">
+          {PIPELINE_STEPS.map((step) => (
+            <div className="steps-grid__item" key={step.icon}>
+              <span className="pipeline__step-icon">{step.icon}</span>
+              <p className="pipeline__step-title">{step.title}</p>
+              <p className="pipeline__step-desc">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="section">
         <p className="section__eyebrow">What it generates</p>
