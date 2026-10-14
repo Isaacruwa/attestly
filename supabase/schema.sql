@@ -49,9 +49,9 @@ create table agents (
   created_at timestamptz not null default now()
 );
 
--- ============================================================
+-- =============================================================
 -- TRACE INGESTION
--- ============================================================
+-- =============================================================
 
 create table trace_imports (
   id uuid primary key default uuid_generate_v4(),
@@ -83,9 +83,9 @@ create table events (
 create index idx_events_trace_import on events(trace_import_id);
 create index idx_events_agent on events(agent_id);
 
--- ============================================================
+-- =============================================================
 -- COMPLIANCE FRAMEWORK
--- ============================================================
+-- =============================================================
 
 -- Static reference table: EU AI Act Annex IV requirement structure.
 -- Seeded once, read by all orgs (no organization_id — it's shared reference data).
@@ -137,9 +137,9 @@ create table evidence_links (
   created_at timestamptz not null default now()
 );
 
--- ============================================================
+-- =============================================================
 -- HUMAN REVIEW & AUDIT
--- ============================================================
+-- =============================================================
 
 create table section_reviews (
   id uuid primary key default uuid_generate_v4(),
@@ -175,6 +175,25 @@ create table organization_subscriptions (
   updated_at timestamptz not null default now()
 );
 
+-- API keys for agent-facing access. Human-provisioned only, via an
+-- authenticated dashboard action (POST /api/api-keys/create) — there is no
+-- public self-registration endpoint. A key authenticates its organization
+-- for agent/script use of endpoints like /api/traces/ingest, standing in
+-- for a logged-in session where one doesn't exist (e.g. a script pushing
+-- trace data on a schedule). Only the sha256 hash is stored; the plaintext
+-- key is shown to the user once, at creation time, and never again.
+create table api_keys (
+  id uuid primary key default uuid_generate_v4(),
+  organization_id uuid not null references organizations(id) on delete cascade,
+  name text not null,
+  key_prefix text not null,        -- shown in the UI, e.g. 'atly_live_8f3c91a2…'
+  key_hash text not null unique,   -- sha256 of the full key
+  created_by uuid references auth.users(id),
+  last_used_at timestamptz,
+  revoked_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
 create table audit_log (
   id uuid primary key default uuid_generate_v4(),
   organization_id uuid not null references organizations(id) on delete cascade,
@@ -203,6 +222,7 @@ alter table section_reviews enable row level security;
 alter table audit_log enable row level security;
 alter table organization_invites enable row level security;
 alter table organization_subscriptions enable row level security;
+alter table api_keys enable row level security;
 
 -- Helper: is the current user a member of a given organization?
 create or replace function is_org_member(org_id uuid)
@@ -284,6 +304,16 @@ create policy "members manage invites for their org" on organization_invites
 -- No client, however trusted, should be able to grant itself a paid plan.
 create policy "members see their subscription" on organization_subscriptions
   for select using (is_org_member(organization_id));
+
+-- Members can list/revoke their org's keys (the app never selects key_hash
+-- in that listing). Creation also goes through this same policy when called
+-- from an authenticated session — key_hash and key_prefix are computed
+-- server-side in the /api/api-keys/create route handler, not sent by the
+-- client. Lookup *by* a presented key (the agent/script auth path) goes
+-- through the service-role client instead, since a bearer-token request has
+-- no Supabase session and so no auth.uid() for is_org_member() to check.
+create policy "members manage their org's api keys" on api_keys
+  for all using (is_org_member(organization_id)) with check (is_org_member(organization_id));
 
 -- Atomically validates an invite token against the calling user's own email
 -- and adds them to that organization. security definer bypasses RLS inside
