@@ -1,0 +1,89 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Attestly Trace Ingestion API",
+    "version": "1.0.0",
+    "description": "Imports agent runtime trace data into an Attestly AI system, so EU AI Act Annex IV documentation can be drafted from real evidence rather than a manual description. This is the only Attestly endpoint published for external/agent use \u2014 see /auth.md for how to authenticate."
+  },
+  "servers": [{ "url": "https://attestly.online" }],
+  "paths": {
+    "/api/traces/ingest": {
+      "post": {
+        "operationId": "ingestTraces",
+        "summary": "Import trace events for an AI system",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ai_system_id", "source"],
+                "properties": {
+                  "ai_system_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Must belong to the authenticated API key's organization."
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": ["opentelemetry", "langsmith", "agentops", "mcp_logs", "api_history", "manual_json"]
+                  },
+                  "events": {
+                    "type": "array",
+                    "description": "Pre-normalized events. Provide this OR payload, not both.",
+                    "items": {
+                      "type": "object",
+                      "required": ["event_type"],
+                      "properties": {
+                        "agent_name": { "type": "string" },
+                        "event_type": {
+                          "type": "string",
+                          "enum": ["agent_action", "tool_call", "api_call", "model_call", "human_intervention", "error", "system_event"]
+                        },
+                        "occurred_at": { "type": ["string", "null"], "description": "ISO 8601 timestamp" },
+                        "summary": { "type": "string" },
+                        "data": { "type": "object", "description": "Arbitrary structured fields for this event" }
+                      }
+                    }
+                  },
+                  "payload": {
+                    "description": "Raw trace data in the native format of `source` (object or array), parsed server-side. Provide this OR events, not both. Note: api_history has no parser implemented yet and will currently be rejected."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Events imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "trace_import_id": { "type": "string", "format": "uuid" },
+                    "events_stored": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid payload, or no parser available for the given source" },
+          "401": { "description": "Missing or invalid API key" },
+          "404": { "description": "ai_system_id not found in the authenticated organization" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "An Attestly API key (format: atly_live_<48 hex chars>). Provisioned by a human account owner via the dashboard, not self-registrable. See https://attestly.online/auth.md."
+      }
+    }
+  }
+}
