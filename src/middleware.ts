@@ -33,15 +33,40 @@ const EXCLUDED_PREFIXES = [
   "/.well-known",
 ];
 
+// RFC 8288 Link headers + the RFC 9727 §3 api-catalog relation, added to
+// the homepage response (all locales) so agents can discover Attestly's
+// machine-readable resources without first parsing the HTML. All four
+// targets are real, already-published resources: /.well-known/api-catalog
+// and the OpenAPI spec it references (api-catalog PR), /auth.md (agent
+// auth/registration discovery PR), and /llms.txt (already existed before
+// any of this — a general machine-readable description of the site, which
+// is what "describedby" is for).
+const HOMEPAGE_PATHS = new Set(["/", "/fr", "/de"]);
+
+const DISCOVERY_LINK_HEADER = [
+  '</.well-known/api-catalog>; rel="api-catalog"',
+  '</openapi/traces-ingest.json>; rel="service-desc"',
+  '</auth.md>; rel="service-doc"',
+  '</llms.txt>; rel="describedby"',
+].join(", ");
+
+function withDiscoveryLinks(res: NextResponse, pathname: string): NextResponse {
+  if (HOMEPAGE_PATHS.has(pathname)) {
+    res.headers.append("Link", DISCOVERY_LINK_HEADER);
+  }
+  return res;
+}
+
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
   const accept = req.headers.get("accept") ?? "";
+
   if (!accept.includes("text/markdown")) {
-    return NextResponse.next();
+    return withDiscoveryLinks(NextResponse.next(), pathname);
   }
 
-  const { pathname } = req.nextUrl;
   if (EXCLUDED_PREFIXES.some((p) => pathname === p || pathname.startsWith(p))) {
-    return NextResponse.next();
+    return withDiscoveryLinks(NextResponse.next(), pathname);
   }
 
   // Self-fetch the normal HTML render of this same page, explicitly asking
@@ -54,25 +79,28 @@ export async function middleware(req: NextRequest) {
       headers: { accept: "text/html" },
     });
     if (!htmlRes.ok) {
-      return NextResponse.next();
+      return withDiscoveryLinks(NextResponse.next(), pathname);
     }
     html = await htmlRes.text();
   } catch {
     // If the self-fetch fails for any reason, fall back to serving the
     // normal HTML response rather than erroring the request outright.
-    return NextResponse.next();
+    return withDiscoveryLinks(NextResponse.next(), pathname);
   }
 
   const markdown = htmlToMarkdown(html);
 
-  return new NextResponse(markdown, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
-      "x-markdown-tokens": String(estimateTokenCount(markdown)),
-      Vary: "Accept",
-    },
-  });
+  return withDiscoveryLinks(
+    new NextResponse(markdown, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/markdown; charset=utf-8",
+        "x-markdown-tokens": String(estimateTokenCount(markdown)),
+        Vary: "Accept",
+      },
+    }),
+    pathname
+  );
 }
 
 export const config = {
