@@ -265,7 +265,7 @@ export default function LandingPageDE() {
       <section className="section">
         <p className="section__eyebrow">Hintergrund</p>
         <h2>Was die technische Anhang-IV-Dokumentation der KI-Verordnung tatsächlich verlangt</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)" }}>
           <p style={{ marginBottom: 16 }}>
             Die KI-Verordnung verlangt von Anbietern von Hochrisiko-KI-Systemen, technische Dokumentation nach
             Anhang IV zu führen, bevor das System auf den Markt gebracht wird, und sie aktuell zu halten,
@@ -289,7 +289,7 @@ export default function LandingPageDE() {
       <section className="section">
         <p className="section__eyebrow">Warum keine generische GRC-Plattform</p>
         <h2>Allgemeine KI-Governance-Tools hören einen Schritt vor diesem Punkt auf.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
           <p style={{ marginBottom: 16 }}>
             Breite KI-Governance-Plattformen sind um Richtlinienverwaltung, Systeminventare und
             Überwachungs-Dashboards herum aufgebaut — nützlich, um zu verfolgen, dass ein KI-System existiert
@@ -311,7 +311,7 @@ export default function LandingPageDE() {
       <section className="section" id="why-traces-not-scans">
         <p className="section__eyebrow">Warum Laufzeit-Traces statt Code-Scans</p>
         <h2>Ein statischer Scan Ihres Repositorys kann nicht sehen, was Ihr Agent tatsächlich getan hat.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
           <p>
             Das Scannen von Quellcode kann Ihnen sagen, welche SDKs und Modellaufrufe verdrahtet sind. Es kann
             Ihnen nicht sagen, was zur Laufzeit passiert ist: welche Tools ein Agent tatsächlich aufgerufen
@@ -322,7 +322,7 @@ export default function LandingPageDE() {
           </p>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 560 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, minWidth: 560 }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--color-line)", textAlign: "left" }}>
                 <th style={{ padding: "10px 12px" }}></th>
@@ -348,7 +348,7 @@ export default function LandingPageDE() {
           </table>
         </div>
         <p style={{ marginTop: 16 }}>
-          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 14 }}>
+          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 15 }}>
             Die vollständige Analyse lesen (auf Englisch), warum Anhang IV Laufzeitnachweise braucht →
           </Link>
         </p>
@@ -374,7 +374,7 @@ export default function LandingPageDE() {
                 padding: "8px 16px",
                 borderRadius: 999,
                 border: "1px solid var(--color-line)",
-                fontSize: 13.5,
+                fontSize: 14.5,
                 fontFamily: "var(--font-mono)",
                 color: "var(--color-ink)",
                 textDecoration: "none",
@@ -390,7 +390,7 @@ export default function LandingPageDE() {
       <section className="section" id="live-example">
         <p className="section__eyebrow">Praxisbeispiel</p>
         <h2>Von einem Trace-Ereignis zu einem Anhang-IV-Satz.</h2>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
           Eine vereinfachte, illustrative Darstellung, wie sich eine Handvoll normalisierter Trace-Ereignisse
           in einen einzelnen entworfenen Dokumentationssatz übersetzen — mit einem Link zurück zu dem genauen
           Ereignis, das ihn begründet hat.
@@ -402,7 +402,7 @@ export default function LandingPageDE() {
             color: "#e6f2ef",
             padding: 20,
             borderRadius: 8,
-            fontSize: 12.5,
+            fontSize: 13.5,
             lineHeight: 1.6,
             overflowX: "auto",
           }}
@@ -415,16 +415,16 @@ export default function LandingPageDE() {
 ]`}
         </pre>
         <div style={{ marginTop: 16, padding: 18, border: "1px solid var(--color-line)", borderRadius: 8, background: "white" }}>
-          <p style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
+          <p style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
             Entworfener Anhang-IV-Abschnitt — Überwachungsmaßnahmen
           </p>
-          <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--color-ink)" }}>
+          <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--color-ink)" }}>
             „Das System rief eigenständig die Rückerstattungs-API auf, die ein menschlicher Prüfer anschließend
             nach einem anfänglichen Timeout bei einem erneuten Versuch genehmigte; das System wurde kurz
             danach von v1.4 auf v1.5 aktualisiert."{" "}
             <span
               className="mono"
-              style={{ fontSize: 12, color: "var(--color-primary)", whiteSpace: "nowrap" }}
+              style={{ fontSize: 13, color: "var(--color-primary)", whiteSpace: "nowrap" }}
             >
               [Nachweis: Trace #a91f02c1]
             </span>
@@ -443,9 +443,9 @@ export default function LandingPageDE() {
       <section className="section">
         <div style={{ background: "var(--color-primary-tint)", border: "1px solid var(--color-line)", borderRadius: 8, padding: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <p className="mono" style={{ fontSize: 12, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Kostenloses Tool</p>
-            <p style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Nicht sicher, ob Ihr KI-System hochriskant ist?</p>
-            <p style={{ fontSize: 13.5, color: "var(--color-ink-muted)" }}>Beantworten Sie ein paar Fragen und erhalten Sie eine richtungsweisende Risikoeinstufung nach der KI-Verordnung.</p>
+            <p className="mono" style={{ fontSize: 13, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Kostenloses Tool</p>
+            <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 4 }}>Nicht sicher, ob Ihr KI-System hochriskant ist?</p>
+            <p style={{ fontSize: 15, color: "var(--color-ink-muted)" }}>Beantworten Sie ein paar Fragen und erhalten Sie eine richtungsweisende Risikoeinstufung nach der KI-Verordnung.</p>
           </div>
           <Link href="/de/eu-ai-act-risk-checker" className="btn-primary" style={{ border: "none", whiteSpace: "nowrap" }}>Jetzt prüfen →</Link>
         </div>
@@ -457,8 +457,8 @@ export default function LandingPageDE() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "65ch" }}>
           {FAQS.map((faq) => (
             <div key={faq.q}>
-              <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{faq.q}</p>
-              <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
+              <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{faq.q}</p>
+              <p style={{ fontSize: 16, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
             </div>
           ))}
         </div>

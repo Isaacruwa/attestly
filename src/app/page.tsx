@@ -303,7 +303,7 @@ export default function LandingPage() {
       <section className="section">
         <p className="section__eyebrow">Background</p>
         <h2>What EU AI Act Annex IV technical documentation actually requires</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)" }}>
           <p style={{ marginBottom: 16 }}>
             The EU AI Act requires providers of high-risk AI systems to maintain technical documentation under
             Annex IV before the system is placed on the market, and to keep it current as the system changes.
@@ -325,7 +325,7 @@ export default function LandingPage() {
       <section className="section">
         <p className="section__eyebrow">Why not a generic GRC platform</p>
         <h2>General AI-governance tools stop one step before this.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
           <p style={{ marginBottom: 16 }}>
             Broad AI-governance platforms are built around policy management, system inventories, and monitoring
             dashboards — useful for tracking that an AI system exists and has an owner, but they don't ingest an
@@ -345,7 +345,7 @@ export default function LandingPage() {
       <section className="section" id="why-traces-not-scans">
         <p className="section__eyebrow">Why runtime traces, not code scans</p>
         <h2>A static scan of your repository cannot see what your agent actually did.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
           <p>
             Scanning source code can tell you which SDKs and model calls are wired up. It cannot tell you what
             happened at runtime: which tools an agent actually invoked, when a human stepped in to override a
@@ -355,7 +355,7 @@ export default function LandingPage() {
           </p>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 560 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, minWidth: 560 }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--color-line)", textAlign: "left" }}>
                 <th style={{ padding: "10px 12px" }}></th>
@@ -381,7 +381,7 @@ export default function LandingPage() {
           </table>
         </div>
         <p style={{ marginTop: 16 }}>
-          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 14 }}>
+          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 15 }}>
             Read the full breakdown of why Annex IV needs runtime evidence →
           </Link>
         </p>
@@ -407,7 +407,7 @@ export default function LandingPage() {
                 padding: "8px 16px",
                 borderRadius: 999,
                 border: "1px solid var(--color-line)",
-                fontSize: 13.5,
+                fontSize: 14.5,
                 fontFamily: "var(--font-mono)",
                 color: "var(--color-ink)",
                 textDecoration: "none",
@@ -423,7 +423,7 @@ export default function LandingPage() {
       <section className="section" id="live-example">
         <p className="section__eyebrow">Live example</p>
         <h2>From trace event to Annex IV sentence.</h2>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
           A simplified, illustrative walkthrough of how a handful of normalized trace events map to a single
           drafted documentation sentence — with a link back to the exact event that justified it.
         </p>
@@ -434,7 +434,7 @@ export default function LandingPage() {
             color: "#e6f2ef",
             padding: 20,
             borderRadius: 8,
-            fontSize: 12.5,
+            fontSize: 13.5,
             lineHeight: 1.6,
             overflowX: "auto",
           }}
@@ -447,15 +447,15 @@ export default function LandingPage() {
 ]`}
         </pre>
         <div style={{ marginTop: 16, padding: 18, border: "1px solid var(--color-line)", borderRadius: 8, background: "white" }}>
-          <p style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
+          <p style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
             Drafted Annex IV section — Monitoring measures
           </p>
-          <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--color-ink)" }}>
+          <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--color-ink)" }}>
             &ldquo;The system autonomously invoked the refund API, which a human reviewer subsequently approved
             after an initial retry timeout; the system was updated from v1.4 to v1.5 shortly after.&rdquo;{" "}
             <span
               className="mono"
-              style={{ fontSize: 12, color: "var(--color-primary)", whiteSpace: "nowrap" }}
+              style={{ fontSize: 13, color: "var(--color-primary)", whiteSpace: "nowrap" }}
             >
               [evidence: trace #a91f02c1]
             </span>
@@ -474,9 +474,9 @@ export default function LandingPage() {
       <section className="section">
         <div style={{ background: "var(--color-primary-tint)", border: "1px solid var(--color-line)", borderRadius: 8, padding: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <p className="mono" style={{ fontSize: 12, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Free tool</p>
-            <p style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Not sure if your AI system is high-risk?</p>
-            <p style={{ fontSize: 13.5, color: "var(--color-ink-muted)" }}>Answer a few questions and get a directional EU AI Act risk classification.</p>
+            <p className="mono" style={{ fontSize: 13, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Free tool</p>
+            <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 4 }}>Not sure if your AI system is high-risk?</p>
+            <p style={{ fontSize: 15, color: "var(--color-ink-muted)" }}>Answer a few questions and get a directional EU AI Act risk classification.</p>
           </div>
           <Link href="/eu-ai-act-risk-checker" className="btn-primary" style={{ border: "none", whiteSpace: "nowrap" }}>Check now →</Link>
         </div>
@@ -488,8 +488,8 @@ export default function LandingPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "65ch" }}>
           {FAQS.map((faq) => (
             <div key={faq.q}>
-              <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{faq.q}</p>
-              <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
+              <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{faq.q}</p>
+              <p style={{ fontSize: 16, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
             </div>
           ))}
         </div>

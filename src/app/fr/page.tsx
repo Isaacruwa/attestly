@@ -265,7 +265,7 @@ export default function LandingPageFR() {
       <section className="section">
         <p className="section__eyebrow">Contexte</p>
         <h2>Ce que requiert réellement la documentation technique annexe IV du règlement sur l'IA</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)" }}>
           <p style={{ marginBottom: 16 }}>
             Le règlement sur l'IA exige que les fournisseurs de systèmes d'IA à haut risque maintiennent une
             documentation technique au titre de l'annexe IV avant la mise sur le marché du système, et la
@@ -290,7 +290,7 @@ export default function LandingPageFR() {
       <section className="section">
         <p className="section__eyebrow">Pourquoi pas une plateforme GRC généraliste</p>
         <h2>Les outils de gouvernance IA généralistes s'arrêtent une étape avant cela.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)" }}>
           <p style={{ marginBottom: 16 }}>
             Les plateformes de gouvernance IA généralistes sont construites autour de la gestion des politiques,
             des inventaires de systèmes et des tableaux de bord de surveillance — utiles pour suivre le fait
@@ -313,7 +313,7 @@ export default function LandingPageFR() {
       <section className="section" id="why-traces-not-scans">
         <p className="section__eyebrow">Pourquoi les traces d'exécution, pas les analyses de code</p>
         <h2>Une analyse statique de votre dépôt ne peut pas voir ce que votre agent a réellement fait.</h2>
-        <div style={{ maxWidth: "68ch", fontSize: 15, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
+        <div style={{ maxWidth: "68ch", fontSize: 16, lineHeight: 1.7, color: "var(--color-ink)", marginBottom: 24 }}>
           <p>
             L'analyse du code source peut vous dire quels SDK et appels de modèle sont connectés. Elle ne peut
             pas vous dire ce qui s'est passé à l'exécution : quels outils un agent a réellement invoqués, quand
@@ -323,7 +323,7 @@ export default function LandingPageFR() {
           </p>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, minWidth: 560 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, minWidth: 560 }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--color-line)", textAlign: "left" }}>
                 <th style={{ padding: "10px 12px" }}></th>
@@ -349,7 +349,7 @@ export default function LandingPageFR() {
           </table>
         </div>
         <p style={{ marginTop: 16 }}>
-          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 14 }}>
+          <Link href="/why-traces-over-scans" style={{ color: "var(--color-primary)", fontSize: 15 }}>
             Lire l'analyse complète (en anglais) de pourquoi l'annexe IV a besoin de preuves d'exécution →
           </Link>
         </p>
@@ -375,7 +375,7 @@ export default function LandingPageFR() {
                 padding: "8px 16px",
                 borderRadius: 999,
                 border: "1px solid var(--color-line)",
-                fontSize: 13.5,
+                fontSize: 14.5,
                 fontFamily: "var(--font-mono)",
                 color: "var(--color-ink)",
                 textDecoration: "none",
@@ -391,7 +391,7 @@ export default function LandingPageFR() {
       <section className="section" id="live-example">
         <p className="section__eyebrow">Exemple concret</p>
         <h2>D'un événement de trace à une phrase de l'annexe IV.</h2>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: "var(--color-ink-muted)", marginBottom: 20, maxWidth: "68ch" }}>
           Une illustration simplifiée de la manière dont une poignée d'événements de trace normalisés se
           traduisent en une seule phrase de documentation rédigée — avec un lien vers l'événement exact qui l'a
           justifiée.
@@ -403,7 +403,7 @@ export default function LandingPageFR() {
             color: "#e6f2ef",
             padding: 20,
             borderRadius: 8,
-            fontSize: 12.5,
+            fontSize: 13.5,
             lineHeight: 1.6,
             overflowX: "auto",
           }}
@@ -416,16 +416,16 @@ export default function LandingPageFR() {
 ]`}
         </pre>
         <div style={{ marginTop: 16, padding: 18, border: "1px solid var(--color-line)", borderRadius: 8, background: "white" }}>
-          <p style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
+          <p style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--color-ink-faint)", marginBottom: 8 }}>
             Section annexe IV rédigée — Mesures de surveillance
           </p>
-          <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--color-ink)" }}>
+          <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--color-ink)" }}>
             « Le système a invoqué de manière autonome l'API de remboursement, qu'un relecteur humain a
             ensuite approuvée après un premier dépassement de délai ; le système a été mis à jour de la v1.4 à
             la v1.5 peu après. »{" "}
             <span
               className="mono"
-              style={{ fontSize: 12, color: "var(--color-primary)", whiteSpace: "nowrap" }}
+              style={{ fontSize: 13, color: "var(--color-primary)", whiteSpace: "nowrap" }}
             >
               [preuve : trace #a91f02c1]
             </span>
@@ -444,9 +444,9 @@ export default function LandingPageFR() {
       <section className="section">
         <div style={{ background: "var(--color-primary-tint)", border: "1px solid var(--color-line)", borderRadius: 8, padding: 28, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <p className="mono" style={{ fontSize: 12, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Outil gratuit</p>
-            <p style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Vous ne savez pas si votre système d'IA est à haut risque ?</p>
-            <p style={{ fontSize: 13.5, color: "var(--color-ink-muted)" }}>Répondez à quelques questions et obtenez une classification directionnelle du risque selon le règlement sur l'IA.</p>
+            <p className="mono" style={{ fontSize: 13, color: "var(--color-primary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Outil gratuit</p>
+            <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 4 }}>Vous ne savez pas si votre système d'IA est à haut risque ?</p>
+            <p style={{ fontSize: 15, color: "var(--color-ink-muted)" }}>Répondez à quelques questions et obtenez une classification directionnelle du risque selon le règlement sur l'IA.</p>
           </div>
           <Link href="/fr/eu-ai-act-risk-checker" className="btn-primary" style={{ border: "none", whiteSpace: "nowrap" }}>Vérifier maintenant →</Link>
         </div>
@@ -458,8 +458,8 @@ export default function LandingPageFR() {
         <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "65ch" }}>
           {FAQS.map((faq) => (
             <div key={faq.q}>
-              <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6 }}>{faq.q}</p>
-              <p style={{ fontSize: 14, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
+              <p style={{ fontWeight: 600, fontSize: 17, marginBottom: 6 }}>{faq.q}</p>
+              <p style={{ fontSize: 16, color: "var(--color-ink-muted)", lineHeight: 1.6 }}>{faq.a}</p>
             </div>
           ))}
         </div>
