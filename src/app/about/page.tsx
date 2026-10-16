@@ -12,8 +12,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "About Attestly",
-  url: "https://attestly.online/about",
-  mainEntity: { "@id": "https://attestly.online/#organization" },
+  url: "https://www.attestly.online/about",
+  mainEntity: { "@id": "https://www.attestly.online/#organization" },
 };
 
 export default function AboutPage() {

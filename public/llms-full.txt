@@ -4,11 +4,11 @@
 
 Attestly is a SaaS product that turns AI agents' existing operational traces into EU AI Act Annex IV technical documentation, risk-management summaries, conformity-assessment checklists, and audit-ready evidence trails. It is built specifically for companies deploying autonomous AI agents that need EU AI Act compliance documentation, not as a general AI governance platform.
 
-Homepage: https://attestly.online
-Pricing: https://attestly.online/pricing
-Terms of Service: https://attestly.online/terms
-Privacy Policy: https://attestly.online/privacy
-Refund Policy: https://attestly.online/refund-policy
+Homepage: https://www.attestly.online
+Pricing: https://www.attestly.online/pricing
+Terms of Service: https://www.attestly.online/terms
+Privacy Policy: https://www.attestly.online/privacy
+Refund Policy: https://www.attestly.online/refund-policy
 Contact: support@attestly.online
 
 ## The problem it solves

@@ -14,12 +14,12 @@ export default function GlossaryIndexPage() {
     "@context": "https://schema.org",
     "@type": "DefinedTermSet",
     name: "EU AI Act Glossary",
-    url: "https://attestly.online/glossary",
+    url: "https://www.attestly.online/glossary",
     hasDefinedTerm: GLOSSARY_TERMS.map((t) => ({
       "@type": "DefinedTerm",
       name: t.title,
       description: t.metaDescription,
-      url: `https://attestly.online/glossary/${t.slug}`,
+      url: `https://www.attestly.online/glossary/${t.slug}`,
     })),
   };
 

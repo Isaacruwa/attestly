@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://attestly.online";
+  const base = "https://www.attestly.online";
   return [
     {
       url: base,

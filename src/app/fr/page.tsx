@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const SITE_URL = "https://attestly.online";
+const SITE_URL = "https://www.attestly.online";
 
 export const metadata: Metadata = buildMetadata({
   title: "Attestly — Documentation technique pour le règlement sur l'IA, à partir des traces d'agents",

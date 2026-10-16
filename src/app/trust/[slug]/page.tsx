@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${data.orgName} — Compliance Status | Attestly Trust Center`,
     description: `${data.orgName}'s EU AI Act documentation status, verified and maintained via Attestly.`,
-    alternates: { canonical: `https://attestly.online/trust/${params.slug}` },
+    alternates: { canonical: `https://www.attestly.online/trust/${params.slug}` },
   };
 }
 
@@ -99,7 +99,7 @@ export default async function TrustCenterPage({ params }: { params: { slug: stri
 
       <p style={{ textAlign: "center", fontSize: 13, color: "var(--color-ink-faint)" }}>
         Compliance status automatically maintained via{" "}
-        <Link href="https://attestly.online" style={{ color: "var(--color-primary)" }}>Attestly</Link>
+        <Link href="https://www.attestly.online" style={{ color: "var(--color-primary)" }}>Attestly</Link>
       </p>
     </main>
   );

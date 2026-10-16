@@ -43,7 +43,7 @@ async function sendFollowUpEmail(email: string, classification: string) {
     <p>You just ran the free EU AI Act risk checker at Attestly, and based on what you selected, ${copy.blurb}.</p>
     <p><strong>Classification: ${copy.label}</strong></p>
     <p>This is a directional, educational read, not legal advice or a legal classification — see the tool for full context.</p>
-    <p>If you'd like to start turning your AI agent's runtime traces into a documented Annex IV starting point, you can sign up for Attestly's free tier here: <a href="https://attestly.online/login?next=%2Fdashboard%2Fsystems%2Fnew">https://attestly.online/login?next=%2Fdashboard%2Fsystems%2Fnew</a></p>
+    <p>If you'd like to start turning your AI agent's runtime traces into a documented Annex IV starting point, you can sign up for Attestly's free tier here: <a href="https://www.attestly.online/login?next=%2Fdashboard%2Fsystems%2Fnew">https://www.attestly.online/login?next=%2Fdashboard%2Fsystems%2Fnew</a></p>
     <p>— Attestly</p>
     <p style="font-size:12px;color:#888;">You're receiving this because you entered your email on attestly.online's free risk checker.</p>
   `;

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_URL = "https://attestly.online";
+const SITE_URL = "https://www.attestly.online";
 const SITE_NAME = "Attestly";
 
 export type HreflangMap = {

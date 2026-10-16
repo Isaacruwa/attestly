@@ -14,9 +14,9 @@ const jsonLd = {
   headline: "Why Annex IV documentation needs runtime evidence, not code scans",
   description:
     "EU AI Act Annex IV evidence has to show what an AI agent actually did at runtime. Static source-code scans can't capture that.",
-  url: "https://attestly.online/why-traces-over-scans",
-  author: { "@id": "https://attestly.online/#organization" },
-  publisher: { "@id": "https://attestly.online/#organization" },
+  url: "https://www.attestly.online/why-traces-over-scans",
+  author: { "@id": "https://www.attestly.online/#organization" },
+  publisher: { "@id": "https://www.attestly.online/#organization" },
 };
 
 export default function WhyTracesPage() {

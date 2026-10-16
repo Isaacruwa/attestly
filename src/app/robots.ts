@@ -65,6 +65,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: disallowPaths,
       })),
     ],
-    sitemap: "https://attestly.online/sitemap.xml",
+    sitemap: "https://www.attestly.online/sitemap.xml",
   };
 }
