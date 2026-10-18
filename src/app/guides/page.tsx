@@ -25,6 +25,11 @@ const GUIDES = [
     desc: "What Article 72 requires providers to monitor after deployment, and what that means in practice.",
   },
   {
+    slug: "eu-ai-act-article-12-logging",
+    title: "EU AI Act Article 12: logging requirements for AI agents",
+    desc: "What Article 12 requires high-risk systems to log, how long to keep logs, and what an AI agent should capture.",
+  },
+  {
     slug: "high-risk-ai-examples",
     title: "High-risk AI systems under Annex III: classification examples",
     desc: "Worked examples of AI systems that do and don't fall into Annex III's high-risk categories.",
