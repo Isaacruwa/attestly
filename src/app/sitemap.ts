@@ -65,6 +65,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${base}/guides/eu-ai-act-article-12-logging`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${base}/guides/high-risk-ai-examples`,
       lastModified: new Date(),
       changeFrequency: "monthly",
