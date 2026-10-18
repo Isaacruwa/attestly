@@ -1,10 +1,10 @@
 name: Keep Supabase awake
 
-# Backup to the Vercel cron: pings the keep-alive endpoint every 3 days so the
-# free-tier database is never idle for 7 days.
+# Backup to the Vercel cron: pings the keep-alive endpoint twice a week
+# (Sun, Wed) so the free-tier database is never idle for 7 days.
 on:
   schedule:
-    - cron: "17 5 */3 * *"
+    - cron: "17 5 * * 0,3"
   workflow_dispatch:
 
 jobs:
