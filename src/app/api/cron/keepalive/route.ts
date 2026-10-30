@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
 // Keep-alive: runs a tiny real query so the Supabase free-tier project is
-// never idle for 7 days. Called daily by Vercel Cron (see vercel.json) and
-// every few days by a GitHub Actions backup (.github/workflows/keepalive.yml).
+// never idle for 7 days. Called by Vercel Cron (see vercel.json) and by a
+// GitHub Actions backup (.github/workflows/keepalive.yml).
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -19,11 +19,12 @@ export async function GET(request: Request) {
     const supabase = createServiceRoleClient();
     const { error } = await supabase
       .from("compliance_requirements")
-      .select("id", { count: "exact", head: true });
+      .select("section_key", { count: "exact", head: true });
     if (error) throw error;
     return NextResponse.json({ ok: true, checked_at: new Date().toISOString() });
-  } catch {
-    // A 500 makes a failed keep-alive visible in Vercel Cron logs / GitHub Actions.
+  } catch (err) {
+    // Server-side log only (visible in Vercel logs); the response stays generic.
+    console.error("keepalive failed:", err);
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }
