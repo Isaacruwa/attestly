@@ -1,3 +1,4 @@
+import SiteLinks from "@/components/SiteLinks";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
@@ -495,6 +496,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <SiteLinks />
       <footer className="site-footer">
         <span className="site-nav__brand">
           <span className="site-nav__mark" aria-hidden="true" />
