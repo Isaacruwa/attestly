@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
-// Keep-alive: runs a tiny real query so the Supabase free-tier project is
-// never idle for 7 days. Called by Vercel Cron (see vercel.json) and by a
-// GitHub Actions backup (.github/workflows/keepalive.yml).
+// Keep-alive: does a real read AND a real write (re-saving one row with its
+// own value, so no data changes) so the Supabase free-tier project always
+// counts as active. Called daily by Vercel Cron (vercel.json) and every other
+// day by a GitHub Actions backup (.github/workflows/keepalive.yml).
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -17,10 +18,22 @@ export async function GET(request: Request) {
 
   try {
     const supabase = createServiceRoleClient();
-    const { error } = await supabase
+
+    const { data, error } = await supabase
       .from("compliance_requirements")
-      .select("section_key", { count: "exact", head: true });
+      .select("section_key, sort_order")
+      .limit(1)
+      .maybeSingle();
     if (error) throw error;
+
+    if (data) {
+      const { error: writeError } = await supabase
+        .from("compliance_requirements")
+        .update({ sort_order: data.sort_order })
+        .eq("section_key", data.section_key);
+      if (writeError) throw writeError;
+    }
+
     return NextResponse.json({ ok: true, checked_at: new Date().toISOString() });
   } catch (err) {
     // Server-side log only (visible in Vercel logs); the response stays generic.
