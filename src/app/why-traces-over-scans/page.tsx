@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
@@ -109,6 +110,7 @@ export default function WhyTracesPage() {
           </Link>
         </div>
       </div>
+      <RelatedLinks current="/why-traces-over-scans" />
     </main>
   );
 }
