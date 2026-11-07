@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
@@ -88,6 +89,7 @@ export default function GuideArticle72() {
           </Link>
         </div>
       </div>
+      <RelatedLinks current="/guides/ai-act-article-72-monitoring" />
     </main>
   );
 }
