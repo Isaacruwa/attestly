@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
@@ -50,6 +51,7 @@ export default function GlossaryTermPage({ params }: { params: { slug: string } 
           See Attestly's pricing →
         </Link>
       </div>
+      <RelatedLinks current={`/glossary/${params.slug}`} />
     </main>
   );
 }
