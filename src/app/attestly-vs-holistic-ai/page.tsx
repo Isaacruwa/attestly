@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/pageMetadata";
@@ -101,6 +102,7 @@ export default function AttestlyVsHolisticAiPage() {
           </Link>
         </div>
       </div>
+      <RelatedLinks current="/attestly-vs-holistic-ai" />
     </main>
   );
 }
