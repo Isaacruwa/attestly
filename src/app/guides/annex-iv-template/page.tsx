@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/pageMetadata";
 import Link from "next/link";
@@ -91,6 +92,7 @@ monitored via monthly sampling."`}</pre>
           </Link>
         </div>
       </div>
+      <RelatedLinks current="/guides/annex-iv-template" />
     </main>
   );
 }
