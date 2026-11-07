@@ -1,170 +1,153 @@
 import type { MetadataRoute } from "next";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 
+const CONTENT_UPDATED = new Date("2026-11-07");
+const SITE_UPDATED = new Date("2026-10-30");
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.attestly.online";
-  return [
+  const entries: MetadataRoute.Sitemap = [
     {
       url: base,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${base}/fr`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${base}/de`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${base}/glossary`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     ...GLOSSARY_TERMS.map((t) => ({
       url: `${base}/glossary/${t.slug}`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     {
       url: `${base}/why-traces-over-scans`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${base}/guides`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/guides/eu-ai-act-annex-iv-explained`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/guides/annex-iv-template`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/guides/ai-act-article-72-monitoring`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/guides/eu-ai-act-article-12-logging`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/guides/high-risk-ai-examples`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${base}/about`,
-      lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${base}/changelog`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.4,
     },
     {
       url: `${base}/attestly-vs-aiacto`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${base}/attestly-vs-openlayer`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${base}/attestly-vs-credo-ai`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${base}/attestly-vs-holistic-ai`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${base}/attestly-vs-manual-process`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
     {
       url: `${base}/login`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${base}/pricing`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${base}/eu-ai-act-risk-checker`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${base}/fr/eu-ai-act-risk-checker`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.85,
     },
     {
       url: `${base}/de/eu-ai-act-risk-checker`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.85,
     },
     {
       url: `${base}/terms`,
-      lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${base}/privacy`,
-      lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${base}/refund-policy`,
-      lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
   ];
+
+  // Real dates (not "now" on every build): update CONTENT_UPDATED when guides,
+  // glossary or comparison pages change, and SITE_UPDATED for other pages.
+  return entries.map((e) => ({
+    ...e,
+    lastModified: /\/(guides|glossary|attestly-vs-|why-traces)/.test(e.url) ? CONTENT_UPDATED : SITE_UPDATED,
+  }));
 }
