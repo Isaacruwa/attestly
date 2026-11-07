@@ -1,3 +1,4 @@
+import RelatedLinks from "@/components/RelatedLinks";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/pageMetadata";
@@ -103,6 +104,7 @@ export default function AttestlyVsCredoAiPage() {
           </Link>
         </div>
       </div>
+      <RelatedLinks current="/attestly-vs-credo-ai" />
     </main>
   );
 }
