@@ -103,11 +103,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${base}/login`,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
       url: `${base}/pricing`,
       changeFrequency: "monthly",
       priority: 0.9,
@@ -126,21 +121,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${base}/de/eu-ai-act-risk-checker`,
       changeFrequency: "monthly",
       priority: 0.85,
-    },
-    {
-      url: `${base}/terms`,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${base}/privacy`,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${base}/refund-policy`,
-      changeFrequency: "yearly",
-      priority: 0.3,
     },
   ];
 
