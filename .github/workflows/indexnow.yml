@@ -2,6 +2,7 @@ name: IndexNow ping
 
 # After every site change, tell IndexNow search engines (Bing, Yandex,
 # DuckDuckGo, Seznam, Naver) which URLs exist. Google does not use IndexNow.
+# Two keys: KEY_MAIN works with Yandex; KEY_BING is a fresh key for Bing.
 on:
   push:
     branches: [main]
@@ -15,44 +16,38 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     env:
-      INDEXNOW_KEY: "8d870c9f070445198978cbb111be2f1b"
+      KEY_MAIN: "8d870c9f070445198978cbb111be2f1b"
+      KEY_BING: "2f22578a239f245e2a126a093a3971a4"
     steps:
       - name: Wait for the Vercel deploy to finish
         if: github.event_name == 'push'
         run: sleep 150
 
-      - name: Check the key file is live and exact
+      - name: Check both key files are live and exact
         run: |
-          set -u
-          url="https://www.attestly.online/${INDEXNOW_KEY}.txt"
-          info=$(curl -sS -L -o keyfile.txt -D headers.txt -w "%{http_code} final=%{url_effective} redirects=%{num_redirects} type=%{content_type}" "$url" || true)
-          echo "Key file fetch: $info"
-          echo "--- response headers"; cat headers.txt
-          echo "--- body (hex)"; xxd keyfile.txt | head -5
-          if [ "$(tr -d '\r\n' < keyfile.txt)" != "$INDEXNOW_KEY" ]; then
-            echo "KEY FILE MISMATCH: the live file does not contain the key"; exit 1
-          fi
-          echo "Key file OK"
+          for k in "$KEY_MAIN" "$KEY_BING"; do
+            body=$(curl -sS -L "https://www.attestly.online/$k.txt" | tr -d '\r\n')
+            if [ "$body" = "$k" ]; then echo "key $k OK"; else echo "key $k MISMATCH (got: $body)"; fi
+          done
 
       - name: Submit every sitemap URL to IndexNow
         run: |
-          set -euo pipefail
+          set -uo pipefail
           curl -fsS --retry 3 --retry-delay 10 "https://www.attestly.online/sitemap.xml" -o sitemap.xml
-          python3 - <<'PY' > payload.json
-          import json, os, re
+          ok=0
+          submit() { # endpoint key
+            python3 - "$2" <<'PY' > payload.json
+          import json, re, sys
+          key = sys.argv[1]
           urls = re.findall(r"<loc>([^<]+)</loc>", open("sitemap.xml").read())
           host = "www.attestly.online"
-          key = os.environ["INDEXNOW_KEY"]
           print(json.dumps({"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": urls}))
           PY
-          echo "Submitting $(python3 -c 'import json;print(len(json.load(open("payload.json"))["urlList"]))') URLs"
-          ok=0
-          for ep in "https://api.indexnow.org/indexnow" "https://www.bing.com/indexnow" "https://yandex.com/indexnow"; do
-            code=$(curl -sS -o response.txt -w "%{http_code}" -X POST "$ep" \
-              -H "Content-Type: application/json; charset=utf-8" \
-              --data @payload.json || echo 000)
-            echo "$ep -> HTTP $code"; cat response.txt || true; echo
-            # 200 = accepted, 202 = accepted (key validation pending)
+            code=$(curl -sS -o response.txt -w "%{http_code}" -X POST "$1" -H "Content-Type: application/json; charset=utf-8" --data @payload.json || echo 000)
+            echo "$1 (key ${2:0:6}...) -> HTTP $code"; cat response.txt; echo
             if [ "$code" = "200" ] || [ "$code" = "202" ]; then ok=1; fi
-          done
+          }
+          submit "https://yandex.com/indexnow" "$KEY_MAIN"
+          submit "https://api.indexnow.org/indexnow" "$KEY_BING"
+          submit "https://www.bing.com/indexnow" "$KEY_BING"
           if [ "$ok" != "1" ]; then exit 1; fi
