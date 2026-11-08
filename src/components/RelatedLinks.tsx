@@ -1,9 +1,10 @@
 import Link from "next/link";
 
-// Contextual "keep reading" links. Each page shows five links, starting at a
-// different point in the list, so every guide, glossary term and key page gets
-// linked from several others (stronger crawl signal than a footer alone).
-const ITEMS: { href: string; label: string }[] = [
+// Contextual "keep reading" links. Each page shows six links: four from the
+// guides/glossary pool and two from the "more" pool (comparisons, About, French
+// homepage), starting at a different point per page, so every page in both
+// pools is linked from several others.
+const CONTENT: { href: string; label: string }[] = [
   { href: "/guides/eu-ai-act-annex-iv-explained", label: "EU AI Act Annex IV: every required section explained" },
   { href: "/guides/annex-iv-template", label: "Annex IV technical documentation template" },
   { href: "/guides/eu-ai-act-article-12-logging", label: "Article 12 logging requirements for AI agents" },
@@ -18,16 +19,30 @@ const ITEMS: { href: string; label: string }[] = [
   { href: "/pricing", label: "Attestly pricing" },
 ];
 
+const MORE: { href: string; label: string }[] = [
+  { href: "/attestly-vs-aiacto", label: "Attestly vs AiActo" },
+  { href: "/attestly-vs-openlayer", label: "Attestly vs Openlayer" },
+  { href: "/attestly-vs-credo-ai", label: "Attestly vs Credo AI" },
+  { href: "/attestly-vs-holistic-ai", label: "Attestly vs Holistic AI" },
+  { href: "/attestly-vs-manual-process", label: "Attestly vs the manual process" },
+  { href: "/about", label: "About Attestly" },
+  { href: "/fr", label: "Attestly en français" },
+];
+
 function hash(s: string) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
   return h;
 }
 
+function take<T extends { href: string }>(list: T[], current: string, count: number, salt: number) {
+  const pool = list.filter((i) => i.href !== current);
+  const start = (hash(current) + salt) % pool.length;
+  return Array.from({ length: count }, (_, k) => pool[(start + k) % pool.length]);
+}
+
 export default function RelatedLinks({ current }: { current: string }) {
-  const pool = ITEMS.filter((i) => i.href !== current);
-  const start = hash(current) % pool.length;
-  const picks = Array.from({ length: 5 }, (_, k) => pool[(start + k) % pool.length]);
+  const picks = [...take(CONTENT, current, 4, 0), ...take(MORE, current, 2, 0)];
   return (
     <aside
       aria-label="Keep reading"
