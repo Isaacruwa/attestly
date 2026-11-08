@@ -32,6 +32,10 @@ jobs:
           print(json.dumps({"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": urls}))
           PY
           echo "Submitting $(python3 -c 'import json;print(len(json.load(open("payload.json"))["urlList"]))') URLs"
-          curl -sS -X POST "https://api.indexnow.org/indexnow" \
+          code=$(curl -sS -o response.txt -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            --data @payload.json -w "\nIndexNow HTTP %{http_code}\n"
+            --data @payload.json)
+          echo "IndexNow HTTP $code"
+          cat response.txt || true
+          # 200 = accepted, 202 = accepted (key validation pending). Anything else fails the run.
+          if [ "$code" != "200" ] && [ "$code" != "202" ]; then exit 1; fi
