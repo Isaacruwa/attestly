@@ -92,6 +92,9 @@ export default async function DashboardPage({
           <Link href="/dashboard/trust-center" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             Trust Center
           </Link>
+          <Link href="/dashboard/settings/api-keys" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
+            API keys
+          </Link>
           <Link href="/dashboard/clients/new" style={{ fontSize: 14, color: "var(--color-ink-muted)" }}>
             + New client workspace
           </Link>
