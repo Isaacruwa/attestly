@@ -11,14 +11,17 @@
 // not published external APIs — they require a browser login an agent
 // doesn't have, so listing them here would be misleading rather than
 // useful. See /auth.md for how to authenticate against the listed API.
+//
+// Uses the canonical www host (the apex 301s to www) — keep in sync with
+// SITE_URL in src/lib/pageMetadata.ts.
 
 export async function GET() {
   const catalog = {
     linkset: [
       {
-        anchor: "https://attestly.online/api/traces/ingest",
-        "service-desc": [{ href: "https://attestly.online/openapi/traces-ingest.json", type: "application/json" }],
-        "service-doc": [{ href: "https://attestly.online/auth.md", type: "text/markdown" }],
+        anchor: "https://www.attestly.online/api/traces/ingest",
+        "service-desc": [{ href: "https://www.attestly.online/openapi/traces-ingest.json", type: "application/json" }],
+        "service-doc": [{ href: "https://www.attestly.online/auth.md", type: "text/markdown" }],
       },
     ],
   };
