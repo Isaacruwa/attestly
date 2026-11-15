@@ -18,6 +18,12 @@ export type Actor = {
 // RLS. Everything *after* authentication (the actual data access) still
 // needs its own explicit organization check in the route handler when using
 // the service-role client, since RLS no longer provides it automatically.
+//
+// For a session actor, organizationId is just the user's first membership
+// — a user in several organizations (agency workspaces) can legitimately
+// act on any of them, and RLS enforces that. So organizationId is only an
+// authoritative scope for authMethod === "api_key"; callers must not treat
+// it as a hard limit for session requests.
 export async function authenticateActor(req: Request): Promise<Actor | null> {
   const authHeader = req.headers.get("authorization");
   const bearerToken = authHeader?.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : null;
@@ -34,9 +40,15 @@ export async function authenticateActor(req: Request): Promise<Actor | null> {
 
     if (!key || key.revoked_at) return null;
 
-    // Best-effort usage tracking — a failed update here shouldn't block the
-    // actual request this key is authenticating.
-    void admin.from("api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", key.id);
+    // Best-effort usage tracking. Must be awaited: Supabase query builders
+    // are lazy and only send the request when awaited/then'd, so a bare
+    // `void` here would silently never run. A failure is ignored rather
+    // than blocking the request this key is authenticating.
+    try {
+      await admin.from("api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", key.id);
+    } catch {
+      // ignore
+    }
 
     return { organizationId: key.organization_id, actingUserId: key.created_by, authMethod: "api_key" };
   }
