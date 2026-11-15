@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "Imports agent runtime trace data into an Attestly AI system, so EU AI Act Annex IV documentation can be drafted from real evidence rather than a manual description. This is the only Attestly endpoint published for external/agent use \u2014 see /auth.md for how to authenticate."
   },
-  "servers": [{ "url": "https://attestly.online" }],
+  "servers": [{ "url": "https://www.attestly.online" }],
   "paths": {
     "/api/traces/ingest": {
       "post": {
@@ -82,7 +82,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "An Attestly API key (format: atly_live_<48 hex chars>). Provisioned by a human account owner via the dashboard, not self-registrable. See https://attestly.online/auth.md."
+        "description": "An Attestly API key (format: atly_live_<48 hex chars>). Provisioned by a human account owner via the dashboard, not self-registrable. See https://www.attestly.online/auth.md."
       }
     }
   }

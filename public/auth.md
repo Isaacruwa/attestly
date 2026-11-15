@@ -7,7 +7,7 @@ This file follows the [auth.md](https://auth0.com/auth.md) agent-registration-di
 Agents and scripts acting on behalf of an existing Attestly account — for example, a scheduled job that imports
 agent trace data, or a coding agent managing an organization's AI-system documentation on a user's behalf.
 This is not for end users signing up through the dashboard; that's regular email/password authentication at
-https://attestly.online/login, out of scope for this file.
+https://www.attestly.online/login, out of scope for this file.
 
 ## Current state: no OAuth
 
@@ -22,8 +22,8 @@ Attestly uses bearer API keys, not OAuth.
 
 - **Registration/provisioning.** There is no public, unauthenticated self-registration endpoint for API keys.
   A key is provisioned by a human who already has an authenticated Attestly account, via the dashboard at
-  `https://attestly.online/dashboard/settings/api-keys` (requires logging in first at
-  `https://attestly.online/login`). An agent cannot register itself; a person has to create the key for it.
+  `https://www.attestly.online/dashboard/settings/api-keys` (requires logging in first at
+  `https://www.attestly.online/login`). An agent cannot register itself; a person has to create the key for it.
 - **Key format.** Keys look like `atly_live_<48 hex characters>`. Only the sha256 hash of a key is ever
   stored server-side; the plaintext is shown once, at creation time, and cannot be recovered afterward.
 - **Using a key.** Send it as a standard bearer token:
