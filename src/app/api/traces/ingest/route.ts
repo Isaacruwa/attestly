@@ -91,17 +91,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Provide either 'events' (normalized) or 'payload' (raw trace for a supported source)." }, { status: 400 });
   }
 
-  // For a session request, RLS confirms org membership implicitly (the
-  // insert below would fail on the foreign key if the user's org didn't own
-  // ai_system_id). For an API-key request, the service-role client bypasses
-  // RLS, so that confirmation has to happen explicitly, here.
+  // Confirm the target system exists and is visible to the caller. For a
+  // session request this runs under RLS, so a system in any organization
+  // the user belongs to is visible (multi-workspace accounts can import
+  // into any of their client workspaces) and anything else comes back null.
+  // For an API-key request the service-role client bypasses RLS, so the
+  // system must additionally belong to the key's own organization — that
+  // equality check is what scopes a key, and is deliberately NOT applied
+  // to session requests (a session actor's organizationId is only their
+  // first membership, not a hard limit).
   const { data: targetSystem } = await supabase
     .from("ai_systems")
     .select("id, organization_id")
     .eq("id", ai_system_id)
     .maybeSingle();
 
-  if (!targetSystem || targetSystem.organization_id !== actor.organizationId) {
+  if (!targetSystem || (actor.authMethod === "api_key" && targetSystem.organization_id !== actor.organizationId)) {
     return NextResponse.json({ error: "ai_system_id not found in your organization" }, { status: 404 });
   }
 
