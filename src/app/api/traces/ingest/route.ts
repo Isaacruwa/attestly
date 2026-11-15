@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import { parseOpenTelemetryTrace } from "@/lib/parsers/opentelemetry";
 import { parseLangSmithTrace } from "@/lib/parsers/langsmith";
@@ -7,6 +7,7 @@ import { parseAgentOpsTrace } from "@/lib/parsers/agentops";
 import { parseManualJsonTrace } from "@/lib/parsers/manualJson";
 import { parseMcpLogsTrace } from "@/lib/parsers/mcp";
 import { hashEventContent } from "@/lib/hashing";
+import { authenticateActor } from "@/lib/apiAuth";
 
 // Accepts either:
 //  (a) a generic pre-normalized `events` array (manual_json, or any source
@@ -44,14 +45,21 @@ const IngestBody = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
+  // Accepts a logged-in dashboard session (human/browser) OR an
+  // `Authorization: Bearer atly_live_...` API key (agent/script — see
+  // /auth.md and POST /api/api-keys/create). Both resolve to an
+  // organization; everything below is identical either way.
+  const actor = await authenticateActor(req);
+  if (!actor) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
+
+  // An API-key request has no Supabase session, so it goes through the
+  // service-role client, which bypasses RLS entirely — the explicit
+  // organization check right after parsing the body (below) is what keeps
+  // a key scoped to its own org in that case. A session request keeps using
+  // the regular client, where RLS does that job automatically as before.
+  const supabase = actor.authMethod === "api_key" ? createServiceRoleClient() : createClient();
 
   const parsed = IngestBody.safeParse(await req.json());
   if (!parsed.success) {
@@ -83,9 +91,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Provide either 'events' (normalized) or 'payload' (raw trace for a supported source)." }, { status: 400 });
   }
 
-  // RLS confirms org membership implicitly: this insert fails if the user's
-  // org doesn't own ai_system_id, because the ai_systems row won't be visible
-  // to satisfy the foreign key under the calling user's policy context.
+  // Confirm the target system exists and is visible to the caller. For a
+  // session request this runs under RLS, so a system in any organization
+  // the user belongs to is visible (multi-workspace accounts can import
+  // into any of their client workspaces) and anything else comes back null.
+  // For an API-key request the service-role client bypasses RLS, so the
+  // system must additionally belong to the key's own organization — that
+  // equality check is what scopes a key, and is deliberately NOT applied
+  // to session requests (a session actor's organizationId is only their
+  // first membership, not a hard limit).
+  const { data: targetSystem } = await supabase
+    .from("ai_systems")
+    .select("id, organization_id")
+    .eq("id", ai_system_id)
+    .maybeSingle();
+
+  if (!targetSystem || (actor.authMethod === "api_key" && targetSystem.organization_id !== actor.organizationId)) {
+    return NextResponse.json({ error: "ai_system_id not found in your organization" }, { status: 404 });
+  }
+
   const { data: importRow, error: importError } = await supabase
     .from("trace_imports")
     .insert({
@@ -93,7 +117,7 @@ export async function POST(req: NextRequest) {
       source,
       status: "processing",
       event_count: events.length,
-      imported_by: user.id,
+      imported_by: actor.actingUserId,
     })
     .select()
     .single();
