@@ -43,6 +43,15 @@ export default function GlossaryTermPage({ params }: { params: { slug: string } 
         changed multiple times in 2026 — verify current status before making compliance decisions.
       </div>
 
+      {params.slug === "compliance-trust-center" && (
+        <p style={{ fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>
+          Setting one up?{" "}
+          <Link href="/guides/compliance-trust-center" style={{ color: "var(--color-primary)" }}>
+            Read the guide: how to build a compliance trust center for an AI system →
+          </Link>
+        </p>
+      )}
+
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
         <Link href="/eu-ai-act-risk-checker" className="btn-primary" style={{ border: "none" }}>
           Check your system's risk tier →
