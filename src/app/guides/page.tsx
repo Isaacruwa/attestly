@@ -30,6 +30,11 @@ const GUIDES = [
     desc: "What Article 12 requires high-risk systems to log, how long to keep logs, and what an AI agent should capture.",
   },
   {
+    slug: "compliance-trust-center",
+    title: "How to build a compliance trust center for an AI system",
+    desc: "What a public compliance trust center should show, what to keep private, and how to set one up for an AI system.",
+  },
+  {
     slug: "high-risk-ai-examples",
     title: "High-risk AI systems under Annex III: classification examples",
     desc: "Worked examples of AI systems that do and don't fall into Annex III's high-risk categories.",
