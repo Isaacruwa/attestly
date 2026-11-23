@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 
-const CONTENT_UPDATED = new Date("2026-11-17");
+const CONTENT_UPDATED = new Date("2026-11-23");
 const SITE_UPDATED = new Date("2026-10-30");
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -64,6 +64,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${base}/guides/compliance-trust-center`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${base}/guides/ai-trust-center-examples`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${base}/guides/soc-2-vs-eu-ai-act-trust-page`,
       changeFrequency: "monthly",
       priority: 0.7,
     },
