@@ -35,6 +35,16 @@ const GUIDES = [
     desc: "What a public compliance trust center should show, what to keep private, and how to set one up for an AI system.",
   },
   {
+    slug: "ai-trust-center-examples",
+    title: "AI trust center examples: sample layout and wording",
+    desc: "A sample layout for an AI trust center, with example wording for each section.",
+  },
+  {
+    slug: "soc-2-vs-eu-ai-act-trust-page",
+    title: "SOC 2 trust page vs EU AI Act trust page: what is different",
+    desc: "What each kind of trust page proves, and how to run both without overclaiming.",
+  },
+  {
     slug: "high-risk-ai-examples",
     title: "High-risk AI systems under Annex III: classification examples",
     desc: "Worked examples of AI systems that do and don't fall into Annex III's high-risk categories.",
