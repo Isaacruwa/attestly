@@ -10,6 +10,8 @@ const CONTENT: { href: string; label: string }[] = [
   { href: "/guides/eu-ai-act-article-12-logging", label: "Article 12 logging requirements for AI agents" },
   { href: "/guides/ai-act-article-72-monitoring", label: "Post-market monitoring under Article 72" },
   { href: "/guides/compliance-trust-center", label: "How to build a compliance trust center for an AI system" },
+  { href: "/guides/ai-trust-center-examples", label: "AI trust center examples: sample layout and wording" },
+  { href: "/guides/soc-2-vs-eu-ai-act-trust-page", label: "SOC 2 trust page vs EU AI Act trust page" },
   { href: "/guides/high-risk-ai-examples", label: "High-risk AI systems under Annex III: examples" },
   { href: "/glossary/annex-iv-technical-documentation", label: "Glossary: Annex IV technical documentation" },
   { href: "/glossary/high-risk-ai-system", label: "Glossary: high-risk AI system" },
