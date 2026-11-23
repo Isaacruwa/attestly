@@ -108,6 +108,10 @@ export default function GuideComplianceTrustCenter() {
         </ul>
 
         <p style={p}>
+          For a sample layout and wording, see <Link href="/guides/ai-trust-center-examples" style={{ color: "var(--color-primary)" }}>AI trust center examples</Link>. If you already have a SOC 2 page, see <Link href="/guides/soc-2-vs-eu-ai-act-trust-page" style={{ color: "var(--color-primary)" }}>how it differs from a SOC 2 trust page</Link>.
+        </p>
+
+        <p style={p}>
           Attestly can publish a public trust page of this kind for the systems you document, showing summary
           status only, with the underlying documents and evidence staying private. See the{" "}
           <Link href="/glossary/audit-evidence-package" style={{ color: "var(--color-primary)" }}>audit evidence package entry</Link> for what the private package contains.
